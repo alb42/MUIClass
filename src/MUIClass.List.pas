@@ -275,25 +275,15 @@ begin
     ATagList.AddTag(MUIA_List_PoolThreshSize, AsTag(FPoolThreshSize));
 
   if Assigned(FOnDisplay) then
-    ATagList.AddTag(MUIA_List_DisplayHook, AsTag(@DisplayHook))
-  else
-    ATagList.AddTag(MUIA_List_DisplayHook, AsTag(nil));
+    ATagList.AddTag(MUIA_List_DisplayHook, AsTag(@DisplayHook));
   if Assigned(FOnCompare) then
-    ATagList.AddTag(MUIA_List_CompareHook, AsTag(@CompareHook))
-  else
-    ATagList.AddTag(MUIA_List_CompareHook, AsTag(nil));
+    ATagList.AddTag(MUIA_List_CompareHook, AsTag(@CompareHook));
   if Assigned(FOnConstruct) then
-    ATagList.AddTag(MUIA_List_ConstructHook, AsTag(@ConstructHook))
-  else
-    ATagList.AddTag(MUIA_List_ConstructHook, AsTag(nil));
+    ATagList.AddTag(MUIA_List_ConstructHook, AsTag(@ConstructHook));
   if Assigned(FOnDestruct) then
-    ATagList.AddTag(MUIA_List_DestructHook, AsTag(@DestructHook))
-  else
-    ATagList.AddTag(MUIA_List_DestructHook, AsTag(nil));
+    ATagList.AddTag(MUIA_List_DestructHook, AsTag(@DestructHook));
   if Assigned(FOnMultiTest) then
-    ATagList.AddTag(MUIA_List_MultiTestHook, AsTag(@MultiTestHook))
-  else
-    ATagList.AddTag(MUIA_List_MultiTestHook, AsTag(nil));
+    ATagList.AddTag(MUIA_List_MultiTestHook, AsTag(@MultiTestHook));
 end;
 
 procedure TMUIList.CreateObject;

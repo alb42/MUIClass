@@ -33,6 +33,7 @@ type
     procedure DynWindowsClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure EditAck(Sender: TObject);
     procedure PropChanged(Sender: TObject);
+
     function ConstructEvent(Sender: TObject; Pool: Pointer; Str: PChar): PChar;
     procedure DestructEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
     procedure DisplayEvent(Sender: TObject; ToPrint: PPChar; Entry: PChar);
@@ -223,12 +224,20 @@ begin
     MultiSelect := MUIV_Listview_MultiSelect_Default;
     OnDoubleClick := @ListClickEvent;
   end;
-  {DirList := TMUIDirList.create;
+
+  DirList := TMUIDirList.create;
   with DirList do
   begin
-    Directory := 'SYS:';
-    Parent := self;
-  end;}
+    Directory := 'Sys:';
+  end;
+
+  with TMUIListView.Create do
+  begin
+    List := DirList;
+    Parent := Self;
+    MultiSelect := MUIV_Listview_MultiSelect_Default;
+    OnDoubleClick := @ListClickEvent;
+  end;
 end;
 
 procedure TMyWindow.ShowEvent(Sender: TObject);
@@ -251,6 +260,7 @@ begin
   //Bubble := Txt.CreateBubble(NBtn.RightEdge, NBtn.BottomEdge, 'Here we are', 0);
   //Prop.Decrease(2);
   //DirList.Sort;
+  //DirList.Directory := 'RAM:';
 end;
 
 procedure TMyWindow.Btn2Click(Sender: TObject);
@@ -264,7 +274,8 @@ begin
     Txt.DeleteBubble(Bubble);
   Bubble := nil;
   //Prop.Increase(2);
-  MyList.Sort;
+  //MyList.Sort;
+  //DirList.Directory := 'SYS:';
 end;
 
 procedure TMyWindow.NewBtnClick(Sender: TObject);
@@ -396,7 +407,7 @@ end;
 
 procedure TMyWindow.ListClickEvent(Sender: TObject);
 begin
-  writeln('List Clicked ' + IntToStr(MyList.Active));
+  writeln('List Clicked ' + IntToStr(TMUIListView(Sender).List.Active));
 end;
 
 procedure TMyWindow.FinishedReading(Sender: TObject);
