@@ -182,13 +182,16 @@ type
     procedure SetRejectIcons(AValue: Boolean);
     procedure SetRejectPattern(AValue: string);
     procedure SetSortDirs(AValue: Integer);
+    function GetStatus: Integer;
   protected
     procedure GetCreateTags(var ATagList: TATagList); override;
     procedure AfterCreateObject; override;
   public
     constructor Create; override;
     procedure CreateObject; override;
-
+    // Methods
+    procedure ReRead;
+    // Fields
     property AcceptPattern: string read FAcceptPattern write SetAcceptPattern;
     property Directory: string read FDirectory write SetDirectory;
     property DrawersOnly: Boolean read FDrawersOnly write SetDrawersOnly;
@@ -205,6 +208,7 @@ type
     property SortDirs: Integer read FSortDirs write SetSortDirs;
     property OnStatusValid: TNotifyEvent read FOnStatusValid write FOnStatusValid;
     property OnStatusInvalid: TNotifyEvent read FOnStatusInvalid write FOnStatusInvalid;
+    property Status: Integer read GetStatus;
   end;
 
 implementation
@@ -1035,6 +1039,19 @@ begin
     if HasObj then
       SetValue(MUIA_DirList_SortDirs, AsTag(FSortDirs));
   end;
+end;
+
+function TMUIDirList.GetStatus: Integer;
+begin
+  Result := MUIV_Dirlist_Status_Invalid;
+  if HasObj then
+    Result := GetIntValue(MUIA_DirList_Status);
+end;
+
+procedure TMUIDirList.ReRead;
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_DirList_ReRead]);
 end;
 
 

@@ -513,8 +513,6 @@ begin
 end;
 
 procedure TMUIScrollbar.DoFirstOpen;
-var
-  i: Integer;
 begin
   inherited;
   if FFirstOpen then
