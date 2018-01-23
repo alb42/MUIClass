@@ -53,7 +53,7 @@ type
     procedure CreateObject; virtual; abstract;
     procedure DestroyObject; virtual;
 
-    property MUIObj: PObject_ read FMUIObj;
+    property MUIObj: PObject_ read FMUIObj write FMUIObj;
     property HasObj: Boolean read GetHasObj;
   end;
 

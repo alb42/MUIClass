@@ -18,7 +18,7 @@ type
     FRevLeftRight: Boolean;
     FRevUpDown: Boolean;
     FValue: Integer;
-    FOnChange: TNotifyEvent;
+    FOnValueChange: TNotifyEvent;
     procedure SetCheckAllSizes(AValue: Boolean);
     procedure SetDefault(AValue: Integer);
     procedure SetFormat(AValue: string);
@@ -52,7 +52,7 @@ type
     property RevLeftRight: Boolean read FRevLeftRight write SetRevLeftRight;
     property RevUpDown: Boolean read FRevUpDown write SetRevUpDown;
     property Value: Integer read GetValue write SetValue;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnValueChange: TNotifyEvent read FOnValueChange write FOnValueChange;
   end;
 
   TMUIKnop = class(TMUINumeric)
@@ -149,8 +149,8 @@ var
 begin
   Result := 0;
   PasObj := TMUINumeric(Hook^.h_Data);
-  if Assigned(PasObj.FOnChange) then
-    PasObj.FOnChange(PasObj);
+  if Assigned(PasObj.FOnValueChange) then
+    PasObj.FOnValueChange(PasObj);
 end;
 
 procedure TMUINumeric.AfterCreateObject;

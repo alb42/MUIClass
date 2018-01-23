@@ -72,7 +72,7 @@ type
   private
     FEntries: Integer;
     FFirst: Integer;
-    FOnChange: TNotifyEvent;
+    FOnFirstChange: TNotifyEvent;
     FHoriz: Boolean;
     FVisible: Integer;
     FUseWinBorder: Integer;
@@ -95,7 +95,7 @@ type
     property Entries: Integer read FEntries write SetEntries;
     property First: Integer read GetFirst write SetFirst;
     property Horiz: Boolean read FHoriz write SetHoriz;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnFirstChange: TNotifyEvent read FOnFirstChange write FOnFirstChange;
     property UseWinBorder: Integer read FUseWinBorder write SetUseWinBorder;
     property Visible: Integer read FVisible write SetVisible;                 // MUIV_Prop_UseWinBorder_*
   end;
@@ -393,8 +393,8 @@ var
 begin
   Result := 0;
   PasObj := TMUIProp(Hook^.h_Data);
-  if Assigned(PasObj.FOnChange) then
-    PasObj.FOnChange(PasObj);
+  if Assigned(PasObj.FOnFirstChange) then
+    PasObj.FOnFirstChange(PasObj);
 end;
 
 procedure TMUIProp.AfterCreateObject;

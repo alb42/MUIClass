@@ -282,7 +282,7 @@ type
   TMUIPenDisplay = class(TMUIArea)
   private
     FSpec: PMUI_PenSpec;
-    FOnChange: TNotifyEvent;
+    FOnSpecChange: TNotifyEvent;
     function GetPen: LongWord;
     procedure SetSpec(AValue: PMUI_PenSpec);
     function GetSpec: PMUI_PenSpec;
@@ -301,7 +301,7 @@ type
     property Pen: LongWord read GetPen;
     // Reference? what it does?
     property Spec: PMUI_PenSpec read GetSpec write SetSpec;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnSpecChange: TNotifyEvent read FOnSpecChange write FOnSpecChange;
   end;
 
   TMUIPopPen = class(TMUIPenDisplay)
@@ -1453,8 +1453,8 @@ var
 begin
   Result := 0;
   PasObj := TMUIPenDisplay(Hook^.h_Data);
-  if Assigned(PasObj.FOnChange) then
-    PasObj.FOnChange(PasObj);
+  if Assigned(PasObj.FOnSpecChange) then
+    PasObj.FOnSpecChange(PasObj);
 end;
 
 procedure TMUIPenDisplay.AfterCreateObject;

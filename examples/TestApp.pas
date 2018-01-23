@@ -21,6 +21,9 @@ type
     Gauge: TMUIGauge;
     MyList: TMUIList;
     DirList: TMUIDirList;
+    Pages: TMUIRegister;
+    Colors: array[0..10] of TMUI_Palette_Entry;
+    Names: array[0..10] of string;
     // Events
     procedure ShowEvent(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
@@ -36,6 +39,10 @@ type
     procedure PropChanged(Sender: TObject);
     procedure NumChanged(Sender: TObject);
     procedure ColChanged(Sender: TObject);
+    procedure PageChange(Sender: TObject);
+    procedure RadioChange(Sender: TObject);
+    procedure CycleChange(Sender: TObject);
+    procedure ColorChange(Sender: TObject);
 
     function ConstructEvent(Sender: TObject; Pool: Pointer; Str: PChar): PChar;
     procedure DestructEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
@@ -60,6 +67,7 @@ var
   Men: TMUIMenu;
   Pnl: TMUIGroup;
   MM: TMUIMenuStrip;
+  i: Integer;
 begin
   inherited;
   OnShow := @ShowEvent;
@@ -103,13 +111,13 @@ begin
 
   with TMUINumericButton.Create do
   begin
-    OnChange := @NumChanged;
+    OnValueChange := @NumChanged;
     Parent := Pnl;
   end;
 
   with TMUIPopPen.Create do
   begin
-    OnChange := @ColChanged;
+    OnSpecChange := @ColChanged;
     Parent := Pnl;
   end;
 
@@ -172,7 +180,7 @@ begin
     Visible := 10;
     Entries := 110;
     First := 50;
-    OnChange := @PropChanged;
+    OnFirstChange := @PropChanged;
     Parent:= Self;
   end;
 
@@ -219,6 +227,22 @@ begin
     OnTrigger := @QuitMe;
   end;
 
+  with TMUICycle.Create do
+  begin
+    Entries := ['Cycle', 'with', 'some', 'fancy', 'Entries'];
+    Active := 0;
+    Parent := self;
+    OnActiveChange := @CycleChange;
+  end;
+
+  Pages := TMUIRegister.Create;
+  with Pages do
+  begin
+    Titles := ['List', 'DirList', 'Radio', 'Palette'];
+    OnPageChange := @PageChange;
+    Parent := Self;
+  end;
+
   MyList := TMUIList.Create;
   with MyList do
   begin
@@ -229,13 +253,12 @@ begin
     OnCompare := @CompareEvent;
     OnMultiTest := @MultiTestEvent;
     //OnChange := @ListClickEvent;
-    //Parent := Self;
   end;
 
   with TMUIListView.Create do
   begin
     List := MyList;
-    Parent := Self;
+    Parent := Pages;
     MultiSelect := MUIV_Listview_MultiSelect_Default;
     OnDoubleClick := @ListClickEvent;
   end;
@@ -249,9 +272,37 @@ begin
   with TMUIListView.Create do
   begin
     List := DirList;
-    Parent := Self;
+    Parent := Pages;
     MultiSelect := MUIV_Listview_MultiSelect_Default;
     OnDoubleClick := @ListClickEvent;
+  end;
+
+  with TMUIRadio.Create do
+  begin
+    Entries := ['Some', 'Radio', 'Items', 'To', 'select'];
+    Active := 2;
+    OnActiveChange := @RadioChange;
+    Parent := Pages;
+  end;
+  //
+  for i := 0 to High(Colors) - 1 do
+  begin
+    with Colors[i] do
+    begin
+      mpe_ID := i;
+      mpe_Red := ColComToMUI(Random(255));
+      mpe_Green := ColComToMUI(Random(255));
+      mpe_Blue := ColComToMUI(Random(255));
+      mpe_Group := i div 3;
+    end;
+    Names[i] := 'Color' + IntToStr(i);
+  end;
+  Colors[High(Colors)].mpe_ID := MUIV_Palette_Entry_End;
+  with TMUIPalette.Create do
+  begin
+    Entries := @Colors[0];
+    Names := Self.Names;
+    Parent := Pages;
   end;
 end;
 
@@ -273,9 +324,8 @@ begin
   if Assigned(Bubble) then
     Txt.DeleteBubble(Bubble);
   //Bubble := Txt.CreateBubble(NBtn.RightEdge, NBtn.BottomEdge, 'Here we are', 0);
-  //Prop.Decrease(2);
-  //DirList.Sort;
-  //DirList.Directory := 'RAM:';
+  Prop.Decrease(2);
+  DirList.Sort;
 end;
 
 procedure TMyWindow.Btn2Click(Sender: TObject);
@@ -288,9 +338,8 @@ begin
   if Assigned(Bubble) then
     Txt.DeleteBubble(Bubble);
   Bubble := nil;
-  //Prop.Increase(2);
-  //MyList.Sort;
-  //DirList.Directory := 'SYS:';
+  Prop.Increase(2);
+  MyList.Sort;
 end;
 
 procedure TMyWindow.NewBtnClick(Sender: TObject);
@@ -309,6 +358,14 @@ begin
   With TMUIButton.Create do
   begin
     Contents := 'This is Window number ' + IntToStr(Count);
+    Parent := W2;
+  end;
+  with TMUIColorAdjust.Create do
+  begin
+    Red := ColComToMUI(Random(255));
+    Green := ColComToMUI(Random(255));
+    Blue := ColComToMUI(Random(255));
+    OnColorChange := @ColorChange;
     Parent := W2;
   end;
   W2.Show;
@@ -447,8 +504,38 @@ end;
 procedure TMyWindow.ColChanged(Sender: TObject);
 begin
   if Sender is TMUIPenDisplay then
+    writeln('Pen changed to "', PChar(@TMUIPenDisplay(Sender).Spec^),'"');
+end;
+
+procedure TMyWindow.PageChange(Sender: TObject);
+begin
+  writeln('Page changed to Page Idx ', Pages.ActivePage,' with title "', Pages.Titles[Pages.ActivePage], '"');
+end;
+
+procedure TMyWindow.RadioChange(Sender: TObject);
+begin
+  if Sender is TMUIRadio then
+    writeln('Radio changed to Idx ', TMUIRadio(Sender).Active,' with title "', TMUIRadio(Sender).Entries[TMUIRadio(Sender).Active], '"');
+end;
+
+procedure TMyWindow.CycleChange(Sender: TObject);
+begin
+  if Sender is TMUICycle then
+    writeln('Cycle changed to Idx ', TMUICycle(Sender).Active,' with title "', TMUICycle(Sender).Entries[TMUICycle(Sender).Active], '"');
+end;
+
+procedure TMyWindow.ColorChange(Sender: TObject);
+var
+  Col: TMUIColorAdjust;
+  Win: string;
+begin
+  if Sender is TMUIColorAdjust then
   begin
-    writeln('Pen changed to "', TMUIPenDisplay(Sender).Spec^.ps_Buf,'"');
+    Col := TMUIColorAdjust(Sender);
+    Win := 'unknown';
+    if Assigned(Col.Parent) and (Col.Parent is TMUIWindow) then
+      Win := TMUIWindow(Col.Parent).Title;
+    writeln('Color in Window: "',Win,'" changed to $', IntToHex(MUIToColComp(Col.Red),2),' ',IntToHex(MUIToColComp(Col.Green),2),' ',IntToHex(MUIToColComp(Col.Blue),2) )
   end;
 end;
 

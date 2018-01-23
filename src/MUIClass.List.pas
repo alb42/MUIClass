@@ -48,7 +48,7 @@ type
     FOnConstruct: TConstructEvent;
     FOnDestruct: TDestructEvent;
     FOnMultiTest: TMultiTestEvent;
-    FOnChange: TNotifyEvent;
+    FOnActiveChange: TNotifyEvent;
 
     function GetActive: Integer;
     procedure SetActive(AValue: Integer);
@@ -101,7 +101,7 @@ type
     function TestPos(x, y: Integer): TMUI_List_TestPos_Result;
     // Fields
     property Active: Integer read GetActive write SetActive;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property OnActiveChange: TNotifyEvent read FOnActiveChange write FOnActiveChange;
     property AdjustHeight: Boolean read FAdjustHeight write SetAdjustHeight;
     property AdjustWidth: Boolean read FAdjustWidth write SetAdjustWidth;
     property AutoVisible: Boolean read FAutoVisible write SetAutoVisible;
@@ -319,8 +319,8 @@ var
 begin
   Result := 0;
   PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnChange) then
-    PasObj.FOnChange(PasObj);
+  if Assigned(PasObj.FOnActiveChange) then
+    PasObj.FOnActiveChange(PasObj);
 end;
 
 procedure TMUIList.AfterCreateObject;
