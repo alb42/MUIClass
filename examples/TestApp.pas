@@ -5,7 +5,8 @@ uses
   SysUtils,
   Exec, Amigados, mui, muihelper, utility, intuition,
   MUIClass.Group, MUIClass.Area, MUIClass.Base,
-  MUIClass.Menu, MUIClass.Window, MUIClass.Gadget, MUIClass.List;
+  MUIClass.Menu, MUIClass.Window, MUIClass.Gadget, MUIClass.List,
+  MUIClass.Numeric;
 
 
 type
@@ -33,6 +34,8 @@ type
     procedure DynWindowsClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure EditAck(Sender: TObject);
     procedure PropChanged(Sender: TObject);
+    procedure NumChanged(Sender: TObject);
+    procedure ColChanged(Sender: TObject);
 
     function ConstructEvent(Sender: TObject; Pool: Pointer; Str: PChar): PChar;
     procedure DestructEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
@@ -95,6 +98,18 @@ begin
     Contents := 'Test2';
     OnClick := @Btn2Click;
     ShortHelp := 'And another Button. :-O';
+    Parent := Pnl;
+  end;
+
+  with TMUINumericButton.Create do
+  begin
+    OnChange := @NumChanged;
+    Parent := Pnl;
+  end;
+
+  with TMUIPopPen.Create do
+  begin
+    OnChange := @ColChanged;
     Parent := Pnl;
   end;
 
@@ -417,6 +432,23 @@ begin
   begin
     writeln('go sort');
     TMUIDirList(Sender).Sort;
+  end;
+end;
+
+procedure TMyWindow.NumChanged(Sender: TObject);
+begin
+  if Sender is TMUINumeric then
+  begin
+    writeln('Numeric Changed to ', TMUINumeric(Sender).Value);
+    Gauge.Current := TMUINumeric(Sender).Value;
+  end;
+end;
+
+procedure TMyWindow.ColChanged(Sender: TObject);
+begin
+  if Sender is TMUIPenDisplay then
+  begin
+    writeln('Pen changed to "', TMUIPenDisplay(Sender).Spec^.ps_Buf,'"');
   end;
 end;
 

@@ -279,6 +279,35 @@ type
     property SetVMax: Boolean read FSetVMax write SetSetVMax;
   end;
 
+  TMUIPenDisplay = class(TMUIArea)
+  private
+    FSpec: PMUI_PenSpec;
+    FOnChange: TNotifyEvent;
+    function GetPen: LongWord;
+    procedure SetSpec(AValue: PMUI_PenSpec);
+    function GetSpec: PMUI_PenSpec;
+  protected
+    procedure GetCreateTags(var ATagList: TATagList); override;
+    procedure AfterCreateObject; override;
+  public
+    constructor Create; override;
+    procedure CreateObject; override;
+    // Methods
+    procedure SetColormap(ColorMap: Integer);
+    procedure SetMUIPen(MUIPen: Integer);
+    procedure SetRGB(Red, Green, Blue: LongWord);
+    procedure SetRGB8(Red, Green, Blue: Byte);
+    // Fields
+    property Pen: LongWord read GetPen;
+    // Reference? what it does?
+    property Spec: PMUI_PenSpec read GetSpec write SetSpec;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+  end;
+
+  TMUIPopPen = class(TMUIPenDisplay)
+  public
+    procedure CreateObject; override;
+  end;
 
   TMUIButton = class(TMUIText)
   public
@@ -306,7 +335,22 @@ type
     property IsSet: Boolean read FIsSet;
   end;
 
+
+
+  function ColComToMUI(c: Byte): LongWord; inline;
+  function MUIToColComp(c: LongWord): Byte; inline;
+
 implementation
+
+function ColComToMUI(c: Byte): LongWord; inline;
+begin
+  Result := c shl 24 or c shl 16 or c shl 8 or c;
+end;
+
+function MUIToColComp(c: LongWord): Byte; inline;
+begin
+  Result := (c shr 24) and $FF;
+end;
 
 { TMUIArea }
 
@@ -1374,6 +1418,115 @@ begin
       FSetVMax := AValue;
   end;
 end;
+
+{ TMUIPenDisplay }
+
+constructor TMUIPenDisplay.Create;
+begin
+  inherited;
+  FSpec := nil;
+end;
+
+procedure TMUIPenDisplay.GetCreateTags(var ATagList: TATagList);
+begin
+  inherited;
+  if Assigned(FSpec) then
+    ATagList.AddTag(MUIA_PenDisplay_Spec, AsTag(FSpec));
+end;
+
+procedure TMUIPenDisplay.CreateObject;
+var
+  TagList: TATagList;
+begin
+  if not Assigned(FMUIObj) then
+  begin
+    BeforeCreateObject;
+    GetCreateTags(TagList);
+    FMUIObj := MUI_NewObjectA(MUIC_PenDisplay, TagList.GetTagPointer);
+    AfterCreateObject
+  end;
+end;
+
+function SpecFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PasObj: TMUIPenDisplay;
+begin
+  Result := 0;
+  PasObj := TMUIPenDisplay(Hook^.h_Data);
+  if Assigned(PasObj.FOnChange) then
+    PasObj.FOnChange(PasObj);
+end;
+
+procedure TMUIPenDisplay.AfterCreateObject;
+begin
+  inherited;
+  // Connect Events
+  ConnectHook(MUIA_PenDisplay_Spec, MUIV_EveryTime, @SpecFunc);
+end;
+
+function TMUIPenDisplay.GetPen: LongWord;
+begin
+  Result := 0;
+  if HasObj then
+    Result := GetIntValue(MUIA_PenDisplay_Pen);
+end;
+
+function TMUIPenDisplay.GetSpec: PMUI_PenSpec;
+begin
+  Result := nil;
+  if HasObj then
+    Result := GetPointerValue(MUIA_Pendisplay_Spec);
+end;
+
+procedure TMUIPenDisplay.SetSpec(AValue: PMUI_PenSpec);
+begin
+  if AValue <> FSpec then
+  begin
+    FSpec := AValue;
+    if HasObj then
+      SetValue(MUIA_Pendisplay_Spec, AsTag(FSpec));
+  end;
+end;
+
+procedure TMUIPenDisplay.SetColormap(ColorMap: Integer);
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Pendisplay_SetColormap, Colormap]);
+end;
+
+procedure TMUIPenDisplay.SetMUIPen(MUIPen: Integer);
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Pendisplay_SetMUIPen, MUIPen]);
+end;
+
+procedure TMUIPenDisplay.SetRGB(Red, Green, Blue: LongWord);
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Pendisplay_SetRGB, Red, Green, Blue]);
+end;
+
+procedure TMUIPenDisplay.SetRGB8(Red, Green, Blue: Byte);
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Pendisplay_SetRGB, ColComToMUI(Red), ColComToMUI(Green), ColComToMUI(Blue)]);
+end;
+
+{ TMUIPopPen }
+
+procedure TMUIPopPen.CreateObject;
+var
+  TagList: TATagList;
+begin
+  if not Assigned(FMUIObj) then
+  begin
+    BeforeCreateObject;
+    GetCreateTags(TagList);
+    FMUIObj := MUI_NewObjectA(MUIC_PopPen, TagList.GetTagPointer);
+    AfterCreateObject
+  end;
+end;
+
 
 { TMUIButton }
 
