@@ -6,7 +6,7 @@ uses
   Exec, Amigados, mui, muihelper, utility, intuition,
   MUIClass.Group, MUIClass.Area, MUIClass.Base,
   MUIClass.Menu, MUIClass.Window, MUIClass.Gadget, MUIClass.List,
-  MUIClass.Numeric;
+  MUIClass.Numeric, MUIClass.PopString;
 
 
 type
@@ -24,6 +24,7 @@ type
     Pages: TMUIRegister;
     Colors: array[0..10] of TMUI_Palette_Entry;
     Names: array[0..10] of string;
+    Pop: TMUIPopList;
     // Events
     procedure ShowEvent(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
@@ -43,6 +44,7 @@ type
     procedure RadioChange(Sender: TObject);
     procedure CycleChange(Sender: TObject);
     procedure ColorChange(Sender: TObject);
+    procedure PopCloseChange(Sender: TObject; Success:Boolean);
 
     function ConstructEvent(Sender: TObject; Pool: Pointer; Str: PChar): PChar;
     procedure DestructEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
@@ -234,6 +236,16 @@ begin
     Parent := self;
     OnActiveChange := @CycleChange;
   end;
+  Pop := TMUIPopList.Create;
+  with Pop do
+  begin
+    LArray := ['hello', 'Hello2', 'Hello3'];
+    StringObj := TMUIString.Create;
+    Button := TMUIButton.Create;
+    Button.FixWidth := 20;
+    TMUIButton(Button).Contents := 'V';
+    Parent := self;
+  end;
 
   Pages := TMUIRegister.Create;
   with Pages do
@@ -326,6 +338,7 @@ begin
   //Bubble := Txt.CreateBubble(NBtn.RightEdge, NBtn.BottomEdge, 'Here we are', 0);
   Prop.Decrease(2);
   DirList.Sort;
+  Pop.OnClose := @PopCloseChange;
 end;
 
 procedure TMyWindow.Btn2Click(Sender: TObject);
@@ -340,6 +353,7 @@ begin
   Bubble := nil;
   Prop.Increase(2);
   MyList.Sort;
+  Pop.Close(0);
 end;
 
 procedure TMyWindow.NewBtnClick(Sender: TObject);
@@ -537,6 +551,11 @@ begin
       Win := TMUIWindow(Col.Parent).Title;
     writeln('Color in Window: "',Win,'" changed to $', IntToHex(MUIToColComp(Col.Red),2),' ',IntToHex(MUIToColComp(Col.Green),2),' ',IntToHex(MUIToColComp(Col.Blue),2) )
   end;
+end;
+
+procedure TMyWindow.PopCloseChange(Sender: TObject; Success:Boolean);
+begin
+  writeln('Popupclose ', Success);
 end;
 
 procedure Startup;
