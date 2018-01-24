@@ -23,9 +23,9 @@ type
 
   TMUIRootClass = class
   private
-    HookList: THookList;
     function GetHasObj: Boolean;
   protected
+    HookList: THookList;
     FFirstOpen: Boolean;
     FMUIObj: PObject_;
     procedure GetCreateTags(var ATagList: TATagList); virtual;
@@ -208,6 +208,37 @@ type
     property Childs;
   end;
 
+  TMUISemaphore = class(TMUINotify)
+  public
+    procedure CreateObject; override;
+    // Methods
+    function Attempt: Boolean;
+    function AtteptShared: Boolean;
+    procedure Obtain;
+    procedure ObtainShared;
+    procedure Release;
+  end;
+
+  TMUIDataspace = class(TMUISemaphore)
+  private
+    FPool: Pointer;
+    procedure SetPool(AValue: Pointer);
+  protected
+    procedure GetCreateTags(var ATagList: TATagList); override;
+  public
+    constructor Create; override;
+    procedure CreateObject; override;
+    // Method
+    function Add(Data: Pointer; Len: Integer; Id: LongWord): Boolean;
+    procedure Clear;
+    function Find(Id: LongWord): Pointer;
+    function Merge(DS: TMUIDataSpace): Integer;
+    function ReadIFF(IFFHandle: Pointer): Integer;
+    function WriteIFF(IFFHandle: Pointer): Integer;
+    function Remove(Id: LongWord): Boolean;
+    //Field
+    property Pool: Pointer read FPool write SetPool;
+  end;
 
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 
@@ -1042,6 +1073,141 @@ begin
       ATagList.AddTag(MUIA_Family_Child, AsTag(Childs[i].MUIObj));
   end;
 end;
+
+{ TMUIFamily }
+
+procedure TMUISemaphore.CreateObject;
+var
+  TagList: TATagList;
+begin
+  if not Assigned(FMUIObj) then
+  begin
+    BeforeCreateObject;
+    GetCreateTags(TagList);
+    FMUIObj := MUI_NewObjectA(MUIC_Semaphore, TagList.GetTagPointer);
+    AfterCreateObject;
+  end;
+end;
+
+function TMUISemaphore.Attempt: Boolean;
+begin
+  if HasObj then
+    Result := Boolean(DoMethod(MUIObj, [MUIM_Semaphore_Attempt]));
+end;
+
+function TMUISemaphore.AtteptShared: Boolean;
+begin
+  if HasObj then
+    Result := Boolean(DoMethod(MUIObj, [MUIM_Semaphore_AttemptShared]));
+end;
+
+procedure TMUISemaphore.Obtain;
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Semaphore_Obtain]);
+end;
+
+procedure TMUISemaphore.ObtainShared;
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Semaphore_ObtainShared]);
+end;
+
+procedure TMUISemaphore.Release;
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Semaphore_Release]);
+end;
+
+{ TMUIDataspace }
+
+constructor TMUIDataspace.Create;
+begin
+  inherited;
+  FPool := nil;
+end;
+
+procedure TMUIDataspace.GetCreateTags(var ATagList: TATagList);
+begin
+  inherited;
+  if Assigned(FPool) then
+    ATagList.AddTag(MUIA_Dataspace_Pool, AsTag(FPool));
+end;
+
+procedure TMUIDataspace.CreateObject;
+var
+  TagList: TATagList;
+begin
+  if not Assigned(FMUIObj) then
+  begin
+    BeforeCreateObject;
+    GetCreateTags(TagList);
+    FMUIObj := MUI_NewObjectA(MUIC_Dataspace, TagList.GetTagPointer);
+    AfterCreateObject
+  end;
+end;
+
+procedure TMUIDataspace.SetPool(AValue: Pointer);
+begin
+  if AValue <> FPool then
+  begin
+    if Assigned(FMUIObj) then
+      ComplainIOnly(Self, 'MUIA_Dataspace_Pool', HexStr(AValue))
+    else
+      FPool := AValue;
+  end;
+end;
+
+function TMUIDataspace.Add(Data: Pointer; Len: Integer; Id: LongWord): Boolean;
+begin
+  Result := False;
+  if HasObj then
+    Result := Boolean(DoMethod(MUIObj, [MUIM_Dataspace_Add, AsTag(Data), AsTag(Len), AsTag(Id)]));
+end;
+
+procedure TMUIDataspace.Clear;
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_Dataspace_Clear]);
+end;
+
+function TMUIDataspace.Find(Id: LongWord): Pointer;
+begin
+  Result := nil;
+  if HasObj then
+    Result := Pointer(DoMethod(MUIObj, [MUIM_Dataspace_Find, AsTag(Id)]));
+end;
+
+function TMUIDataspace.Merge(DS: TMUIDataSpace): Integer;
+begin
+  Result := 0;
+  if HasObj and DS.HasObj then
+    Result := DoMethod(MUIObj, [MUIM_Dataspace_Add, AsTag(DS.MUIObj)]);
+end;
+
+function TMUIDataspace.ReadIFF(IFFHandle: Pointer): Integer;
+begin
+  Result := -1;
+  if HasObj then
+    Result := DoMethod(MUIObj, [MUIM_Dataspace_ReadIFF, AsTag(IFFHandle)]);
+end;
+
+function TMUIDataspace.WriteIFF(IFFHandle: Pointer): Integer;
+begin
+  Result := -1;
+  if HasObj then
+    Result := DoMethod(MUIObj, [MUIM_Dataspace_WriteIFF, AsTag(IFFHandle)]);
+end;
+
+function TMUIDataspace.Remove(Id: LongWord): Boolean;
+begin
+  Result := False;
+  if HasObj then
+    Result := Boolean(DoMethod(MUIObj, [MUIM_Dataspace_Remove, AsTag(Id)]));
+end;
+
+
+
 
 
 initialization
