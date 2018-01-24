@@ -208,7 +208,7 @@ type
     property Childs;
   end;
 
-  TMUISemaphore = class(TMUINotify)
+  TMUISemaphore = class(TMUIWithParent)
   public
     procedure CreateObject; override;
     // Methods

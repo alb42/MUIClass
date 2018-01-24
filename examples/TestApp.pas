@@ -2,11 +2,11 @@ program TestApp;
 {$mode objfpc}{$H+}
 
 uses
-  SysUtils,
-  Exec, Amigados, mui, muihelper, utility, intuition,
+  SysUtils, Classes,
+  Exec, Amigados, mui, muihelper, utility, intuition, AGraphics,
   MUIClass.Group, MUIClass.Area, MUIClass.Base,
   MUIClass.Menu, MUIClass.Window, MUIClass.Gadget, MUIClass.List,
-  MUIClass.Numeric, MUIClass.PopString;
+  MUIClass.Numeric, MUIClass.PopString, MUIClass.DrawPanel;
 
 
 type
@@ -25,6 +25,10 @@ type
     Colors: array[0..10] of TMUI_Palette_Entry;
     Names: array[0..10] of string;
     Pop: TMUIPopList;
+    DB: TDrawBuffer;
+    Down: Boolean;
+    Pen: Integer;
+    Spec: TMUI_PenSpec;
     // Events
     procedure ShowEvent(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
@@ -45,6 +49,10 @@ type
     procedure CycleChange(Sender: TObject);
     procedure ColorChange(Sender: TObject);
     procedure PopCloseChange(Sender: TObject; Success:Boolean);
+    procedure DrawEvent(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
+    procedure MouseDown(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
+    procedure MouseUp(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
+    procedure MouseMove(Sender: TObject; X,Y: Integer; var EatEvent: Boolean);
 
     function ConstructEvent(Sender: TObject; Pool: Pointer; Str: PChar): PChar;
     procedure DestructEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
@@ -60,6 +68,7 @@ type
     procedure AppRestore(Sender: TObject);
   public
     constructor Create; override;
+    destructor Destroy; override;
   end;
 
 
@@ -250,7 +259,7 @@ begin
   Pages := TMUIRegister.Create;
   with Pages do
   begin
-    Titles := ['List', 'DirList', 'Radio', 'Palette'];
+    Titles := ['List', 'DirList', 'Radio', 'Palette', 'DrawPanel'];
     OnPageChange := @PageChange;
     Parent := Self;
   end;
@@ -316,6 +325,28 @@ begin
     Names := Self.Names;
     Parent := Pages;
   end;
+
+  with TMUIDrawPanel.Create do
+  begin
+    MinHeight := 256;
+    MinWidth := 256;
+    DefHeight := 256;
+    DefWidth := 256;
+    OnDrawObject := @DrawEvent;
+    OnMUIMouseDown := @MouseDown;
+    OnMUIMouseUp := @MouseUp;
+    OnMUIMouseMove := @MouseMove;
+    Parent := Pages;
+  end;
+  DB := nil;
+  Down := False;
+  Pen := -1;
+end;
+
+destructor TMyWindow.Destroy;
+begin
+  DB.Free;
+  inherited;
 end;
 
 procedure TMyWindow.ShowEvent(Sender: TObject);
@@ -518,7 +549,10 @@ end;
 procedure TMyWindow.ColChanged(Sender: TObject);
 begin
   if Sender is TMUIPenDisplay then
+  begin
+    Move(TMUIPenDisplay(Sender).Spec^, Spec, SizeOf(Spec));
     writeln('Pen changed to "', PChar(@TMUIPenDisplay(Sender).Spec^),'"');
+  end;
 end;
 
 procedure TMyWindow.PageChange(Sender: TObject);
@@ -556,6 +590,66 @@ end;
 procedure TMyWindow.PopCloseChange(Sender: TObject; Success:Boolean);
 begin
   writeln('Popupclose ', Success);
+end;
+
+// we Draw a little bit
+procedure TMyWindow.DrawEvent(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
+begin
+  //SetBPen(RP, 0);
+  //SetAPen(RP, 0);
+  //RectFill(RP, DrawRect.Left, DrawRect.Top, DrawRect.Left + DrawRect.Width, DrawRect.Top + DrawRect.Height);
+  // now you can draw to RastPort into the DrawRect
+  if not Assigned(DB) then
+  begin
+    writeln('do it');
+    DB := TDrawBuffer.Create(256, 256, RP^.Bitmap^.Depth, RP^.Bitmap);
+    SetBPen(DB.RP, 2);
+    SetAPen(DB.RP, 2);
+    RectFill(DB.RP, 0, 0, 256, 256);
+    SetAPen(DB.RP, 1);
+  end;
+  //SetAPen(RP, 1);
+  //GFXMove(RP, DrawRect.Left, DrawRect.Top);
+  //Draw(RP, DrawRect.Right, DrawRect.Bottom);
+  //GFXMove(RP, DrawRect.Right, DrawRect.Top);
+  //Draw(RP, DrawRect.Left, DrawRect.Bottom);
+  ClipBlit(DB.Rp, 0, 0, RP, DrawRect.Left, DrawRect.Top, DB.Width, DB.Height, $00C0);
+end;
+
+procedure TMyWindow.MouseDown(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
+begin
+  EatEvent := False;
+  if MouseBtn = mmbLeft then
+  begin
+    writeln('Down ', x, y);
+    Pen := 1;
+    Pen := MUI_ObtainPen(MUIRenderInfo(TMUIDrawPanel(Sender).MuiObj), @Spec, 0);
+    SetAPen(DB.RP, Pen);
+    GFXMove(DB.RP, x, y);
+    Down := True;
+  end;
+end;
+
+procedure TMyWindow.MouseUp(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
+begin
+  EatEvent := False;
+  if MouseBtn = mmbLeft then
+  begin
+    if Pen >= 0 then
+      MUI_ReleasePen(MUIRenderInfo(TMUIDrawPanel(Sender).MuiObj), Pen);
+    Down := False;
+  end;
+end;
+
+procedure TMyWindow.MouseMove(Sender: TObject; X,Y: Integer; var EatEvent: Boolean);
+begin
+  EatEvent := False;
+  if Down then
+  begin
+    writeln('Move ', x, y);
+    Draw(DB.RP, x, y);
+    TMUIDrawPanel(Sender).RedrawObject;
+  end;
 end;
 
 procedure Startup;
