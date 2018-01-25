@@ -4,12 +4,12 @@ Wrapper to use Amiga MUI Objects with standard Pascal objects
 ## Units
 <table border=1>
 <tr><td>Unit Name</td><td>MUI Objects</td></tr>
-<tr><td>MUIClass.Base</td><td>RootClass, Notify, Application, Family, Semaphore, Dataspace</td></tr>
+<tr><td>MUIClass.Base</td><td>RootClass, Notify, Application, Family, Semaphore, Dataspace, HSpace, VSpace, HBar, VBar, BarTitle</td></tr>
 <tr><td>MUIClass.Area</td><td>Area, Rectangle, Balance, Gauge, Scale, Colorfield, Text, PenDisplay, PopPen, Button</td></tr>
 <tr><td>MUIClass.Group</td><td>Group, ListView, Register, Virtgroup, Scrollgroup, Radio, Cycle, Coloradjust, Palette</td></tr>
 <tr><td>MUIClass.Window</td><td>Window, AboutMUI</td></tr>
 <tr><td>MUIClass.Gadget</td><td>Gadget, String, Prop, Scrollbar</td></tr>
-<tr><td>MUIClass.Image</td><td>Image, Bitmap</td></tr>
+<tr><td>MUIClass.Image</td><td>Image, Bitmap, PopButton, Checkmark</td></tr>
 <tr><td>MUIClass.List</td><td>List, FloatText, VolumeList, DirList</td></tr>
 <tr><td>MUIClass.Popstring</td><td>Popstring, PopObject, PopList, PopASL</td></tr>
 <tr><td>MUIClass.Menu</td><td>Menustrip, Menu, Menuitem</td></tr>
@@ -53,7 +53,7 @@ type
   TMyWindow = class(TMUIWindow)
     procedure ButtonClick(Sender: TObject);
   end;
-  
+
 procedure TMyWindow.ButtonClick(Sender: TObject);
 begin
   Text.Contents := 'Clicked';

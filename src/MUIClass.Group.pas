@@ -1042,6 +1042,9 @@ constructor TMUICycle.Create;
 begin
   inherited;
   SetLength(FEntries, 0);
+  Frame := MUIV_Frame_Button;
+  Font := MUIV_Font_Button;
+  CycleChain := 1;
 end;
 
 procedure TMUICycle.GetCreateTags(var ATagList: TATagList);

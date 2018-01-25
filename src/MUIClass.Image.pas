@@ -78,6 +78,17 @@ type
     property Transparent: Integer read FTransparent write SetTransparent;
   end;
 
+  TMUIPopButton = class(TMUIImage)
+  public
+    constructor Create; override;
+    constructor Create(ASpec: PtrInt); virtual;
+  end;
+
+  TMUICheckmark = class(TMUIImage)
+  public
+    constructor Create; override;
+  end;
+
 implementation
 
 { TMUIImage }
@@ -116,7 +127,7 @@ begin
   if Assigned(FOldImage) then
     ATagList.AddTag(MUIA_Image_OldImage, AsTag(FOldImage));
   if FSpec.IsSet then
-    ATagList.AddTag(MUIA_Image_OldImage, AsTag(FSpec.Spec));
+    ATagList.AddTag(MUIA_Image_Spec, AsTag(FSpec.Spec));
 end;
 
 procedure TMUIImage.CreateObject;
@@ -344,6 +355,42 @@ begin
     if HasObj then
       SetValue(MUIA_Bitmap_Transparent, AsTag(FTransparent));
   end;
+end;
+
+{ TMUIPopButton }
+
+constructor TMUIPopButton.Create;
+begin
+  inherited;
+  Frame := MUIV_Frame_ImageButton;
+  Background.Spec := MUII_ButtonBack;
+  InputMode := MUIV_InputMode_RelVerify;
+  Spec.Spec := MUII_PopUp;
+  FreeVert := True;
+  FreeHoriz := False;
+end;
+
+constructor TMUIPopButton.Create(ASpec: PtrInt);
+begin
+  inherited Create;
+  Frame := MUIV_Frame_ImageButton;
+  Background.Spec := MUII_ButtonBack;
+  InputMode := MUIV_InputMode_RelVerify;
+  Spec.Spec := ASpec;
+  FreeVert := True;
+  FreeHoriz := False;
+end;
+
+constructor TMUICheckmark.Create;
+begin
+  inherited;
+  Frame := MUIV_Frame_ImageButton;
+  Background.Spec := MUII_ButtonBack;
+  Weight := 0;
+  Spec.Spec := MUII_CheckMark;
+  InputMode := MUIV_InputMode_Toggle;
+  FreeVert := True;
+  ShowSelState := False;
 end;
 
 end.

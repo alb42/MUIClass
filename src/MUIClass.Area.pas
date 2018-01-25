@@ -270,6 +270,7 @@ type
     procedure GetCreateTags(var ATagList: TATagList); override;
   public
     constructor Create; override;
+    constructor Create(AContents: string); virtual;
     procedure CreateObject; override;
     property Contents: string read FContents write SetContents;
     property HiChar: char read FHiChar write SetHiChar;
@@ -312,8 +313,38 @@ type
   TMUIButton = class(TMUIText)
   public
     constructor Create; override;
+    constructor Create(ATitle: string); override;
   end;
 
+  TMUIHSpace = class(TMUIRectangle)
+  public
+    constructor Create; override;
+    constructor Create(Space: Integer); virtual;
+  end;
+
+  TMUIVSpace = class(TMUIRectangle)
+  public
+    constructor Create; override;
+    constructor Create(Space: Integer); virtual;
+  end;
+
+  TMUIHBar = class(TMUIRectangle)
+  public
+    constructor Create; override;
+    constructor Create(Space: Integer); virtual;
+  end;
+
+  TMUIVBar = class(TMUIRectangle)
+  public
+    constructor Create; override;
+    constructor Create(Space: Integer); virtual;
+  end;
+
+  TMUIBarTitle = class(TMUIRectangle)
+  public
+    constructor Create; override;
+    constructor Create(ALabel: string); virtual;
+  end;
 
   TSpecDesc = class
   private
@@ -1324,6 +1355,18 @@ begin
   Frame := MUIV_Frame_Text;
 end;
 
+constructor TMUIText.Create(AContents: string);
+begin
+  inherited Create;
+  FContents := AContents;
+  FHiChar := #0;
+  FPreParse := '';
+  FSetMax := False;
+  FSetMax := False;
+  FSetVMax := True;
+  Frame := MUIV_Frame_Text;
+end;
+
 procedure TMUIText.GetCreateTags(var ATagList: TATagList);
 begin
   inherited;
@@ -1527,17 +1570,108 @@ begin
   end;
 end;
 
-
 { TMUIButton }
 
 constructor TMUIButton.Create;
 begin
-  inherited;
-  Background.Spec := MUII_ButtonBack;
-  PreParse := MUIX_C;
+  inherited Create;
   Frame := MUIV_Frame_Button;
+  Font := MUIV_Font_Button;
+  PreParse := MUIX_C;
   InputMode := MUIV_InputMode_RelVerify;
+  Background.Spec := MUII_ButtonBack;
+  CycleChain := 1;
 end;
+
+constructor TMUIButton.Create(ATitle: string);
+begin
+  inherited Create;
+  Frame := MUIV_Frame_Button;
+  Font := MUIV_Font_Button;
+  HiChar := '_';
+  PreParse := MUIX_C;
+  InputMode := MUIV_InputMode_RelVerify;
+  Background.Spec := MUII_ButtonBack;
+  CycleChain := 1;
+  Contents := ATitle;
+end;
+
+{ TMUIHSpace }
+
+constructor TMUIHSpace.Create;
+begin
+  inherited Create;
+  VertWeight := 0;
+end;
+
+constructor TMUIHSpace.Create(Space: Integer);
+begin
+  inherited Create;
+  VertWeight := 0;
+  FixWidth := Space;
+end;
+
+{ TMUIVSpace }
+
+constructor TMUIVSpace.Create;
+begin
+  inherited Create;
+  HorizWeight := 0;
+end;
+
+constructor TMUIVSpace.Create(Space: Integer);
+begin
+  inherited Create;
+  HorizWeight := 0;
+  FixHeight := Space;
+end;
+
+{ TMUIHBar }
+
+constructor TMUIHBar.Create;
+begin
+  inherited Create;
+  HBar := True;
+end;
+
+constructor TMUIHBar.Create(Space: Integer);
+begin
+  inherited Create;
+  HBar := True;
+  FixHeight := Space;
+end;
+
+{ TMUIVBar }
+
+constructor TMUIVBar.Create;
+begin
+  inherited Create;
+  VBar := True;
+end;
+
+constructor TMUIVBar.Create(Space: Integer);
+begin
+  inherited Create;
+  VBar := True;
+  FixWidth := Space;
+end;
+
+{ TMUIBarTitle }
+
+constructor TMUIBarTitle.Create;
+begin
+  inherited Create;
+
+end;
+
+constructor TMUIBarTitle.Create(ALabel: string);
+begin
+  inherited Create;
+  HBar := True;
+  BarTitle := ALabel;
+  FixHeight := 1;
+end;
+
 
 { TSpecDesc }
 

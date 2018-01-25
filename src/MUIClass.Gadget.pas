@@ -165,6 +165,7 @@ begin
   MaxLen := 0;
   FReject := '';
   FSecret := False;
+  //
   Frame := MUIV_Frame_String;
 end;
 

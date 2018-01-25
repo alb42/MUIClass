@@ -6,7 +6,7 @@ uses
   Exec, Amigados, mui, muihelper, utility, intuition, AGraphics,
   MUIClass.Group, MUIClass.Area, MUIClass.Base,
   MUIClass.Menu, MUIClass.Window, MUIClass.Gadget, MUIClass.List,
-  MUIClass.Numeric, MUIClass.PopString, MUIClass.DrawPanel;
+  MUIClass.Numeric, MUIClass.PopString, MUIClass.DrawPanel, MUIClass.Image;
 
 
 type
@@ -104,17 +104,15 @@ begin
   Pnl.Horiz := True;
   Pnl.Parent := Self;
 
-  with TMUIButton.Create do
+  with TMUIButton.Create('Test 1') do
   begin
-    Contents := 'Test1';
     OnClick := @Btn1Click;
     ShortHelp := 'This is a Button. ;-)';
     Parent := Pnl;
   end;
 
-  with TMUIButton.Create do
+  with TMUIButton.Create('Test 2') do
   begin
-    Contents := 'Test2';
     OnClick := @Btn2Click;
     ShortHelp := 'And another Button. :-O';
     Parent := Pnl;
@@ -155,12 +153,7 @@ begin
     Parent := Pnl;
   end;
 
-  with TMUIRectangle.Create do
-  begin
-    FixHeight := 8;
-    HBar := True;
-    Parent := Self;
-  end;
+  TMUIHBar.Create(11).Parent := Self;
 
   Txt := TMUIText.Create;
   With Txt do
@@ -245,14 +238,14 @@ begin
     Parent := self;
     OnActiveChange := @CycleChange;
   end;
+
   Pop := TMUIPopList.Create;
   with Pop do
   begin
     LArray := ['hello', 'Hello2', 'Hello3'];
     StringObj := TMUIString.Create;
-    Button := TMUIButton.Create;
-    Button.FixWidth := 20;
-    TMUIButton(Button).Contents := 'V';
+    Button := TMUIPopButton.Create;
+    //Button.FixWidth := 20;
     Parent := self;
   end;
 
