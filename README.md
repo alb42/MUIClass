@@ -14,11 +14,11 @@ Wrapper to use Amiga MUI Objects with standard Pascal objects
 <tr><td>MUIClass.Popstring</td><td>Popstring, PopObject, PopList, PopASL</td></tr>
 <tr><td>MUIClass.Menu</td><td>Menustrip, Menu, Menuitem</td></tr>
 <tr><td>MUIClass.Numeric</td><td>Numeric, Knop, Levelmeter, NumericButton, Slider</td></tr>
-<tr><td>MUIClass.DrawPanel</td><td>DrawPanel</td></tr>
+<tr><td>MUIClass.DrawPanel</td><td>DrawPanel (not an actual MUI Object, just an Area with more Events like Paint, Mouse,  Key)</td></tr>
 </table>
 ## Basic usage
 
-Create a Subclass for your Window.
+Make a new class for your Window.
 <pre>
 type
   TMyWindow = class(TMUIWindow)
@@ -26,11 +26,11 @@ type
 var
   Win: TMyWindow;
 </pre>
-in you main routine, create your window class.
+In your main routine, create your window class.
 <pre>
 Win := TMUIWindow.Create;
 </pre>
-Set some properties, for example title
+Set some properties, for example the window title text.
 <pre>
 Win.Title := 'Test Window';
 </pre>
@@ -42,12 +42,12 @@ Button := TMUIButton.Create;
 Button.Contents := 'Click me';
 </pre>
 Now connect both to the Window by assigning the Parents to the window.
-The order of Parent assignment defines the order in the Window later. By default the first Group in the window aligns the Items vertically (one over the other) if you want them side by side set <code>Win.Horiz := True;</code>.
+The order of Parent assignment defines the order in the Window later. By default the window aligns the Items vertically, one over the other (By setting  <code>Win.Horizontal := True;</code> you get them side by side).
 <pre>
 Text.Parent := Win;
 Button.Parent := Win;
 </pre>
-We want also some Action in your Window, create a Event Function inside your Window Class:
+We want also some Action in the Window, create an Event Function inside your Window Class:
 <pre>
 type
   TMyWindow = class(TMUIWindow)
@@ -63,16 +63,17 @@ The Event should be called when the Button is clicked. Connect it to the OnClick
 <pre>
 Button.OnClick := @Win.ButtonClick;
 </pre>
-Now everythis is setup. Now we start our created application. (There is no need to create a application object or connect the Windows to the application object this is done automatically). The application is started with
+Now everythis is ready to run. We start our created application. (There is no need to create a application object or connect the Windows to the application object, this is done automatically). The application is started with
 <pre>
 MUIApp.Run;
 </pre>
-You can find that complete Source in examples/HelloWorld2.pas
 
-MUIApp is a global Application object in MUIClass.Base it has the usual fields you would expect like application description and so on.
+MUIApp is a global Application object in MUIClass.Base. It has the usual fields you would expect, like application description, events for iconify and so on.
 If the main Window is closed the application will terminate. (you can also call <code>MUIApp.Terminate</code> to end the application).
-When the Application quits it will destroy every class and object, which is connected to MUIApp (also nested through other classes or objects) it will free all MUI objects and Pascal Classes.
+When the Application quits it will destroy everything which is connected to MUIApp (also nested through other classes or objects) it will free all MUI objects and Pascal Classes.
 
 MUI objects have several fields which can only be changed before the actual object is created, make sure to set them before you start MUIApp.Run. If you try to set such a field in runtime you will get a warning in the debug log and the value will be ignored.
+
+You can find that complete Source of this example in examples/HelloWorld2.pas
 
 How to Handle other problems like dynamic creation/destruction of Windows other event types an Drawing to a Panel check the examples/TestApp.pas which contains many objects and Event connections.
