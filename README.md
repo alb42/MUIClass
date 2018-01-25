@@ -4,7 +4,7 @@ Wrapper to use Amiga MUI Objects with standard Pascal objects
 ## Units
 <table border=1>
 <tr><td>Unit Name</td><td>MUI Objects</td></tr>
-<tr><td>MUIClass.Base</td><td>RootClass, Notify, Application, Family, Semaphore, Dataspace, HSpace, VSpace, HBar, VBar, BarTitle</td></tr>
+<tr><td>MUIClass.Base</td><td>RootClass, Notify, Application, Family, Semaphore, Dataspace, HSpace, VSpace, HBar, VBar, BarTitle, Timer</td></tr>
 <tr><td>MUIClass.Area</td><td>Area, Rectangle, Balance, Gauge, Scale, Colorfield, Text, PenDisplay, PopPen, Button</td></tr>
 <tr><td>MUIClass.Group</td><td>Group, ListView, Register, Virtgroup, Scrollgroup, Radio, Cycle, Coloradjust, Palette</td></tr>
 <tr><td>MUIClass.Window</td><td>Window, AboutMUI</td></tr>

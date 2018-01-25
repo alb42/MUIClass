@@ -8,8 +8,9 @@ uses
   mui, muihelper,
   tagsparamshelper;
 
-
 type
+  TMUITimer = class;
+
   THookList = class
   private
     FList: Classes.TList;
@@ -81,14 +82,18 @@ type
     class function GetPasObject(AMUIObj: PObject_): TMUINotify;
   end;
 
+  TTimerList = specialize TFPGObjectList<TMUITimer>;
 
   TMUIApplication = class(TMUINotify)
   private
     FToDestroy: TChildList;
+    FTimerList: TTimerList;
+    FActiveTimer: Boolean;
     FTerminated: Boolean;
     FMainWindow: TMUINotify;
     FOnActivate: TNotifyEvent;
     FOnDeactivate: TNotifyEvent;
+    FOnIdle: TNotifyEvent;
     FAuthor: string;          //* ''
     FBase: string;            //* ''
     FBrokerPri: Integer;      //  0
@@ -188,6 +193,7 @@ type
     // Usedclasses
     // UseRexx (No REXX in AROS)
     property Version: string read FVersion write SetVersion;
+    property OnIdle: TNotifyEvent read FOnIdle write FOnIdle;
   end;
 
   TMUIWithParent = class(TMUINotify)
@@ -238,6 +244,22 @@ type
     function Remove(Id: LongWord): Boolean;
     //Field
     property Pool: Pointer read FPool write SetPool;
+  end;
+
+  TMUITimer = class
+  private
+    FEnabled: boolean;
+    FInterval: Integer;
+    FLastStart: Int64;
+    FOnTimer: TNotifyEvent;
+    procedure SetEnabled(AValue: boolean);
+  public
+    constructor Create; virtual;
+    destructor Destroy; override;
+
+    property Enabled: Boolean read FEnabled write SetEnabled;
+    property Interval: Integer read FInterVal write FInterval;
+    property OnTimer: TNotifyEvent read FOnTimer write FOnTimer;
   end;
 
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
@@ -524,6 +546,8 @@ constructor TMUIApplication.Create;
 begin
   inherited;
   FToDestroy := TChildList.Create(False);
+  FTimerList := TTimerList.Create(False);
+  FActiveTimer := False;
   FTerminated := False;
   FMainWindow := nil;
   // Inits
@@ -552,6 +576,10 @@ begin
   for i := 0 to FToDestroy.Count - 1 do
     FToDestroy[i].Free;
   FToDestroy.Free;
+  while FTimerList.Count > 0 do
+  begin
+    FTimerList[0].Free;
+  end;
   inherited;
 end;
 
@@ -679,6 +707,7 @@ procedure TMUIApplication.Run;
 var
   Sigs: LongInt;
   i: Integer;
+  t1: Int64;
 begin
   if Childs.Count = 0 then
   begin
@@ -717,9 +746,31 @@ begin
       Break;
     if Sigs <> 0 then
     begin
-      Sigs := Wait(sigs or SIGBREAKF_CTRL_C);
-      if (Sigs and SIGBREAKF_CTRL_C) <>0 then
-        Break;
+      if Assigned(FOnIdle) or (FActiveTimer) then
+      begin
+        if Assigned(FOnIdle) then
+          FOnIdle(Self);
+        t1 := GetTickCount64;
+        I := 0;
+        while i < FTimerList.Count do
+        begin
+          if FTimerList[i].Enabled and Assigned(FTimerList[i].OnTimer) then
+          begin
+            if t1 > FTimerList[i].FLastStart + FTimerList[i].InterVal then
+            begin
+              FTimerList[i].FLastStart := t1;
+              FTimerList[i].OnTimer(Self);
+            end;
+          end;
+          Inc(i);
+        end;
+      end
+      else
+      begin
+        Sigs := Wait(sigs or SIGBREAKF_CTRL_C);
+        if (Sigs and SIGBREAKF_CTRL_C) <>0 then
+          Break;
+      end;
     end;
   end;
 
@@ -1206,9 +1257,38 @@ begin
     Result := Boolean(DoMethod(MUIObj, [MUIM_Dataspace_Remove, AsTag(Id)]));
 end;
 
+constructor TMUITimer.Create;
+begin
+  FEnabled := False;
+  FInterval := 1000;
+  FLastStart := 0;
+  MUIApp.FtimerList.Add(Self);
+end;
 
+destructor TMUITimer.Destroy;
+begin
+  Enabled := False;
+  MUIApp.FTimerList.Remove(Self);
+  inherited;
+end;
 
-
+procedure TMUITimer.SetEnabled(AValue: boolean);
+var
+  i: Integer;
+begin
+  FEnabled := AValue;
+  if FEnabled then
+    FLastStart := GetTickCount64;
+  MUIApp.FActiveTimer := False;
+  for i := 0 to MUIApp.FTimerList.Count - 1 do
+  begin
+    if MUIApp.FTimerList[i].Enabled then
+    begin
+      MUIApp.FActiveTimer := True;
+      Break;
+    end;
+  end;
+end;
 
 initialization
   MUIApp := TMUIApplication.Create;

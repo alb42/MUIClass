@@ -29,6 +29,7 @@ type
     Down: Boolean;
     Pen: Integer;
     Spec: TMUI_PenSpec;
+    Timer: TMUITimer;
     // Events
     procedure ShowEvent(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
@@ -53,6 +54,7 @@ type
     procedure MouseDown(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
     procedure MouseUp(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
     procedure MouseMove(Sender: TObject; X,Y: Integer; var EatEvent: Boolean);
+    procedure TimerEvent(Sender: TObject);
 
     function ConstructEvent(Sender: TObject; Pool: Pointer; Str: PChar): PChar;
     procedure DestructEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
@@ -334,6 +336,10 @@ begin
   DB := nil;
   Down := False;
   Pen := -1;
+
+  Timer := TMUITimer.Create;
+  Timer.InterVal := 1000;
+  Timer.OnTimer := @TimerEvent;
 end;
 
 destructor TMyWindow.Destroy;
@@ -363,6 +369,7 @@ begin
   Prop.Decrease(2);
   DirList.Sort;
   Pop.OnClose := @PopCloseChange;
+  Timer.Enabled := True;
 end;
 
 procedure TMyWindow.Btn2Click(Sender: TObject);
@@ -378,6 +385,7 @@ begin
   Prop.Increase(2);
   MyList.Sort;
   Pop.Close(0);
+  Timer.Enabled := False;
 end;
 
 procedure TMyWindow.NewBtnClick(Sender: TObject);
@@ -643,6 +651,11 @@ begin
     Draw(DB.RP, x, y);
     TMUIDrawPanel(Sender).RedrawObject;
   end;
+end;
+
+procedure TMyWindow.TimerEvent(Sender: TObject);
+begin
+  writeln('Timer Hit');
 end;
 
 procedure Startup;
