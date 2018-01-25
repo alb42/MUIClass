@@ -970,7 +970,7 @@ procedure TMUIApplication.Load(FromEnvarc: Boolean);
 begin
   if HasObj then
   begin
-    {$ifndef Amiga68k}
+    {$ifdef AROS}
     if FromEnvarc then
       DoMethod(FMUIObj, [MUIM_Application_Load, AsTag(MUIV_Application_Load_ENVARC)])
     else
@@ -989,7 +989,7 @@ procedure TMUIApplication.Save(ToEnvarc: Boolean);
 begin
   if HasObj then
   begin
-    {$ifndef Amiga68k}
+    {$ifdef AROS}
     if ToEnvarc then
       DoMethod(FMUIObj, [MUIM_Application_Save, AsTag(MUIV_Application_Load_ENVARC)])
     else

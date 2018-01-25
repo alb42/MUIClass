@@ -595,9 +595,9 @@ end;
 // we Draw a little bit
 procedure TMyWindow.DrawEvent(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
 begin
-  //SetBPen(RP, 0);
-  //SetAPen(RP, 0);
-  //RectFill(RP, DrawRect.Left, DrawRect.Top, DrawRect.Left + DrawRect.Width, DrawRect.Top + DrawRect.Height);
+  SetBPen(RP, 0);
+  SetAPen(RP, 0);
+  RectFill(RP, DrawRect.Left, DrawRect.Top, DrawRect.Left + DrawRect.Width, DrawRect.Top + DrawRect.Height);
   // now you can draw to RastPort into the DrawRect
   if not Assigned(DB) then
   begin
@@ -646,7 +646,7 @@ begin
   EatEvent := False;
   if Down then
   begin
-    writeln('Move ', x, y);
+    //writeln('Move ', x, y);
     Draw(DB.RP, x, y);
     TMUIDrawPanel(Sender).RedrawObject;
   end;
