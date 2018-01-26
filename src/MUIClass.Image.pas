@@ -31,13 +31,14 @@ type
     constructor Create; override;
     destructor Destroy; override;
     procedure CreateObject; override;
-    property FontMatch: Boolean read FFontMatch write SetFontMatch;
-    property FontMatchHeight: Boolean read FFontMatchHeight write SetFontMatchHeight;
-    property FontMatchWidth: Boolean read FFontMatchWidth write SetFontMatchWidth;
-    property FreeHoriz: Boolean read FFreeHoriz write SetFreeHoriz;
-    property FreeVert: Boolean read FFreeVert write SetFreeVert;
-    property OldImage: PImage read FOldImage write SetOldImage;
-    property Spec: TSpecDesc read FSpec;
+    property OldImage: PImage read FOldImage write SetOldImage;                                     //I
+  published
+    property FontMatch: Boolean read FFontMatch write SetFontMatch default False;                   //I
+    property FontMatchHeight: Boolean read FFontMatchHeight write SetFontMatchHeight default False; //I
+    property FontMatchWidth: Boolean read FFontMatchWidth write SetFontMatchWidth default False;    //I
+    property FreeHoriz: Boolean read FFreeHoriz write SetFreeHoriz default False;                   //I
+    property FreeVert: Boolean read FFreeVert write SetFreeVert default False;                      //I
+    property Spec: TSpecDesc read FSpec;                                                            //I
     property State: Integer read FState write SetState;
   end;
 
@@ -67,15 +68,16 @@ type
     constructor Create; override;
     procedure CreateObject; override;
 
-    property Bitmap: PBitmap read FBitmap write SetBitmap;
-    property UseFriend: Boolean read FUseFriend write SetUseFriend;
-    property Height: Integer read FHeight write SetHeight;
-    property Width: Integer read FWidth write SetWidth;
-    property MappingTable: PByte read FMappingTable write SetMappingTable;
-    property Precision: Integer read FPrecision write SetPrecision;
-    property RemappedBitmap: PBitmap read GetRemappedBitmap;
-    property SourceColors: PLongWord read FSourceColors write SetSourceColors;
-    property Transparent: Integer read FTransparent write SetTransparent;
+    property Bitmap: PBitmap read FBitmap write SetBitmap;                              //
+    property MappingTable: PByte read FMappingTable write SetMappingTable;              //
+    property Precision: Integer read FPrecision write SetPrecision;                     //
+    property RemappedBitmap: PBitmap read GetRemappedBitmap;                            //
+    property SourceColors: PLongWord read FSourceColors write SetSourceColors;          //
+  published
+    property UseFriend: Boolean read FUseFriend write SetUseFriend default False;       //I
+    property Height: Integer read FHeight write SetHeight default 0;                    //
+    property Width: Integer read FWidth write SetWidth default 0;                       //
+    property Transparent: Integer read FTransparent write SetTransparent default -1;    //
   end;
 
   TMUIPopButton = class(TMUIImage)

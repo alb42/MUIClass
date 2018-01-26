@@ -51,20 +51,23 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Accept: string read FAccept write SetAccept;
-    property AdvanceOnCR: Boolean read FAdvanceOnCR write SetAdvanceOnCR;
-    property OnAcknowledge: TNotifyEvent read FOnAcknowledge write FOnAcknowledge;
-    // AttachedList -> needs to be implemented first
+
     property BufferPos: Integer read GetBufferPos write SetBufferPos;
-    property Contents: string read GetContents write SetContents;
     property DisplayPos: Integer read GetDisplayPos write SetDisplayPos;
+  published
+    property Accept: string read FAccept write SetAccept;                                  //
+    property AdvanceOnCR: Boolean read FAdvanceOnCR write SetAdvanceOnCR default False;    //
+    // AttachedList -> needs to be implemented first
+    property Contents: string read GetContents write SetContents;                          //
     // EditHook -> own Event? (does not work in AROS)
-    property Format: Integer read FFormat write SetFormat;              //MUIV_StringFormat_*
-    property IntegerValue: Integer read GetInteger write SetInteger;
+    property Format: Integer read FFormat write SetFormat default MUIV_String_Format_Left; //I MUIV_StringFormat_*
+    property IntegerValue: Integer read GetInteger write SetInteger default 0;             //
     // LonelyEditHook -> see EditHook
-    property MaxLen: Integer read FMaxLen write SetMaxLen; // maximal length of the string in the Gadget WITHOUT #0 at the end! (class add one to it ;-))
-    property Reject: string read FReject write SetReject;
-    property Secret: Boolean read FSecret write FSecret;
+    property MaxLen: Integer read FMaxLen write SetMaxLen default 0;                       //I maximal length of the string in the Gadget WITHOUT #0 at the end! (class add one to it ;-))
+    property Reject: string read FReject write SetReject;                                  //
+    property Secret: Boolean read FSecret write FSecret default False;                     //I
+    // EVents
+    property OnAcknowledge: TNotifyEvent read FOnAcknowledge write FOnAcknowledge;
   end;
 
 
@@ -92,12 +95,14 @@ type
     procedure Increase(Amount: Integer);
     procedure Decrease(Amount: Integer);
     // Fields
-    property Entries: Integer read FEntries write SetEntries;
-    property First: Integer read GetFirst write SetFirst;
-    property Horiz: Boolean read FHoriz write SetHoriz;
+  published
+    property Entries: Integer read FEntries write SetEntries default 0; //
+    property First: Integer read GetFirst write SetFirst default 0;     //
+    property Horiz: Boolean read FHoriz write SetHoriz;                 //I
+    property UseWinBorder: Integer read FUseWinBorder write SetUseWinBorder default MUIV_Prop_UseWinBorder_None; //I MUIV_Prop_UseWinBorder_*
+    property Visible: Integer read FVisible write SetVisible default 0; //
+    // Events
     property OnFirstChange: TNotifyEvent read FOnFirstChange write FOnFirstChange;
-    property UseWinBorder: Integer read FUseWinBorder write SetUseWinBorder;
-    property Visible: Integer read FVisible write SetVisible;                 // MUIV_Prop_UseWinBorder_*
   end;
 
   TMUIScrollbar = class(TMUIProp)
@@ -113,7 +118,8 @@ type
     constructor Create; override;
     procedure CreateObject; override;
     property Horiz: Boolean read FHoriz write SetHoriz;
-    property SType: Integer read FType write SetType;
+  published
+    property SType: Integer read FType write SetType default MUIV_Scrollbar_Type_Default; //I MUIV_Scrollbar_Type_*
   end;
 
 implementation

@@ -163,37 +163,42 @@ type
     procedure Save(ToEnvarc: Boolean);
     procedure ShowHelp(Window: TMUINotify; HelpFileName: string; Node: string; LineNum: Integer); overload; // TMUIWindow
     procedure ShowHelp(Node: string; LineNum: Integer); overload;
+
     // MUI Fields
+    property Broker: PCxObj read GetBroker;
+    property DiskObject: Pointer read FDiskObject write SetDiskObject;
+    property ForceQuit: Boolean read GetForceQuit;
+    property Iconified: Boolean read GetIconified write SetIconified;
+    property Sleep: Boolean read GetSleep write SetSleep;
+
+  published
     property Active: Boolean read GetActive write SetActive;
-    property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
-    property OnDeactivate: TNotifyEvent read FOnDeactivate write FOnDeactivate;
     property Author: string read FAuthor write SetAuthor;
     property Base: string read GetBase write SetBase;
-    property Broker: PCxObj read GetBroker;
     // Broker Hook
     // BrokerPort
     property BrokerPri: Integer read FBrokerPri write SetBrokerPri;
-    // Commands
+        // Commands
     property Copyright: string read FCopyright write SetCopyright;
     property Description: string read FDescription write SetDescription;
-    property DiskObject: Pointer read FDiskObject write SetDiskObject;
-    property OnDoubleStart: TNotifyEvent read FOnDoubleStart write FOnDoubleStart;
     // Drop object
-    property ForceQuit: Boolean read GetForceQuit;
     property HelpFile: string read FHelpFile write SetHelpFile;
-    property Iconified: Boolean read GetIconified write SetIconified;
-    property OnIconify: TNotifyEvent read FOnIconify write FOnIconify;
-    property OnRestore: TNotifyEvent read FOnRestore write FOnRestore;
     property Menustrip: TMUINotify read FMenuStrip write SetMenuStrip; // TMUIMenuStrip
     // RexxMsg, RexxString (AROS no support)
     property SingleTask: Boolean read FSingleTask write SetSingleTask;
-    property Sleep: Boolean read GetSleep write SetSleep;
     property Title: string read FTitle write SetTitle;
     property UseCommodities: Boolean read FUseCommodities write SetUseCommodities;
     // Usedclasses
     // UseRexx (No REXX in AROS)
     property Version: string read FVersion write SetVersion;
+
+    property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
+    property OnDeactivate: TNotifyEvent read FOnDeactivate write FOnDeactivate;
+    property OnDoubleStart: TNotifyEvent read FOnDoubleStart write FOnDoubleStart;
     property OnIdle: TNotifyEvent read FOnIdle write FOnIdle;
+    property OnIconify: TNotifyEvent read FOnIconify write FOnIconify;
+    property OnRestore: TNotifyEvent read FOnRestore write FOnRestore;
+
   end;
 
   TMUIWithParent = class(TMUINotify)
@@ -256,7 +261,7 @@ type
   public
     constructor Create; virtual;
     destructor Destroy; override;
-
+  published
     property Enabled: Boolean read FEnabled write SetEnabled;
     property Interval: Integer read FInterVal write FInterval;
     property OnTimer: TNotifyEvent read FOnTimer write FOnTimer;

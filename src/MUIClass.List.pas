@@ -100,32 +100,34 @@ type
     procedure Sort;
     function TestPos(x, y: Integer): TMUI_List_TestPos_Result;
     // Fields
-    property Active: Integer read GetActive write SetActive;
+    property DropMark: Integer read GetDropMark;
+    property Entries: Integer read GetEntries;
+    property First: Integer read GetFirst;
+    property InsertPosition: Integer read GetInsertPosition;
+    property Pool: Pointer read FPool write SetPool;                              //I
+    property PoolPuddleSize: LongWord read FPoolPuddleSize write FPoolPuddleSize; //I
+    property PoolThreshSize: LongWord read FPoolThreshSize write FPoolThreshSize; //I
+    property Quiet: Boolean read FQuiet write SetQuiet;
+    property Visible: Integer read GetVisible;
+  published
+    property Active: Integer read GetActive write SetActive default 0;                     //
+    property AdjustHeight: Boolean read FAdjustHeight write SetAdjustHeight default False; //I
+    property AdjustWidth: Boolean read FAdjustWidth write SetAdjustWidth default False;    //I
+    property AutoVisible: Boolean read FAutoVisible write SetAutoVisible default False;    //I
+    property DragSortable: Boolean read FDragSortable write SetDragSortable default False; //
+    property Format: string read FFormat write SetFormat;                                  //
+    property MinLineHeight: Integer read FMinLineHeight write SetMinLineHeight default 0;  //I
+    property ShowDropMarks: Boolean read FShowDropMarks write SetShowDropMarks default True;
+    property SourceStrings: TStringArray read FSourceStrings write SetSourceArray;         //I
+    property Title: string read FTitle write SetTitle;                                     // #1 for multicolumn lists -> DisplayHook will be called
+    //Events
     property OnActiveChange: TNotifyEvent read FOnActiveChange write FOnActiveChange;
-    property AdjustHeight: Boolean read FAdjustHeight write SetAdjustHeight;
-    property AdjustWidth: Boolean read FAdjustWidth write SetAdjustWidth;
-    property AutoVisible: Boolean read FAutoVisible write SetAutoVisible;
     property OnDisplay: TDisplayEvent read FOnDisplay write SetOnDisplay;
     property OnCompare: TCompareEvent read FOnCompare write SetOnCompare;
     property OnConstruct: TConstructEvent read FOnConstruct write SetOnConstruct;
     property OnDestruct: TDestructEvent read FOnDestruct write SetOnDestruct;
     property OnMultiTest: TMultiTestEvent read FOnMultiTest write SetOnMultiTest;
-    property DragSortable: Boolean read FDragSortable write SetDragSortable;
-    property DropMark: Integer read GetDropMark;
     property OnDrop: TNotifyEvent read FOnDrop write FOnDrop;
-    property Entries: Integer read GetEntries;
-    property First: Integer read GetFirst;
-    property Format: string read FFormat write SetFormat;
-    property InsertPosition: Integer read GetInsertPosition;
-    property MinLineHeight: Integer read FMinLineHeight write SetMinLineHeight;
-    property Pool: Pointer read FPool write SetPool;
-    property PoolPuddleSize: LongWord read FPoolPuddleSize write FPoolPuddleSize;
-    property PoolThreshSize: LongWord read FPoolThreshSize write FPoolThreshSize;
-    property Quiet: Boolean read FQuiet write SetQuiet;
-    property ShowDropMarks: Boolean read FShowDropMarks write SetShowDropMarks;
-    property SourceStrings: TStringArray read FSourceStrings write SetSourceArray;
-    property Title: string read FTitle write SetTitle; // #1 for multicolumn lists -> DisplayHook will be called
-    property Visible: Integer read GetVisible;
   end;
 
   TMUIFloatText = class(TMUIList)
@@ -143,9 +145,10 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Justify: Boolean read FJustify write SetJustify;
+  published
+    property Justify: Boolean read FJustify write SetJustify default False;
     property SkipChars: string read FSkipChars write SetSkipChars;
-    property TabSize: Integer read FTabSize write SetTabSize;
+    property TabSize: Integer read FTabSize write SetTabSize default 8;
     property Text: string read FText write SetText;
   end;
 
@@ -192,23 +195,25 @@ type
     // Methods
     procedure ReRead;
     // Fields
-    property AcceptPattern: string read FAcceptPattern write SetAcceptPattern;
-    property Directory: string read FDirectory write SetDirectory;
-    property DrawersOnly: Boolean read FDrawersOnly write SetDrawersOnly;
-    property FilesOnly: Boolean read FFilesOnly write SetFilesOnly;
-    property FilterDrawers: Boolean read FFilterDrawers write SetFilterDrawers;
-    // FilterHook
-    property MultiSelDirs: Boolean read FMultiSelDirs write SetMultiSelDirs;
     property NumBytes: Integer read GetNumBytes;
     property NumDrawers: Integer read GetNumDrawers;
     property NumFiles: Integer read GetNumFiles;
     property Path: string read GetPath;
-    property RejectIcons: Boolean read FRejectIcons write SetRejectIcons;
+    property Status: Integer read GetStatus;
+  published
+    property AcceptPattern: string read FAcceptPattern write SetAcceptPattern;
+    property Directory: string read FDirectory write SetDirectory;
+    property DrawersOnly: Boolean read FDrawersOnly write SetDrawersOnly default False;
+    property FilesOnly: Boolean read FFilesOnly write SetFilesOnly default False;
+    property FilterDrawers: Boolean read FFilterDrawers write SetFilterDrawers default False;
+    // FilterHook
+    property MultiSelDirs: Boolean read FMultiSelDirs write SetMultiSelDirs default False;
+    property RejectIcons: Boolean read FRejectIcons write SetRejectIcons default False;
     property RejectPattern: string read FRejectPattern write SetRejectPattern;
-    property SortDirs: Integer read FSortDirs write SetSortDirs;
+    property SortDirs: Integer read FSortDirs write SetSortDirs default MUIV_Dirlist_SortDirs_First; // MUIV_Dirlist_*
+
     property OnStatusValid: TNotifyEvent read FOnStatusValid write FOnStatusValid;
     property OnStatusInvalid: TNotifyEvent read FOnStatusInvalid write FOnStatusInvalid;
-    property Status: Integer read GetStatus;
   end;
 
 implementation

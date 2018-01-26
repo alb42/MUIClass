@@ -47,18 +47,19 @@ type
     procedure ExitChange;  //   Lock/Unlock the Group before changing
     //procedure Sort; // needs a concept (maybe sort the Childlist, then apply with it)
     // Fields
-    property ActivePage: Integer read GetActivePage write SetActivePage;         // Active Page if PageMode is active (0 <= ActivePage < Childs.Count)
+    property ActivePage: Integer read GetActivePage write SetActivePage default 0;     //  Active Page if PageMode is active (0 <= ActivePage < Childs.Count)
+    property Columns: Integer read FColumns write SetColumns default 0;                //  Show Childs in Columns
+    property Horiz: Boolean read FHoriz write SetHoriz default False;                  // True = order the Children horizontally, False = order the Children vertically (default)
+    property HorizSpacing: Integer read FHorizSpacing write SetHorizSpacing default 0; //  Change Spacing between Children in horizontal direction
+    property PageMode: Boolean read FPageMode write SetPageMode default False;         // Activate Pagemode, Childrens should TMUIGroup objects, each a new Page of the Group
+    property Rows: Integer read FRows write SetRows default 0;                         // Show Childs in Rows
+    property SameHeight: Boolean read FSameHeight write SetSameHeight default False;   // Scale all Children to the same Height
+    property SameSize: Boolean read GetSameSize write SetSameSize default False;       // Scale all Children to the same Size (in principle SameHeight + SameWidth)
+    property SameWidth: Boolean read FSameWidth write SetSameWidth default False;      // Scale all Children to the same Width
+    property Spacing: Integer read FSpacing write SetSpacing default 0;                // Set Spacing between Children
+    property VertSpacing: Integer read FVertSpacing write SetVertSpacing default 0;    // Set Spacing between Children in vertical direction
+    //
     property OnPageChange: TNotifyEvent read FOnPageChange write FOnPageChange;
-    property Columns: Integer read FColumns write SetColumns;                  // Show Childs in Columns
-    property Horiz: Boolean read FHoriz write SetHoriz;                        // True = order the Children horizontally, False = order the Children vertically (default)
-    property HorizSpacing: Integer read FHorizSpacing write SetHorizSpacing;   // Change Spacing between Children in horizontal direction
-    property PageMode: Boolean read FPageMode write SetPageMode;               // Activate Pagemode, Childrens should TMUIGroup objects, each a new Page of the Group
-    property Rows: Integer read FRows write SetRows;                           // Show Childs in Rows
-    property SameHeight: Boolean read FSameHeight write SetSameHeight;         // Scale all Children to the same Height
-    property SameSize: Boolean read GetSameSize write SetSameSize;             // Scale all Children to the same Size (in principle SameHeight + SameWidth)
-    property SameWidth: Boolean read FSameWidth write SetSameWidth;            // Scale all Children to the same Width
-    property Spacing: Integer read FSpacing write SetSpacing;                  // Set Spacing between Children
-    property VertSpacing: Integer read FVertSpacing write SetVertSpacing;      // Set Spacing between Children in vertical direction
   end;
 
   TMUIListView = class(TMUIGroup)
@@ -95,17 +96,19 @@ type
     procedure ClearObject; override;
 
     property ClickColumn: Integer read GetClickColumn;
-    property OnClick: TNotifyEvent read FOnClick write FOnClick;
-    property DefClickColumn: Integer read FDefClickColumn write SetDefClickColumn;
-    property OnDoubleClick: TNotifyEvent read FOnDoubleClick write FOnDoubleClick;
-    property DragType: Integer read FDragType write SetDragType;                        // MUIV_ListView_DragType_*
-    property Input: Boolean read FInput write SetInput;
-    property List: TMUIList read FList write SetList;
-    property MultiSelect: Integer read FMultiSelect write SetMultiSelect;               // MUIV_Listview_MultiSelect_*
-    property ScrollerPos: Integer read FScrollerPos write SetScrollerPos;               // MUIV_Listview_ScrollerPos_*
-    property OnSelectChange: TNotifyEvent read FOnSelectChange write FOnSelectChange;
-  end;
+  published
 
+    property DefClickColumn: Integer read FDefClickColumn write SetDefClickColumn default 0;
+    property DragType: Integer read FDragType write SetDragType default MUIV_ListView_DragType_None;                //  MUIV_ListView_DragType_*
+    property Input: Boolean read FInput write SetInput default True;                                                //I
+    property List: TMUIList read FList write SetList;                                                               //I
+    property MultiSelect: Integer read FMultiSelect write SetMultiSelect default MUIV_Listview_MultiSelect_None;    //I MUIV_Listview_MultiSelect_*
+    property ScrollerPos: Integer read FScrollerPos write SetScrollerPos default MUIV_Listview_ScrollerPos_Default; //I MUIV_Listview_ScrollerPos_*
+
+    property OnSelectChange: TNotifyEvent read FOnSelectChange write FOnSelectChange;
+    property OnClick: TNotifyEvent read FOnClick write FOnClick;
+    property OnDoubleClick: TNotifyEvent read FOnDoubleClick write FOnDoubleClick;
+  end;
 
   TMUIRegister = class(TMUIGroup)
   private
@@ -119,8 +122,9 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Frame: Boolean read FFrame write SetFrame;
-    property Titles: TStringArray read FTitles write SetTitles;
+  published
+    property Frame: Boolean read FFrame write SetFrame default False; //I
+    property Titles: TStringArray read FTitles write SetTitles;       //I
   end;
 
   TMUIVirtGroup = class(TMUIGroup)
@@ -141,11 +145,12 @@ type
     constructor Create; override;
     procedure CreateObject; override;
 
-    property VirtLeft: Integer read GetVLeft write SetVLeft;
-    property VirtTop: Integer read GetVTop write SetVTop;
     property VirtHeight: Integer read GetVHeight;
     property VirtWidth: Integer read GetVWidth;
-    property Input: Boolean read FInput write SetInput;
+  published
+    property VirtLeft: Integer read GetVLeft write SetVLeft default 0; //
+    property VirtTop: Integer read GetVTop write SetVTop default 0;    //
+    property Input: Boolean read FInput write SetInput default True;   //I
   end;
 
   TMUIScrollGroup = class(TMUIGroup)
@@ -171,12 +176,13 @@ type
     procedure DestroyObject; override;
     procedure ClearObject; override;
 
-    property Contents: TMUIVirtGroup read FContents;
-    property FreeHoriz: Boolean read FFreeHoriz write SetFreeHoriz;
-    property FreeVert: Boolean read FFreeVert write SetFreeVert;
     property HorizBar: TMUIScrollBar read FHorizBar;
     property VertBar: TMUIScrollBar read FVertBar;
-    property UseWinBorder: Boolean read FUseWinBorder write SetUseWinBorder;
+  published
+    property Contents: TMUIVirtGroup read FContents;                                       //I
+    property FreeHoriz: Boolean read FFreeHoriz write SetFreeHoriz default True;           //I
+    property FreeVert: Boolean read FFreeVert write SetFreeVert default True;              //I
+    property UseWinBorder: Boolean read FUseWinBorder write SetUseWinBorder default False; //I
   end;
 
   TMUIRadio = class(TMUIGroup)
@@ -195,9 +201,10 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Active: Integer read GetActive write SetActive;
+  published
+    property Active: Integer read GetActive write SetActive default 0;  //
+    property Entries: TStringArray read FEntries write SetEntries;      //I
     property OnActiveChange: TNotifyEvent read FOnActiveChange write FOnActiveChange;
-    property Entries: TStringArray read FEntries write SetEntries;
   end;
 
   TMUICycle = class(TMUIGroup)
@@ -216,9 +223,10 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Active: Integer read GetActive write SetActive;
+  public
+    property Active: Integer read GetActive write SetActive default 0; //
+    property Entries: TStringArray read FEntries write SetEntries;     //I
     property OnActiveChange: TNotifyEvent read FOnActiveChange write FOnActiveChange;
-    property Entries: TStringArray read FEntries write SetEntries;
   end;
 
   TMUIColorAdjust = class(TMUIGroup)
@@ -248,11 +256,13 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Red: LongWord read GetRed write SetRed;
-    property Green: LongWord read GetGreen write SetGreen;
-    property Blue: LongWord read GetBlue write SetBlue;
-    property ModeID: LongWord read FModeID write SetModeID;
     property RGB: PLongWord read GetRGB write SetRGB;
+  published
+    property Red: LongWord read GetRed write SetRed default 0;
+    property Green: LongWord read GetGreen write SetGreen default 0;
+    property Blue: LongWord read GetBlue write SetBlue default 0;
+    property ModeID: LongWord read FModeID write SetModeID default 0;
+    //
     property OnColorChange: TNotifyEvent read FOnColorChange write FOnColorChange;
   end;
 
@@ -270,9 +280,10 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Entries: PMUI_Palette_Entry read FEntries write SetEntries;
-    property Groupable: Boolean read FGroupable write SetGroupable;
-    property Names: TStringArray read FNames write SetNames;
+    property Entries: PMUI_Palette_Entry read FEntries write SetEntries; //I
+  published
+    property Groupable: Boolean read FGroupable write SetGroupable;      //
+    property Names: TStringArray read FNames write SetNames;             //
   end;
 
 implementation

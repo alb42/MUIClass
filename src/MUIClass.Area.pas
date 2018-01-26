@@ -106,58 +106,60 @@ type
     procedure BeforeCloseWindow; override;
   protected
     procedure GetCreateTags(var ATagList: TATagList); override;
-    property FillArea: Boolean read FFillArea write SetFillArea;
+    property FillArea: Boolean read FFillArea write SetFillArea default True;
   public
     constructor Create; override;
     destructor Destroy; override;
     procedure CreateObject; override;
 
-    property OnClick: TNotifyEvent read FOnClick write FOnClick;
     // MUI Methods
     function CreateBubble(x,y: Integer; Txt: string; Flags: Integer): PBubble;
     procedure DeleteBubble(Bubble: PBubble);
     procedure DeleteAllBubbles;
     // MUI Fields
-    property Background: TSpecDesc read FBackground;
     property LeftEdge: Integer read GetLeftEdge;
     property TopEdge: Integer read GetTopEdge;
     property RightEdge: Integer read GetRightEdge;
     property BottomEdge: Integer read GetBottomEdge;
-    // ContextMenu/ContextMenuTrigger (need some special care, destroying?)
-    property ControlChar: Char read FControlChar write SetControlChar;
-    property CycleChain: Integer read GetCycleChain write SetCycleChain;
-    property Disabled: Boolean read FDisabled write SetDisabled;
-    property Draggable: Boolean read FDraggable write SetDraggable;
-    property Dropable: Boolean read FDropable write SetDropable;
-    property FixHeight: Integer read FFixHeight write SetFixHeight;
-    property FixHeightTxt: string read FFixHeightTxt write SetFixHeightTxt;
-    property FixWidth: Integer read FFixWidth write SetFixWidth;
-    property FixWidthTxt: string read FFixWidthTxt write SetFixWidthTxt;
-    property Font: PtrInt read FFont write SetFont;                             // MUIV_Font_* or PtrInt(PTextFont)
-    property Frame: PtrInt read FFrame write SetFrame;                          // MUIV_Frame_*
-    property FramePhantomHoriz: Boolean read FFramePhantomHoriz write SetFramePhantomHoriz;
-    property FrameTitle: string read FFrameTitle write SetFrameTitle;
     property Height: Integer read GetHeight;
     property Width: Integer read GetWidth;
-    property HorizDisappear: Integer read FHorizDisappear write SetHorizDisappear;
-    property VertDisappear: Integer read FVertDisappear write SetVertDisappear;
-    property HorizWeight: Integer read FHorizWeight write SetHorizWeight;
-    property VertWeight: Integer read FVertWeight write SetVertWeight;
-    property InnerLeft: Integer read GetInnerLeft write SetInnerLeft;
-    property InnerTop: Integer read GetInnerTop write SetInnerTop;
-    property InnerRight: Integer read GetInnerRight write SetInnerRight;
-    property InnerBottom: Integer read GetInnerBottom write SetInnerBottom;
-    property InputMode: Integer read FInputMode write SetInputMode;            // MUIV_InputMode_*
-    property MaxHeight: Integer read FMaxHeight write SetMaxHeight;
-    property MaxWidth: Integer read FMaxWidth write SetMaxWidth;
     property Pressed: Boolean read GetPressed;
-    property Selected: Boolean read GetSelected write SetSelected;
-    property ShortHelp: string read FShortHelp write SetShortHelp;
-    property ShowSelState: Boolean read FShowSelState write SetShowSelState;  // defaults to true
     // Timer -> event?
-    property Weight: Integer read FWeight write SetWeight;
     property Window: PWindow read GetWindow;
     property WindowObject: TMUIWindow read GetWindowObject;
+  published
+    property Background: TSpecDesc read FBackground;
+    // ContextMenu/ContextMenuTrigger (need some special care, destroying?)
+    property ControlChar: Char read FControlChar write SetControlChar default #0;
+    property CycleChain: Integer read GetCycleChain write SetCycleChain default 0;
+    property Disabled: Boolean read FDisabled write SetDisabled default False;
+    property Draggable: Boolean read FDraggable write SetDraggable default False;
+    property Dropable: Boolean read FDropable write SetDropable default False;
+    property FixHeight: Integer read FFixHeight write SetFixHeight default 0;
+    property FixHeightTxt: string read FFixHeightTxt write SetFixHeightTxt;
+    property FixWidth: Integer read FFixWidth write SetFixWidth default 0;
+    property FixWidthTxt: string read FFixWidthTxt write SetFixWidthTxt;
+    property Font: PtrInt read FFont write SetFont default 0;                             // MUIV_Font_* or PtrInt(PTextFont)
+    property Frame: PtrInt read FFrame write SetFrame default 0;                          // MUIV_Frame_*
+    property FramePhantomHoriz: Boolean read FFramePhantomHoriz write SetFramePhantomHoriz default False;
+    property FrameTitle: string read FFrameTitle write SetFrameTitle;
+    property HorizDisappear: Integer read FHorizDisappear write SetHorizDisappear default 0;
+    property VertDisappear: Integer read FVertDisappear write SetVertDisappear default 0;
+    property HorizWeight: Integer read FHorizWeight write SetHorizWeight default 100;
+    property VertWeight: Integer read FVertWeight write SetVertWeight default 100;
+    property InnerLeft: Integer read GetInnerLeft write SetInnerLeft default 0;
+    property InnerTop: Integer read GetInnerTop write SetInnerTop default 0;
+    property InnerRight: Integer read GetInnerRight write SetInnerRight default 0;
+    property InnerBottom: Integer read GetInnerBottom write SetInnerBottom default 0;
+    property InputMode: Integer read FInputMode write SetInputMode default MUIV_InputMode_None;  // MUIV_InputMode_*
+    property MaxHeight: Integer read FMaxHeight write SetMaxHeight default 0;
+    property MaxWidth: Integer read FMaxWidth write SetMaxWidth default 0;
+    property Selected: Boolean read GetSelected write SetSelected default False;
+    property ShortHelp: string read FShortHelp write SetShortHelp;
+    property ShowSelState: Boolean read FShowSelState write SetShowSelState default True;  // defaults to true
+    property Weight: Integer read FWeight write SetWeight default 100;
+    // Events
+    property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
 
   TMUIRectangle = class(TMUIArea)
@@ -173,9 +175,10 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
+  published
     property BarTitle: string read FBarTitle write SetBarTitle;
-    property HBar: Boolean read FHBar write SetHBar;
-    property VBar: Boolean read FVBar write SetVBar;
+    property HBar: Boolean read FHBar write SetHBar default False;
+    property VBar: Boolean read FVBar write SetVBar default False;
   end;
 
   TMUIBalance = class(TMUIArea)
@@ -187,7 +190,8 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Quiet: Boolean read FQuiet write SetQuiet;  // If set to TRUE the balance object will show its frame only if the mouse is located over the object. Otherwise it will be invisible.
+  published
+    property Quiet: Boolean read FQuiet write SetQuiet default False;  // If set to TRUE the balance object will show its frame only if the mouse is located over the object. Otherwise it will be invisible.
   end;
 
   TMUIGauge = class(TMUIArea)
@@ -195,20 +199,24 @@ type
     FCurrent: Integer;
     FDivide: LongWord;
     FHoriz: Boolean;
+    FInfoText: string;
     FMax: Integer;
     procedure SetHoriz(AValue: Boolean);
     procedure SetCurrent(AValue: Integer);
     procedure SetDivide(AValue: LongWord);
     procedure SetMax(AValue: Integer);
+    procedure SetInfoText(AValue: string);
   protected
     procedure GetCreateTags(var ATagList: TATagList); override;
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Current: Integer read FCurrent write SetCurrent;
-    property Divide: LongWord read FDivide write SetDivide;
-    property Max: Integer read FMax write SetMax;
-    property Horiz: Boolean read FHoriz write SetHoriz;
+  published
+    property Current: Integer read FCurrent write SetCurrent default 0;
+    property Divide: LongWord read FDivide write SetDivide default 0;
+    property InfoText: string read FInfoText write SetInfoText;
+    property Max: Integer read FMax write SetMax default 100;
+    property Horiz: Boolean read FHoriz write SetHoriz default False;
   end;
 
   TMUIScale = class(TMUIArea)
@@ -220,7 +228,8 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Horiz: Boolean read FHoriz write SetHoriz;
+  published
+    property Horiz: Boolean read FHoriz write SetHoriz default True;
   end;
 
   TMUIColorfield = class(TMUIArea)
@@ -244,11 +253,13 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Blue: LongWord read FBlue write SetBlue;
-    property Red: LongWord read FRed write SetRed;
-    property Green: LongWord read FGreen write SetGreen;
+
     property Pen: LongWord read GetPen write SetPen;
     property RGB: TMUIRGB read GetRGB write SetRGB;
+  published
+    property Blue: LongWord read FBlue write SetBlue default 0;
+    property Red: LongWord read FRed write SetRed default 0;
+    property Green: LongWord read FGreen write SetGreen default 0;
   end;
 
   //
@@ -272,12 +283,13 @@ type
     constructor Create; override;
     constructor Create(AContents: string); virtual;
     procedure CreateObject; override;
+  published
     property Contents: string read FContents write SetContents;
-    property HiChar: char read FHiChar write SetHiChar;
+    property HiChar: char read FHiChar write SetHiChar default #0;          // I
     property PreParse: string read FPreParse write SetPreParse;
-    property SetMax: Boolean read FSetMax write SetSetMax;
-    property SetMin: Boolean read FSetMin write SetSetMin;
-    property SetVMax: Boolean read FSetVMax write SetSetVMax;
+    property SetMax: Boolean read FSetMax write SetSetMax default False;    // I
+    property SetMin: Boolean read FSetMin write SetSetMin default False;    // I
+    property SetVMax: Boolean read FSetVMax write SetSetVMax default False; // I
   end;
 
   TMUIPenDisplay = class(TMUIArea)
@@ -302,6 +314,7 @@ type
     property Pen: LongWord read GetPen;
     // Reference? what it does?
     property Spec: PMUI_PenSpec read GetSpec write SetSpec;
+  published
     property OnSpecChange: TNotifyEvent read FOnSpecChange write FOnSpecChange;
   end;
 
@@ -362,8 +375,9 @@ type
     procedure SetPicture(PicPath: string);             //5: Path to external file
     procedure SetPreConf(ABack: Integer);              //6: MUII_WindowBack ... MUII_Count - 1
     procedure SetString(AText: string);                // your own string must include the '<num>:';
-    property Spec: PtrInt read FSpec write SetFSpec;
     property IsSet: Boolean read FIsSet;
+  published
+    property Spec: PtrInt read FSpec write SetFSpec;
   end;
 
 
@@ -390,6 +404,7 @@ begin
   inherited;
   FBubbleList := TBubbleList.Create;
   FBackground := TSpecDesc.Create;
+  FControlChar := #0;
   FCycleChain := 0;
   FDisabled := False;
   FDraggable := False;
@@ -433,6 +448,8 @@ begin
   inherited;
   if FBackground.IsSet then
     ATagList.AddTag(MUIA_Background, AsTag(FBackground.FSpec));
+  if FControlChar <> #0 then
+    ATagList.AddTag(MUIA_ControlChar, AsTag(Integer(FControlChar)));
   if FCycleChain <> 0 then
     ATagList.AddTag(MUIA_CycleChain, AsTag(FCycleChain));
   if FDisabled then
@@ -1126,6 +1143,7 @@ begin
   FCurrent := 0;
   FMAx := 0;
   FDivide := 0;
+  FInfoText := '';
   FHoriz := False;
 end;
 
@@ -1140,6 +1158,8 @@ begin
     ATagList.AddTag(MUIA_Gauge_Divide, AsTag(FDivide));
   if FMax > 0 then
     ATagList.AddTag(MUIA_Gauge_Max, AsTag(FMax));
+  if FInfoText <> '' then
+    ATagList.AddTag(MUIA_Gauge_InfoText, AsTag(PChar(FInfoText)));
 end;
 
 procedure TMUIGauge.CreateObject;
@@ -1196,12 +1216,22 @@ begin
   end;
 end;
 
+procedure TMUIGauge.SetInfoText(AValue: string);
+begin
+  if AValue <> FInfoText then
+  begin
+    FInfoText := AValue;
+    if HasObj then
+      SetValue(MUIA_Gauge_InfoText, AsTag(PChar(FInfoText)));
+  end;
+end;
+
 { TMUIScale }
 
 constructor TMUIScale.Create;
 begin
   inherited;
-  FHoriz := False;
+  FHoriz := True;
 end;
 
 procedure TMUIScale.GetCreateTags(var ATagList: TATagList);

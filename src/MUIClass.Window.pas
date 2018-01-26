@@ -45,6 +45,7 @@ type
     FSizeGadget: Boolean;
     FTitle: string;
     FUBBS, FULBS, FURBS: Boolean;
+    FSizeRight: Boolean;
     FOnShow: TNotifyEvent;
     function GetActivate: Boolean;
     procedure SetActivate(AValue: Boolean);
@@ -79,6 +80,7 @@ type
     procedure SetScreen(AValue: PScreen);
     procedure SetScreenTitle(AValue: string);
     procedure SetSizeGadget(AValue: Boolean);
+    procedure SetSizeRight(AValue: Boolean);
     function GetSleep: Boolean;
     procedure SetSleep(AValue: Boolean);
     procedure SetTitle(AValue: string);
@@ -112,46 +114,48 @@ type
     procedure Unsnapshot;     // Unsnapshot the window
     procedure ToBack;   // put the Window to back
     procedure ToFront;  // put the Window to Front
-
     // MUI Fields
-    property Activate: Boolean read GetActivate write SetActivate;                // Activate the Window (True activate the Window, False does nothing)
-    property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;         // Event when the Window gets activated
-    property ActiveObject: TMUINotify read GetActiveObject write SetActiveObject; // Currently active Object (can be nil!), can be also set
-    property AltLeftEdge: Integer read FAltLeftEdge write SetAltLeftEdge;         // alternate (when click the zoom button) Left Edge (default = -1, let system decide)
-    property AltTopEdge: Integer read FAltTopEdge write SetAltTopEdge;            // alternate (when click the zoom button) Top Edge (default = -1, let system decide)
-    property AltHeight: Integer read FAltHeight write SetAltHeight;               // alternate (when click the zoom button) Height (default = -1, minimum)
-    property AltWidth: Integer read FAltWidth write SetAltWidth;                  // alternate (when click the zoom button) Width (default = -1, minimum)
-    property AppWindow: Boolean read FAppWindow write SetAppWindow;               // Create the Window as AppWindow default False
-    property Backdrop: Boolean read FBackdrop write SetBackdrop;                  // Create the Window as backdrop window (default False)
-    property Borderless: Boolean read FBorderless write SetBorderless;            // Create the Window without border (default False)
-    property CloseGadget: Boolean read FCloseGadget write SetCloseGadget;         // Create the Window with CloseGadget (default True)
-    property OnCloseRequest: TCloseReqEvent read FOnCloseRequest write FOnCloseRequest; // Ask the user what to do on Close button click
-    property DefaultObject: TMUINotify read GetDefaultObject write SetDefaultObject; // Default object gets the keyboard input if not other takes it
-    property DepthGadget: Boolean read FDepthGadget write SetDepthGadget;          // Create the Window with DepthGadget (default True)
-    property SizeGadget: Boolean read FSizeGadget write SetSizeGadget;             // Create the Window with SizeGadget (default True)
-    property DragBar: Boolean read FDragBar write SetDragBar;                      // Create the Window with DragBar (default True)
-    property LeftEdge: Integer read GetLeftEdge write SetLeftEdge;                 // Set inital LeftEdge of Window, read current LeftEdge (Default MUIV_Window_LeftEdge_Centered);
-    property TopEdge: Integer read GetTopEdge write SetTopEdge;                    // Set inital TopEdge of Window, read current TopEdge (Default MUIV_Window_TopEdge_Centered);
-    property Height: Integer read GetHeight write SetHeight;                       // Set inital Height of Window, read current Height (Default MUIV_Window_Height_Default;
-    property Width: Integer read GetWidth write SetWidth;                          // Set inital Width of Window, read current Width (Default MUIV_Window_Width_Default);
-    property ID: LongWord read FID write SetID;                                    // unique ID in the App to identify the Window for snapshots and so on use number or MAKEID()
+    property Activate: Boolean read GetActivate write SetActivate;                   //  Activate the Window (True activate the Window, False does nothing)
+    property ActiveObject: TMUINotify read GetActiveObject write SetActiveObject;    //  Currently active Object (can be nil!), can be also set
+    property DefaultObject: TMUINotify read GetDefaultObject write SetDefaultObject; //  Default object gets the keyboard input if not other takes it
+    property Open: Boolean read FOpen write SetOpen default False;                   //  Open the Window (default False)
+    property Screen: PScreen read GetScreen write SetScreen;                         //  Set the Screen to open the Window or get the Screen structure the currently window is open
+    property Window: PWindow read GetWindow;
+    property Sleep: Boolean read GetSleep write SetSleep;                            //  Put Window to sleep mode, with Busy Pointer
+  published
+    property AltLeftEdge: Integer read FAltLeftEdge write SetAltLeftEdge default -1;   //I alternate (when click the zoom button) Left Edge (default = -1, let system decide)
+    property AltTopEdge: Integer read FAltTopEdge write SetAltTopEdge default -1;      //I alternate (when click the zoom button) Top Edge (default = -1, let system decide)
+    property AltHeight: Integer read FAltHeight write SetAltHeight default -1;         //I alternate (when click the zoom button) Height (default = -1, minimum)
+    property AltWidth: Integer read FAltWidth write SetAltWidth default -1;            //I alternate (when click the zoom button) Width (default = -1, minimum)
+    property AppWindow: Boolean read FAppWindow write SetAppWindow default False;      //I Create the Window as AppWindow default False
+    property Backdrop: Boolean read FBackdrop write SetBackdrop default False;         //I Create the Window as backdrop window (default False)
+    property Borderless: Boolean read FBorderless write SetBorderless default False;   //I Create the Window without border (default False)
+    property CloseGadget: Boolean read FCloseGadget write SetCloseGadget default True; //I  Create the Window with CloseGadget (default True)
+    property DepthGadget: Boolean read FDepthGadget write SetDepthGadget default True; //I Create the Window with DepthGadget (default True)
+    property SizeGadget: Boolean read FSizeGadget write SetSizeGadget default True;    //I Create the Window with SizeGadget (default True)
+    property SizeRight: Boolean read FSizeRight write SetSizeRight default False;      //I SizeGadget is in the right window border (default False)
+    property DragBar: Boolean read FDragBar write SetDragBar default True;             //I Create the Window with DragBar (default True)
+    property LeftEdge: Integer read GetLeftEdge write SetLeftEdge default MUIV_Window_LeftEdge_Centered; //I Set inital LeftEdge of Window, read current LeftEdge (Default MUIV_Window_LeftEdge_Centered);
+    property TopEdge: Integer read GetTopEdge write SetTopEdge default MUIV_Window_TopEdge_Centered;     //I Set inital TopEdge of Window, read current TopEdge (Default MUIV_Window_TopEdge_Centered);
+    property Height: Integer read GetHeight write SetHeight default MUIV_Window_Height_Default;          //I Set inital Height of Window, read current Height (Default MUIV_Window_Height_Default;
+    property Width: Integer read GetWidth write SetWidth default MUIV_Window_Width_Default;              //I Set inital Width of Window, read current Width (Default MUIV_Window_Width_Default);
+    property ID: LongWord read FID write SetID default 0;                              //  unique ID in the App to identify the Window for snapshots and so on use number or MAKEID()
     // inputevent
     property Menustrip: TMUINotify read FMenuStrip write SetMenuStrip; // TMUIMenuStrip
     // NeedMouseObject/MouseObject -> not in AROS
-    property NoMenus: Boolean read FNoMenus write SetNoMenus;                      // Disable the global or window menu
-    property Open: Boolean read FOpen write SetOpen;                               // Open the Window (default False)
-    property PublicScreen: string read FPublicScreen write SetPublicScreen;        // Force to a Public Screen
+    property NoMenus: Boolean read FNoMenus write SetNoMenus default False;        //  Disable the global or window menu
+    property PublicScreen: string read FPublicScreen write SetPublicScreen;        //I  Force to a Public Screen
     // RefWindow ?
     // RootObject handled internally
-    property Screen: PScreen read GetScreen write SetScreen;                       // Set the Screen to open the Window or get the Screen structure the currently window is open
-    property ScreenTitle: string read FScreenTitle write SetScreenTitle;           // Title in the Screen bar shown, when the Window is active
-    property Sleep: Boolean read GetSleep write SetSleep;                          // Put Window to sleep mode, with Busy Pointer
-    property Title: string read FTitle write SetTitle;                             // Set Window Title
-    property UseBottomBorderScroller: Boolean read FUBBS write SetUBBS;            // Use Bottom Border scroller if any Object needs it
-    property UseLeftBorderScroller: Boolean read FULBS write SetULBS;              // Use Left Border scroller if any Object needs it
-    property UseRightBorderScroller: Boolean read FURBS write SetURBS;             // Use Right Border scroller if any Object needs it
-    property Window: PWindow read GetWindow;
-    property OnShow: TNotifyEvent read FOnShow write FOnShow;
+    property ScreenTitle: string read FScreenTitle write SetScreenTitle;              //  Title in the Screen bar shown, when the Window is active
+    property Title: string read FTitle write SetTitle;                                //  Set Window Title
+    property UseBottomBorderScroller: Boolean read FUBBS write SetUBBS default False; //  Use Bottom Border scroller if any Object needs it
+    property UseLeftBorderScroller: Boolean read FULBS write SetULBS default False;   //  Use Left Border scroller if any Object needs it
+    property UseRightBorderScroller: Boolean read FURBS write SetURBS default False;  //  Use Right Border scroller if any Object needs it
+    // EVents
+    property OnShow: TNotifyEvent read FOnShow write FOnShow;                           // Event when the Window is opened
+    property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;               // Event when the Window gets activated
+    property OnCloseRequest: TCloseReqEvent read FOnCloseRequest write FOnCloseRequest; // Ask the user what to do on Close button click
   end;
 
   TMUIAboutMUI = class(TMUIWindow)
@@ -204,6 +208,7 @@ begin
   FUBBS := False;
   FULBS := False;
   FURBS := False;
+  FSizeRight := False;
 end;
 
 destructor TMUIWindow.Destroy;
@@ -265,6 +270,8 @@ begin
     ATagList.AddTag(MUIA_Window_ScreenTitle, AsTag(PChar(FScreenTitle)));
   if not FSizeGadget then
     ATagList.AddTag(MUIA_Window_SizeGadget, AsTag(FSizeGadget));
+  if not FSizeRight then
+    ATagList.AddTag(MUIA_Window_SizeRight, AsTag(FSizeRight));
   if FTitle <> '' then
     ATagList.AddTag(MUIA_Window_Title, AsTag(PChar(FTitle)));
   if FUBBS then
@@ -737,6 +744,17 @@ begin
       ComplainIOnly(Self, 'MUIA_Window_SizeGadget', BoolToStr(AValue, True))
     else
       FSizeGadget := AValue;
+  end;
+end;
+
+procedure TMUIWindow.SetSizeRight(AValue: Boolean);
+begin
+  if AValue <> FSizeRight then
+  begin
+    if Assigned(FMUIObj) then
+      ComplainIOnly(Self, 'MUIA_Window_SizeRight', BoolToStr(AValue, True))
+    else
+      FSizeRight := AValue;
   end;
 end;
 

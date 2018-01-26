@@ -40,9 +40,11 @@ type
     procedure Open;
     procedure Close(Result: Integer);
     // Fields
-    property Toggle: Boolean read FToggle write SetToggle;
-    property Button: TMUIArea read FButton write SetButton;
-    property StringObj: TMUIString read FString write SetString;
+  published
+    property Toggle: Boolean read FToggle write SetToggle;           //
+    property Button: TMUIArea read FButton write SetButton;          //I
+    property StringObj: TMUIString read FString write SetString;     //I
+    //Events
     property OnOpen: TNotifyEvent read FOnOpen write SetOnOpen;
     property OnClose: TClosePopEvent read FOnClose write SetOnClose;
   end;
@@ -71,12 +73,13 @@ type
 
     procedure DestroyObject; override;
     procedure ClearObject; override;
-
-    property Follow: Boolean read FFollow write SetFollow;
-    property Light: Boolean read FLight write SetLight;
-    property PopObject: TMUIArea read FObject write SetObject;
+  published
+    property Follow: Boolean read FFollow write SetFollow default True;       //
+    property Light: Boolean read FLight write SetLight default True;          //
+    property PopObject: TMUIArea read FObject write SetObject;                //I
+    property Volatile: Boolean read FVolatile write SetVolatile default True; //
+    // Events
     property OnStrObj: TNotifyEvent read FOnStrObj write SetOnStrObj;
-    property Volatile: Boolean read FVolatile write SetVolatile;
     // WindowHook
   end;
 
@@ -90,6 +93,7 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
+  published
     property LArray: TStringArray read FLArray write SetLArray;
   end;
 
@@ -104,7 +108,8 @@ type
     constructor Create; override;
     procedure CreateObject; override;
     property Active: Boolean read GetActive;
-    property ASLType: LongWord read FASLType write SetASLType;
+  published
+    property ASLType: LongWord read FASLType write SetASLType default 0; //I ASL_*Request
     // StartHook/StopHook
   end;
 

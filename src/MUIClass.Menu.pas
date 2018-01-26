@@ -23,8 +23,8 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-
-    property Enabled: Boolean read FEnabled write SetEnabled;    // Enable/Disable Menu
+  published
+    property Enabled: Boolean read FEnabled write SetEnabled default True; // Enable/Disable Menu
   end;
 
   TMUIMenu = class(TMUIFamily)
@@ -38,8 +38,8 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-
-    property Enabled: Boolean read FEnabled write SetEnabled;  // Disable/Enable the full Menu
+  published
+    property Enabled: Boolean read FEnabled write SetEnabled default True; // Disable/Enable the full Menu
     property Title: string read FTitle write SetTitle;         // Title for the Menu
   end;
 
@@ -69,16 +69,16 @@ type
     constructor Create; override;
     procedure CreateObject; override;
     procedure AfterCreateObject; override;
-
-    property Checked: Boolean read GetChecked write SetChecked;                  // Check a Checkable Menu Entry (if CheckIt is True)
-    property CheckIt: Boolean read FCheckIt write SetCheckIt;                    // If True the Item is Checkable
-    property CommandString: Boolean read FCommandString write SetCommandString;  // if True SortCut points to a full Short Cut, else only the first Char + Amiga is used
-    property Enabled: Boolean read FEnabled write SetEnabled;                    // Enable/Disable this Menu Entry
-    property Exclude: LongWord read FExclude write SetExclude;                   // BitField to uncheck other menu entries when this one is checked (Radio)
-    property ShortCut: string read FShortCut write SetShortCut;                  // ShortCut (just the name on the menu, the actual check you have to do yourself)
-    property Title: string read FTitle write SetTitle;                           // Title for menu Entry or '-' for a Line
-    property Toggle: Boolean read FToggle write SetToggle;                       // Automatically toggle Checkable Entries when selected by user
-    property OnTrigger: TNotifyEvent read FOnTrigger write FOnTrigger;           // Event when an Entry is selected
+  published
+    property Checked: Boolean read GetChecked write SetChecked default False;                 // Check a Checkable Menu Entry (if CheckIt is True)
+    property CheckIt: Boolean read FCheckIt write SetCheckIt default False;                   // If True the Item is Checkable
+    property CommandString: Boolean read FCommandString write SetCommandString default False; // if True SortCut points to a full Short Cut, else only the first Char + Amiga is used
+    property Enabled: Boolean read FEnabled write SetEnabled default True;                    // Enable/Disable this Menu Entry
+    property Exclude: LongWord read FExclude write SetExclude default 0;                      // BitField to uncheck other menu entries when this one is checked (Radio)
+    property ShortCut: string read FShortCut write SetShortCut;                               // ShortCut (just the name on the menu, the actual check you have to do yourself)
+    property Title: string read FTitle write SetTitle;                                        // Title for menu Entry or '-' for a Line
+    property Toggle: Boolean read FToggle write SetToggle default False;                      // Automatically toggle Checkable Entries when selected by user
+    property OnTrigger: TNotifyEvent read FOnTrigger write FOnTrigger;                        // Event when an Entry is selected
   end;
 
 implementation

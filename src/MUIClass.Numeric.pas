@@ -43,15 +43,17 @@ type
     function Stringify(Value: Integer): string;
     function ValueToScale(ScaleMin, ScaleMax: Integer): Integer;
     // Fields
-    property CheckAllSizes: Boolean read FCheckAllSizes write SetCheckAllSizes;
-    property Default: Integer read FDefault write SetDefault;
+  published
+    property CheckAllSizes: Boolean read FCheckAllSizes write SetCheckAllSizes default False;
+    property Default: Integer read FDefault write SetDefault default 0;
     property Format: string read FFormat write SetFormat;
-    property Min: Integer read FMin write SetMin;
-    property Max: Integer read FMax write SetMax;
-    property Reverse: Boolean read FReverse write SetReverse;
-    property RevLeftRight: Boolean read FRevLeftRight write SetRevLeftRight;
-    property RevUpDown: Boolean read FRevUpDown write SetRevUpDown;
-    property Value: Integer read GetValue write SetValue;
+    property Min: Integer read FMin write SetMin default 0;
+    property Max: Integer read FMax write SetMax default 0;
+    property Reverse: Boolean read FReverse write SetReverse default False;
+    property RevLeftRight: Boolean read FRevLeftRight write SetRevLeftRight default False;
+    property RevUpDown: Boolean read FRevUpDown write SetRevUpDown default False;
+    property Value: Integer read GetValue write SetValue default 0;
+    // Event
     property OnValueChange: TNotifyEvent read FOnValueChange write FOnValueChange;
   end;
 
@@ -69,6 +71,7 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
+  published
     property LLabel: string read FLabel write SetLabel;
   end;
 
@@ -88,8 +91,9 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-    property Horiz: Boolean read FHoriz write SetHoriz;
-    property Quiet: Boolean read FQuiet write SetQuiet;
+  published
+    property Horiz: Boolean read FHoriz write SetHoriz default False; //I
+    property Quiet: Boolean read FQuiet write SetQuiet default False; //I
   end;
 
 implementation
