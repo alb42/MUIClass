@@ -90,14 +90,14 @@ type
 
     // Events
     property OnDrawObject: TMUIDrawEvent read FOnDrawObject write FOnDrawObject;
-    property OnMUIMouseDown: TMUIMouseEvent read FOnMUIMouseDown write FOnMUIMouseDown;
-    property OnMUIMouseUp: TMUIMouseEvent read FOnMUIMouseUp write FOnMUIMouseUp;
-    property OnMUIDblClick: TMUIMouseEvent read FOnMUIDblClick write FOnMUIDblClick;
-    property OnMUIMouseWheel: TMUIMouseWheel read FOnMUIMouseWheel write FOnMUIMouseWheel;
-    property OnMUIMouseMove: TMUIMouseMove read FOnMUIMouseMove write FOnMUIMouseMove;
-    property OnMUIMouseLeave: TNotifyEvent read FOnMUIMouseLeave write FOnMUIMouseLeave;
-    property OnMUIKeyDown: TMUIKeyDown read FOnMUIKeyDown write FOnMUIKeyDown;
-    property OnMUIKeyUp: TMUIKeyUp read FOnMUIKeyUp write FOnMUIKeyUp;
+    property OnMouseDown: TMUIMouseEvent read FOnMUIMouseDown write FOnMUIMouseDown;
+    property OnMouseUp: TMUIMouseEvent read FOnMUIMouseUp write FOnMUIMouseUp;
+    property OnDblClick: TMUIMouseEvent read FOnMUIDblClick write FOnMUIDblClick;
+    property OnMouseWheel: TMUIMouseWheel read FOnMUIMouseWheel write FOnMUIMouseWheel;
+    property OnMouseMove: TMUIMouseMove read FOnMUIMouseMove write FOnMUIMouseMove;
+    property OnMouseLeave: TNotifyEvent read FOnMUIMouseLeave write FOnMUIMouseLeave;
+    property OnKeyDown: TMUIKeyDown read FOnMUIKeyDown write FOnMUIKeyDown;
+    property OnKeyUp: TMUIKeyUp read FOnMUIKeyUp write FOnMUIKeyUp;
 
     property Width: Integer read GetWidth;
     property Height: Integer read GetHeight;
@@ -144,7 +144,7 @@ begin
   Frame := MUIV_Frame_Text;
   Background.Spec := MUII_BACKGROUND;
   Font := MUIV_Font_Button;
-  FillArea := False;
+  FillArea := True;
   InnerLeft := 0;
   InnerTop := 0;
   InnerBottom := 0;

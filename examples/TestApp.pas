@@ -328,9 +328,9 @@ begin
     DefHeight := 256;
     DefWidth := 256;
     OnDrawObject := @DrawEvent;
-    OnMUIMouseDown := @MouseDown;
-    OnMUIMouseUp := @MouseUp;
-    OnMUIMouseMove := @MouseMove;
+    OnMouseDown := @MouseDown;
+    OnMouseUp := @MouseUp;
+    OnMouseMove := @MouseMove;
     Parent := Pages;
   end;
   DB := nil;
@@ -596,24 +596,15 @@ end;
 // we Draw a little bit
 procedure TMyWindow.DrawEvent(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
 begin
-  SetBPen(RP, 0);
-  SetAPen(RP, 0);
-  RectFill(RP, DrawRect.Left, DrawRect.Top, DrawRect.Left + DrawRect.Width, DrawRect.Top + DrawRect.Height);
   // now you can draw to RastPort into the DrawRect
   if not Assigned(DB) then
   begin
-    writeln('do it');
     DB := TDrawBuffer.Create(256, 256, RP^.Bitmap^.Depth, RP^.Bitmap);
     SetBPen(DB.RP, 2);
     SetAPen(DB.RP, 2);
     RectFill(DB.RP, 0, 0, 256, 256);
     SetAPen(DB.RP, 1);
   end;
-  //SetAPen(RP, 1);
-  //GFXMove(RP, DrawRect.Left, DrawRect.Top);
-  //Draw(RP, DrawRect.Right, DrawRect.Bottom);
-  //GFXMove(RP, DrawRect.Right, DrawRect.Top);
-  //Draw(RP, DrawRect.Left, DrawRect.Bottom);
   ClipBlit(DB.Rp, 0, 0, RP, DrawRect.Left, DrawRect.Top, DB.Width, DB.Height, $00C0);
 end;
 
