@@ -319,8 +319,16 @@ type
   end;
 
   TMUIPopPen = class(TMUIPenDisplay)
+  private
+    FWinTitle: string;
+    procedure SetWinTitle(AValue: string);
+  protected
+    procedure GetCreateTags(var ATagList: TATagList); override;
   public
+    constructor Create; override;
     procedure CreateObject; override;
+  published
+    property WinTitle: string read FWinTitle write SetWinTitle;
   end;
 
   TMUIButton = class(TMUIText)
@@ -382,12 +390,12 @@ type
 
 
 
-  function ColComToMUI(c: Byte): LongWord; inline;
+  function ColCompToMUI(c: Byte): LongWord; inline;
   function MUIToColComp(c: LongWord): Byte; inline;
 
 implementation
 
-function ColComToMUI(c: Byte): LongWord; inline;
+function ColCompToMUI(c: Byte): LongWord; inline;
 begin
   Result := c shl 24 or c shl 16 or c shl 8 or c;
 end;
@@ -1582,10 +1590,22 @@ end;
 procedure TMUIPenDisplay.SetRGB8(Red, Green, Blue: Byte);
 begin
   if HasObj then
-    DoMethod(MUIObj, [MUIM_Pendisplay_SetRGB, ColComToMUI(Red), ColComToMUI(Green), ColComToMUI(Blue)]);
+    DoMethod(MUIObj, [MUIM_Pendisplay_SetRGB, ColCompToMUI(Red), ColCompToMUI(Green), ColCompToMUI(Blue)]);
 end;
 
 { TMUIPopPen }
+
+constructor TMUIPopPen.Create;
+begin
+  inherited;
+  FWinTitle := '';
+end;
+
+procedure TMUIPopPen.GetCreateTags(var ATagList: TATagList);
+begin
+  if FWinTitle <> '' then
+    ATagList.AddTag(MUIA_Window_Title, AsTag(PChar(FWinTitle)));
+end;
 
 procedure TMUIPopPen.CreateObject;
 var
@@ -1599,6 +1619,17 @@ begin
     AfterCreateObject
   end;
 end;
+
+procedure TMUIPopPen.SetWinTitle(AValue: string);
+begin
+  if AValue <> FWinTitle then
+  begin
+    FWinTitle := AValue;
+    if HasObj then
+      SetValue(MUIA_Window_Title, AsTag(PChar(FWinTitle)));
+  end;
+end;
+
 
 { TMUIButton }
 

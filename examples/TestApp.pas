@@ -129,6 +129,7 @@ begin
   with TMUIPopPen.Create do
   begin
     OnSpecChange := @ColChanged;
+    WinTitle := 'My PenSelector';
     Parent := Pnl;
   end;
 
@@ -306,9 +307,9 @@ begin
     with Colors[i] do
     begin
       mpe_ID := i;
-      mpe_Red := ColComToMUI(Random(255));
-      mpe_Green := ColComToMUI(Random(255));
-      mpe_Blue := ColComToMUI(Random(255));
+      mpe_Red := ColCompToMUI(Random(255));
+      mpe_Green := ColCompToMUI(Random(255));
+      mpe_Blue := ColCompToMUI(Random(255));
       mpe_Group := i div 3;
     end;
     Names[i] := 'Color' + IntToStr(i);
@@ -408,9 +409,9 @@ begin
   end;
   with TMUIColorAdjust.Create do
   begin
-    Red := ColComToMUI(Random(255));
-    Green := ColComToMUI(Random(255));
-    Blue := ColComToMUI(Random(255));
+    Red := ColCompToMUI(Random(255));
+    Green := ColCompToMUI(Random(255));
+    Blue := ColCompToMUI(Random(255));
     OnColorChange := @ColorChange;
     Parent := W2;
   end;

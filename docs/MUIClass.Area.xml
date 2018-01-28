@@ -139,8 +139,6 @@
 <descr>
   The Bubbles are not automatically destroyed by MUI. Therefore we destroy them on the end of Application.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- record type Visibility: default -->
@@ -149,8 +147,6 @@
 <descr>
   Attention: a white color will be $ffffffff, $ffffffff, $ffffffff (in contrast a $ff, $ff, $ff would be still black)
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- variable Visibility: default -->
@@ -171,10 +167,6 @@
 <!-- pointer type Visibility: default -->
 <element name="PMUIRGB">
 <short>Pointer to a list of MUI RGB color with three LongWords for every color</short>
-<descr>
-</descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- class Visibility: default -->
@@ -196,32 +188,17 @@
   of area, you can create rather complex buttons consisting
   of many other display elements.</p>
 </descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIArea.AfterCreateObject">
 <short>Started after the MUI Object is created to connect events.</short>
-<descr>Will be called by <link id="TMUIArea.CreateObject">CreateObject</link> there is no reason to call it yourself.
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<descr>Will be called by <link id="TMUIArea.CreateObject">CreateObject</link> there is no reason to call it yourself.</descr>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIArea.BeforeCloseWindow">
 <short>Called before the window gets closed or the application get terminated to clean some contents</short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
@@ -229,10 +206,6 @@
 <short>Get the properties of this class as TagList to create the MUI Object</short>
 <descr>Will be called by <link id="TMUIArea.CreateObject">CreateObject</link> there is no reason to call it yourself.
 </descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
 </element>
 
 <!-- argument Visibility: default -->
@@ -250,42 +223,23 @@
   is responsible for filling every pixel of your objects
   rectangle, otherwise some display trash will remain there.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIArea.Create">
 <short>Create the class and init the properties</short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIArea.Destroy">
 <short>Destroy the class, if the MUI object is still alive it will be disconnected and destroyed as well.</short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIArea.CreateObject">
 <short>Create the MUI object.</short>
-<descr>
-  This will be called by the Parent class, usually you do not need to call this yourself.
+<descr>This will be called by the Parent class, usually you do not need to call this yourself.
 </descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
 </element>
 
 <!-- function Visibility: public -->
@@ -321,8 +275,6 @@
             is some user input.</dd>
   </dl>
 </descr>
-<errors>
-</errors>
 <seealso>
   <link id="TMUIArea.DeleteBubble">DeleteBubble()</link>
   <link id="TMUIArea.DeleteAllBubbles">DeleteAllBubbles()</link>
@@ -385,8 +337,6 @@
   The object remembers the open bubbles, with this method you can call all bubbles opened on this object.
   Note: all the bubble handles become invalid in this moment.
 </descr>
-<errors>
-</errors>
 <seealso>
    <link id="TMUIArea.CreateBubble">CreateBubble()</link>
    <link id="TMUIArea.DeleteBubble">DeleteBubble()</link>
@@ -405,8 +355,6 @@ up some requester below.</p>
 Of course, this attribute is only valid when the
 parent window of the object is currently open.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -421,8 +369,6 @@ up some requester below.</p>
 Of course, this attribute is only valid when the
 parent window of the object is currently open.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -437,8 +383,6 @@ up some requester below.</p>
 Of course, this attribute is only valid when the
 parent window of the object is currently open.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -453,8 +397,6 @@ up some requester below.</p>
 Of course, this attribute is only valid when the
 parent window of the object is currently open.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -469,8 +411,6 @@ up some requester below.</p>
 Of course, this attribute is only valid when the
 parent window of the object is currently open.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -485,8 +425,6 @@ up some requester below.</p>
 Of course, this attribute is only valid when the
 parent window of the object is currently open.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -507,8 +445,6 @@ parent window of the object is currently open.</p>
   <dt></dt><dd></dd>
   </dl>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
@@ -537,8 +473,6 @@ The result is only valid when the window is opened.</p>
   Useful mainly within Events if you do not want
   to deal with global variables.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -580,8 +514,6 @@ Only a few MUII_* tags make sense as background.</p>
            same.</dd>
 </dl>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -595,8 +527,6 @@ This can be used to create old style key shortcuts.
  </p>
 <p>Note: Using an uppercase control char will force the user to press shift.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -605,8 +535,6 @@ This can be used to create old style key shortcuts.
 <descr>
 Set to one to add the object to the cycle chain. (can navigate with TAB through the items in the chain)
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -623,8 +551,6 @@ Disabled gadgets cannot be activated with the TAB key.</p>
 Using Disable on a group of objects will disable
 all objects within that group.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -634,8 +560,6 @@ all objects within that group.</p>
 Set this if you want the complete object to be
 dragable for Drag'n'Drop operations.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -649,8 +573,6 @@ dragable for Drag'n'Drop operations.
   because the DragQuery method is answered False when
   it arrives at area class.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -660,8 +582,6 @@ dragable for Drag'n'Drop operations.
 This property is absolutely not needed in a general MUI application
 and only present for emergency situations. Please think twice before using it!
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -674,8 +594,6 @@ absolutely not needed in a general MUI application
 and only present for emergency situations. Please
 think twice before using it!
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -685,8 +603,6 @@ think twice before using it!
 This property is absolutely not needed in a general MUI application
 and only present for emergency situations. Please think twice before using it!
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -699,8 +615,6 @@ absolutely not needed in a general MUI application
 and only present for emergency situations. Please
 think twice before using it!
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -726,8 +640,6 @@ MUIV_Font_Button,
 MUIV_Font_Slider,
 MUIV_Font_Gauge</b></p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -786,8 +698,6 @@ be always on the same vertical position as the string
 gadget text, no matter what spacing values the user
 configured.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -867,6 +777,8 @@ objects with a big disappear level.
   weights.
 </descr>
 <seealso>
+  <link id="TMUIArea.Weight">Weight</link>
+  <link id="TMUIArea.VertWeight">VertWeight</link>
 </seealso>
 </element>
 
@@ -881,6 +793,8 @@ objects with a big disappear level.
   weights.
 </descr>
 <seealso>
+  <link id="TMUIArea.Weight">Weight</link>
+  <link id="TMUIArea.HorizWeight">HorizWeight</link>
 </seealso>
 </element>
 
@@ -946,19 +860,11 @@ objects with a big disappear level.
 <!-- property Visibility: published -->
 <element name="TMUIArea.MaxHeight">
 <short>[i] Specify a maximum height for an object (in pixels).</short>
-<descr>
-</descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIArea.MaxWidth">
 <short>[i] Specify a maximum width for an object (in pixels).</short>
-<descr>
-</descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -990,8 +896,6 @@ depending on the input mode:</p>
         object.</short>
 <descr>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
@@ -1052,538 +956,270 @@ object is resizable. A <link id="TMUIArea.VertWeight">VertWeight</link> for a
 
 <!-- class Visibility: default -->
 <element name="TMUIRectangle">
-<short></short>
+<short>Create an empty Rectangle object</short>
 <descr>
+Rectangle class seems kind of useless since it
+doesn't define any attributes or methods itself.
+However, objects of this type are frequently
+used in every application. They allow insertion
+of space to control MUI's layout process.
 </descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIRectangle.FBarTitle">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIRectangle.FHBar">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIRectangle.FVBar">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIRectangle.SetBarTitle">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIRectangle.SetBarTitle.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIRectangle.SetHBar">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIRectangle.SetHBar.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIRectangle.SetVBar">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIRectangle.SetVBar.AValue">
-<short></short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRectangle.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Form the TagList for creation of a rectangle item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRectangle.GetCreateTags.ATagList">
-<short></short>
+<short>Taglist to be formed</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIRectangle.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the object and init the default values</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIRectangle.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the MUI Item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRectangle.BarTitle">
-<short></short>
+<short>[i] Text inside a horizontal bar</short>
 <descr>
+This attribute describes a text string which will be displayed
+in group title style centered in the rectangle. Really only
+makes sense if <link id="TMUIRectangle.HBar">HBar</link> is True.
 </descr>
 <seealso>
+  <link id="TMUIRectangle.HBar">HBar</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRectangle.HBar">
-<short></short>
+<short>[i] Draws a horizontal bar in the middle of the rectangle</short>
 <descr>
+When set to True, MUI draws a horizontal bar in the middle of the
+rectangle. Such bars can be used instead of group frames to
+seperate objects in a window.
 </descr>
 <seealso>
+  <link id="TMUIRectangle.VBar">VBar</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRectangle.VBar">
-<short></short>
+<short>[i] Draws a vertical bar in the middle of the rectangle</short>
 <descr>
+When set to True, MUI draws a vertical bar in the middle of the
+rectangle. Such bars can be used instead of group frames to
+seperate objects in a window.
 </descr>
 <seealso>
+  <link id="TMUIRectangle.HBar">HBar</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIBalance">
-<short></short>
+<short>Splitter type item to change sizes of to aligned object</short>
 <descr>
+The balance class is very simple and has no attributes.
+Simply insert objects of this class somewhere in your
+group (only horizontal or vertical groups, nothing
+2-dimensional) allows your users to dynamically change
+the weight of your children.
 </descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIBalance.FQuiet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIBalance.SetQuiet">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIBalance.SetQuiet.AValue">
-<short></short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIBalance.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Fill Tag list to create a blanace item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIBalance.GetCreateTags.ATagList">
-<short></short>
+<short>Taglist to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIBalance.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the Balance object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIBalance.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the MUI balance Item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIBalance.Quiet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>[i] Only show Frame when mouse hovers over it</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIGauge">
-<short></short>
+<short>Progressbar like item</short>
 <descr>
+A gauge object is a nice looking display element useful
+for some kind of progress display.
 </descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIGauge.FCurrent">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIGauge.FDivide">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIGauge.FHoriz">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIGauge.FInfoText">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIGauge.FMax">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIGauge.SetHoriz">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIGauge.SetHoriz.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIGauge.SetCurrent">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIGauge.SetCurrent.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIGauge.SetDivide">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIGauge.SetDivide.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIGauge.SetMax">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIGauge.SetMax.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIGauge.SetInfoText">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIGauge.SetInfoText.AValue">
-<short></short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIGauge.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Fill TagList with Tags to create gauge item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIGauge.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIGauge.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create a Gauge object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIGauge.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the MUI Gauge item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIGauge.Current">
-<short></short>
+<short>Set the current level of the gauge</short>
 <descr>
+  The value must be between 0 and <link id="TMUIGauge.Max">Max</link>.
 </descr>
 <seealso>
+  <link id="TMUIGauge.Max">Max</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIGauge.Divide">
-<short></short>
+<short>Divide the Value for display</short>
 <descr>
+If this attribute is &lt;&gt; 0, every value set with
+<link id="TMUIGauge.Current">Current</link> will be divided by this before
+further processing.
 </descr>
 <seealso>
+  <link id="TMUIGauge.Current">Current</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIGauge.InfoText">
-<short></short>
+<short>Text in the progressbar</short>
 <descr>
+  <p>
+    The text given here is displayed within a gauge object
+    and is usually intended to show some kind of percentage
+    information.
+  </p>
+  <p>
+    This texts preparse is set to #27'c'#27'8', this makes
+    it appear centered and highlighted by default.
+  </p>
+  <p>
+    Any %ld will be replaced with the current value of
+    <link id="TMUIGauge.Current">Current</link>.
+  </p>
 </descr>
 <seealso>
+  <link id="TMUIGauge.Current">Current</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIGauge.Max">
-<short></short>
+<short>Maximum of the Gauge</short>
 <descr>
+  Set the maximum value for the gauge.
+  Defaults to 100.
+  Currently, <link id="TMUIGauge.Max">Max</link> and <link id="TMUIGauge.Current">Current</link>
+  is limited to 16 bit.
 </descr>
 <seealso>
+  <link id="TMUIGauge.Max">Max</link>
+  <link id="TMUIGauge.Current">Current</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIGauge.Horiz">
-<short></short>
+<short>make the Gauge horizontal </short>
 <descr>
+  Determine if you want a horizontal or vertical gauge.
+  Default to False (= vertical Gauge)
 </descr>
 <seealso>
+  <link id="TMUIGauge.Current">Current</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIScale">
-<short></short>
+<short>Percentage Scale</short>
 <descr>
+  <p>
+    A Scale object generates a percentage scale
+    running from 0% to 100%. A good place for
+    such an object is e.g. below a fuel <link id="TMUIGauge">gauge</link>.
+  </p>
+  <p>
+    Depending on how much space is available,
+    the scale will be more or less detailed.
+  </p>
+  <p>
+    Due to MUI's automatic layout system, you
+    don't need to worry about it's size. When
+    placed in a vertical group just below the
+    object you want to scale, everything is
+    fine.
+  </p>
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="TMUIGauge">gauge</link>
 </seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIScale.FHoriz">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIScale.SetHoriz">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIScale.SetHoriz.AValue">
-<short></short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScale.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Fill Tag list to create the Scale item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIScale.GetCreateTags.ATagList">
-<short></short>
+<short>Tag list to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIScale.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create Scale object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIScale.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIScale.Horiz">
-<short></short>
+<short>Show the scale in teh horizontal direction</short>
 <descr>
+  Indicate whether you want a horizontal or a
+  vertical scale.
+  <b>Currently, only the horizontal scale is implemented.</b>
+  Defaults to True.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- class Visibility: default -->
@@ -1597,745 +1233,431 @@ object is resizable. A <link id="TMUIArea.VertWeight">VertWeight</link> for a
 </seealso>
 </element>
 
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FBlue">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FBlueSet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FRed">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FRedSet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FGreen">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FGreenSet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIColorfield.FPen">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIColorfield.SetBlue">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIColorfield.SetBlue.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIColorfield.SetRed">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIColorfield.SetRed.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIColorfield.SetGreen">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIColorfield.SetGreen.AValue">
-<short></short>
-</element>
-
-<!-- function Visibility: private -->
-<element name="TMUIColorfield.GetPen">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: private -->
-<element name="TMUIColorfield.GetPen.Result">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIColorfield.SetPen">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIColorfield.SetPen.AValue">
-<short></short>
-</element>
-
-<!-- function Visibility: private -->
-<element name="TMUIColorfield.GetRGB">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: private -->
-<element name="TMUIColorfield.GetRGB.Result">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIColorfield.SetRGB">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIColorfield.SetRGB.AValue">
-<short></short>
-</element>
-
 <!-- procedure Visibility: protected -->
 <element name="TMUIColorfield.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Fill TagList to create the Colorfield item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIColorfield.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIColorfield.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create a Colorfield object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIColorfield.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIColorfield.Pen">
-<short></short>
+<short>Use this Pen to show the color</short>
 <descr>
+When specified, the colorfield uses exactly this pen instead
+of trying to obtain a new one.
 </descr>
 <seealso>
+  <link id="TMUIColorfield.RGB">RGB</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIColorfield.RGB">
-<short></short>
+<short>Set or Get Color as three 32bit LongWords</short>
 <descr>
+Set or get the red/green/blue values of a colorfield all at
+once. You pass in / receive a pointer to three longwords
+containing the 32-bit red, green and blue values.
 </descr>
 <seealso>
+  <link id="TMUIColorfield.Red">Red</link>
+  <link id="TMUIColorfield.Green">Green</link>
+  <link id="TMUIColorfield.Blue">Blue</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorfield.Blue">
-<short></short>
+<short>Blue color component as 32bit LongWord</short>
 <descr>
+Set or get the 32-bit blue component of the fields color.
+Values range from 0 (no blue) to $ffffffff (full blue).
 </descr>
 <seealso>
+  <link id="TMUIColorfield.Red">Red</link>
+  <link id="TMUIColorfield.Green">Green</link>
+  <link id="TMUIColorfield.RGB">RGB</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorfield.Red">
-<short></short>
+<short>Red color component as 32bit LongWord</short>
 <descr>
+Set or get the 32-bit red component of the fields color.
+Values range from 0 (no red) to $ffffffff (full red).
 </descr>
 <seealso>
+  <link id="TMUIColorfield.RGB">RGB</link>
+  <link id="TMUIColorfield.Green">Green</link>
+  <link id="TMUIColorfield.Blue">Blue</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorfield.Green">
-<short></short>
+<short>Green color component as 32bit LongWord</short>
 <descr>
+Set or get the 32-bit green component of the fields color.
+Values range from 0 (no green) to $ffffffff (full green).
 </descr>
 <seealso>
+  <link id="TMUIColorfield.Red">Red</link>
+  <link id="TMUIColorfield.RGB">RGB</link>
+  <link id="TMUIColorfield.Blue">Blue</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIText">
-<short></short>
+<short>Label type text object</short>
 <descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIText.FContents">
-<short></short>
-<descr>
+Text class allows generating objects that contain
+some kind of text. You can control the outfit of
+your text with some special control characters,
+including italics, bold, underline and color
+codes. Format codes align text either left,
+centered or right, linefeeds allow multiline
+text fields.
 </descr>
 <seealso>
+  <link id="MUIClass.List.TMUIFloatText">FloatText</link>
 </seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIText.FHiChar">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIText.FPreParse">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIText.FSetMax">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIText.FSetMin">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIText.FSetVMax">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIText.SetContents">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIText.SetContents.AContents">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIText.SetHiChar">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIText.SetHiChar.AHiChar">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIText.SetPreParse">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIText.SetPreParse.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIText.SetSetMax">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIText.SetSetMax.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIText.SetSetMin">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIText.SetSetMin.AValue">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIText.SetSetVMax">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIText.SetSetVMax.AValue">
-<short></short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIText.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Fill Tags list for Text item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIText.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIText.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create Text object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIText.Create.AContents">
-<short></short>
+<short>String to be displayed in a text object.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIText.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIText.Contents">
-<short></short>
+<short>String to be displayed in a text object.</short>
 <descr>
+<p>If the string is larger than available display space,
+it will be clipped. Setting Contents to ''
+results in an empty text object.</p>
+<p>The string is copied into a private buffer, you can destroy
+the original after using this tag.
+</p>
+<p>
+whenever MUI prints strings, they may contain some special
+character sequences defining format, color and style of the text.
+</p>
+<dl>
+  <dt>'\n'</dt><dd>Start a new line. With this character you can e.g. create multi line buttons.</dd>
+  <dt>ESC -</dt><dd>Disable text engine, following chars will be printed without further parsing.</dd>
+  <dt>ESC u</dt><dd>Set the soft style to underline.</dd>
+  <dt>ESC b</dt><dd>Set the soft style to bold.</dd>
+  <dt>ESC i</dt><dd>Set the soft style to italic.</dd>
+  <dt>ESC n</dt><dd>Set the soft style back to normal.</dd>
+  <dt>ESC &lt;n&gt;</dt><dd>Use pen number n (2..9) as front pen. n must be a valid DrawInfo pen as specified in intuition".</dd>
+  <dt>ESC c</dt><dd>Center current (and following) line(s). This sequence is only valid at the beginning of a string or after a newline character.</dd>
+  <dt>ESC r</dt><dd>Right justify current (and following) line(s). This sequence is only valid at the beginning of a string or after a newline character.</dd>
+  <dt>ESC l</dt><dd>Left justify current (and following) line(s). This sequence is only valid at the beginning of a string or after a newline character.</dd>
+  <dt>ESC I[s]</dt><dd>Draw MUI image with specification &lt;s&gt;. See <link id="MUIClass.Image.TMUIImage.Spec">image</link> for image spec definition.</dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIText.SetMin">SetMin</link>
+  <link id="TMUIText.SetMax">SetMax</link>
+  <link id="TMUIText.PreParse">PreParse</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIText.HiChar">
-<short></short>
+<short>[i] Underline this character in the Text</short>
 <descr>
+If the character given here exists in the displayed
+string (no matter if upper or lower case), it will
+be underlined. This makes it easy to create macros
+such as KeyButton() that specify the control char
+and the underline char at the same time.
 </descr>
 <seealso>
+  <link id="TMUIText.Contents">Contents</link>
+  <link id="TMUIArea.ControlChar">ControlChar</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIText.PreParse">
-<short></short>
+<short>Define fixed content independant text format.</short>
 <descr>
+<p>
+String containing format definitions to be parsed before
+the text from <link id="TMUIText.Contents">Contents</link> is printed.
+</p>
+<p>
+Using this tag, you can easily define different formats,
+colors and styles without modifying the original string.
+</p>
 </descr>
 <seealso>
+  <link id="TMUIText.Contents">Contents</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIText.SetMax">
-<short></short>
+<short>[i] Define the initial contents width as maximum width of the item</short>
 <descr>
+<p>
+Boolean value to indicate wether the objects maximal width
+shall be calculated to fit the string given with
+<link id="TMUIText.Contents">Contents</link>.
+</p>
+<p>
+When set to False, maximum width is not limited.
+</p>
+<p>
+For a text object that needs to be updated (e.g. some
+information about your programs status) you would probably
+set SetMax to False to allow resizing of this
+object.
+</p>
+<p>
+For a label for one of your gadgets, you might want to
+give this property a value of True to prevent MUI from
+inserting additional layout space.
+</p>
+<p>
+Default to False
+</p>
 </descr>
 <seealso>
+  <link id="TMUIText.Contents">Contents</link>
+  <link id="TMUIText.SetMin">SetMin</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIText.SetMin">
-<short></short>
+<short>[i] Define the initial contents width as minimum width of the item</short>
 <descr>
+<p>
+Boolean value to indicate wether the objects minimal width
+shall be calculated to fit the string given with
+<link id="TMUIText.Contents">Contents</link>.
+</p>
+<p>
+When set to False, minimum width will be set to 0
+and the displayed string may be clipped.
+</p>
+<p>Defaults to True.</p>
 </descr>
 <seealso>
+  <link id="TMUIText.Contents">Contents</link>
+  <link id="TMUIText.SetMax">SetMax</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIText.SetVMax">
-<short></short>
+<short>[i] Fix Vertical height</short>
 <descr>
+Settings this to False makes a TextObjects y-size unlimited.
+Defaults to True which means the objects height is fixed.
 </descr>
 <seealso>
+  <link id="TMUIText.Contents">Contents</link>
+  <link id="TMUIText.SetMax">SetMax</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIPenDisplay">
-<short></short>
+<short>Show a Pen as Color field</short>
 <descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIPenDisplay.FSpec">
-<short></short>
-<descr>
+Pendisplay class takes a struct PMUI_PenSpec and displays it.
+Its main use is to be sub-classed by Poppen class which adds
+a popup window to adjust the PMUI_PenSpec. <link id="TMUIPopPen">PopPen</link> class should
+be used by every application that allows users to configure
+custom drawing pens.
 </descr>
 <seealso>
+  <link id="TMUIPopPen">PopPen</link>
 </seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TMUIPenDisplay.FOnSpecChange">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- function Visibility: private -->
-<element name="TMUIPenDisplay.GetPen">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: private -->
-<element name="TMUIPenDisplay.GetPen.Result">
-<short></short>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TMUIPenDisplay.SetSpec">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIPenDisplay.SetSpec.AValue">
-<short></short>
-</element>
-
-<!-- function Visibility: private -->
-<element name="TMUIPenDisplay.GetSpec">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: private -->
-<element name="TMUIPenDisplay.GetSpec.Result">
-<short></short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPenDisplay.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Fill Tag list for PenDisplay creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPenDisplay.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Connects events after MUI item is created</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPenDisplay.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Creates a PenDisplay Object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPenDisplay.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Creates the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPenDisplay.SetColormap">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
+<short>Switch the pendisplay object to a specific colormap entry.</short>
 <seealso>
+  <link id="TMUIPenDisplay.SetMUIPen">SetMUIPen</link>
+  <link id="TMUIPenDisplay.SetRGB">SetRGB</link>
+  <link id="TMUIPenDisplay.SetRGB">SetRGB</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetColormap.ColorMap">
-<short></short>
+<short>Colormap entry</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPenDisplay.SetMUIPen">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
+<short>Switch the pendisplay object to a specific MUI pen (MPEN_SHINE, MPEN_SHADOW, ...)</short>
 <seealso>
+  <link id="TMUIPenDisplay.SetColormap">SetMUIPen</link>
+  <link id="TMUIPenDisplay.SetRGB">SetRGB</link>
+  <link id="TMUIPenDisplay.SetRGB">SetRGB</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetMUIPen.MUIPen">
-<short></short>
+<short>MUI Pen to set</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPenDisplay.SetRGB">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
+<short>Switch the pendisplay object to an RGB value.</short>
 <seealso>
+  <link id="TMUIPenDisplay.SetMUIPen">SetMUIPen</link>
+  <link id="TMUIPenDisplay.SetColormap">SetMUIPen</link>
+  <link id="TMUIPenDisplay.SetRGB8">SetRGB8</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetRGB.Red">
-<short></short>
+<short>Red component as 32 bit longword</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetRGB.Green">
-<short></short>
+<short>Green component as 32 bit longword</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetRGB.Blue">
-<short></short>
+<short>Blue component as 32 bit longword</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPenDisplay.SetRGB8">
-<short></short>
+<short>Switch the pendisplay object to an RGB value as byte values.</short>
 <descr>
 </descr>
 <errors>
 </errors>
 <seealso>
+  <link id="TMUIPenDisplay.SetMUIPen">SetMUIPen</link>
+  <link id="TMUIPenDisplay.SetColormap">SetMUIPen</link>
+  <link id="TMUIPenDisplay.SetRGB">SetRGB</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetRGB8.Red">
-<short></short>
+<short>Red component as byte value</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetRGB8.Green">
-<short></short>
+<short>Green component as byte value</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPenDisplay.SetRGB8.Blue">
-<short></short>
+<short>Blue component as byte value</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIPenDisplay.Pen">
-<short></short>
+<short>Used Pen for this item</short>
 <descr>
+<p>This attribute returns the
+pen number MUI uses for color representation of the current
+pendisplay object.</p>
+<p>This attribute returns -1 when outside of not setup
+or when the pendisplay object didnt allocate a color on its
+own.
+</p>
 </descr>
 <seealso>
+  <!--link id="TMUIPenDisplay.Reference">TMUIPenDisplay.Reference</link-->
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIPenDisplay.Spec">
-<short></short>
+<short>Defines the color/pen to show</short>
 <descr>
+<p>
+The black box structure PMUI_PenSpec specifies a drawing
+pen which should be displayed by Pendisplay class. If you
+use Poppen class to allow your users to configure custom
+drawing pens, its this attribute that you need to get()
+and save in your preferences.</p>
+<p>
+Use the functions MUI_ObtainPen() and MUI_ReleasePen()
+from muimaster.library and the MUIPEN() macro to get
+a usable value for SetAPen() from a struct MUI_PenSpec.</p>
+<p>
+<b>NOTE</b>: In allmost all cases you will use <link id="TMUIPopPen">PopPen</link> class which
+is a subclass of Pendisplay class. </p>
 </descr>
 <seealso>
 </seealso>
@@ -2343,457 +1665,380 @@ object is resizable. A <link id="TMUIArea.VertWeight">VertWeight</link> for a
 
 <!-- property Visibility: published -->
 <element name="TMUIPenDisplay.OnSpecChange">
-<short></short>
+<short>Color definition was changed</short>
 <descr>
+  The <link id="TMUIPenDisplay.Spec">Spec</link> field was changed. useful for
+  <link id="TMUIPopPen">PopPen</link> where the user can change the pen with a dialog.
 </descr>
 <seealso>
+  <link id="TMUIPenDisplay.Spec">Spec</link>
+  <link id="TMUIPopPen">PopPen</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIPopPen">
-<short></short>
+<short>Colored Button with Dialog to choose a Color/Pen</short>
 <descr>
+<p>
+Poppen class adds input capabilities to its super class
+Pendisplay. It should be used if your application allows
+users to configure some custom pens for rendering.
+</p>
+<p>
+A Poppen object will appear as kind of a button which
+displays the currently selected color. When the user hits
+the button, a Popup window containing a Penadjust object
+opens up and lets the user choose change the color.</p>
+<p>
+You can control the window title of the popup window using
+the <link id="TMUIPopPen.WinTitle">WinTitle</link> field. It will remember
+its value and use it when creating the popup window.</p>
+<p>
+As most MUI popups, the Penadjust popup window runs
+asynchronously and stays there until the user terminates
+it with "OK" or "Cancel". Furthermore, if the popup window
+is automatically cancelled if the pop button is removed.</p>
+<p> You
+can get/set the current color from a Poppen object by using
+the <link id="TMUIPenDisplay.Spec">Spec</link> attribute. The resulting struct
+PMUI_SpenSpec may then be saved somewhere in your preferences
+and used as parameter for MUI_ObtainPen() and MUI_ReleasePen().
+</p>
 </descr>
 <errors>
 </errors>
 <seealso>
+  <link id="TMUIPopPen.WinTitle">WinTitle</link>
+  <link id="TMUIPenDisplay.Spec">Spec</link>
 </seealso>
+</element>
+
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopPen.GetCreateTags">
+<short>Fill Tag list for PopPen creation</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPopPen.GetCreateTags.ATagList">
+<short>TagList to fill</short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPopPen.Create">
+<short>Creates a PopPen Object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopPen.CreateObject">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the PopPen object</short>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopPen.WinTitle">
+<short>Define the title of the Dialog window</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIButton">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Short cut to create a simple Button</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIButton.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create a Button object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIButton.Create.ATitle">
-<short></short>
+<short>Define the Text on the Button</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIHSpace">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Horizontal space object</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIHSpace.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the horizontal space object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIHSpace.Create.Space">
-<short></short>
+<short>Number of pixels height</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIVSpace">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Vertical space object</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIVSpace.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create the vertical space object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIVSpace.Create.Space">
-<short></short>
+<short>Number of Pixels width</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIHBar">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Horizonal bar object</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIHBar.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create a horizontal bar</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIHBar.Create.Space">
-<short></short>
+<short>Number of Pixels height</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIVBar">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Vertical bar object</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIVBar.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create a vertical bar object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIVBar.Create.Space">
-<short></short>
+<short>Number of pixels width</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIBarTitle">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Horizontal bar with a Text</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIBarTitle.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create horizontal bar with text</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIBarTitle.Create.ALabel">
-<short></short>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TSpecDesc.FText">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TSpecDesc.FSpec">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: private -->
-<element name="TSpecDesc.FIsSet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: private -->
-<element name="TSpecDesc.SetFSpec">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TSpecDesc.SetFSpec.ASpec">
-<short></short>
+<short>Text shown in the bar object</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TSpecDesc.Create">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
-<seealso>
-</seealso>
+<short>Create a Spec description object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetStdPattern">
-<short></short>
-<descr>
-</descr>
-<errors>
-</errors>
+<short>Set by MUI standard pattern (will directly supplied not as string)</short>
 <seealso>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetStdPattern.APattern">
-<short></short>
+<short>e.g. MUII_BACKGROUND ... MUII_FILLBACK2 , MUII_ButtonBack, MUII_TextBack</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetRGB">
-<short></short>
+<short>Set by Color as three bytes</short>
 <descr>
+  will resolve to '2: rrrrrrrr,gggggggg,bbbbbbbb'
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="TSpecDesc.SetRGB32">SetRGB32</link>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetRGB.R">
-<short></short>
+<short>Red as byte</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetRGB.G">
-<short></short>
+<short>Green as byte</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetRGB.B">
-<short></short>
+<short>Blue as byte</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetRGB32">
-<short></short>
+<short>Set by Color MUI typical as three Longwords</short>
 <descr>
+  will resolve to '2: rrrrrrrr,gggggggg,bbbbbbbb'
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="TSpecDesc.SetRGB">SetRGB</link>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetRGB32.R">
-<short></short>
+<short>Red component as LongWord</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetRGB32.G">
-<short></short>
+<short>Green component as LongWord</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetRGB32.B">
-<short></short>
+<short>Blue component as LongWord</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetBoopsiName">
-<short></short>
+<short>Set by external Boopsi class name</short>
 <descr>
+  will resolve to '3: &lt;AName&gt;'
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetBoopsiName.AName">
-<short></short>
+<short>Name of the external Boopsi class</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetMUIBrush">
-<short></short>
+<short>Set by external MUI brush name</short>
 <descr>
+  will resolve to '4: &lt;AName&gt;'
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetMUIBrush.AName">
-<short></short>
+<short>Name of the external MUI brush</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetPicture">
-<short></short>
+<short>Set by path to an external Picture</short>
 <descr>
+  will resolve to '5: &lt;PicPath&gt;'
+  Picture will be loaded by datatype
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetPicture.PicPath">
-<short></short>
+<short>Name of the picture with path</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetPreConf">
-<short></short>
+<short>Set by preconfigured patterns</short>
 <descr>
+  MUII_WindowBack ... MUII_Count - 1
+  will resolve to '6: &lt;ABack&gt;'
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetPreConf.ABack">
-<short></short>
+<short>Value of the preconfigures pattern</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TSpecDesc.SetString">
-<short></short>
+<short>Set by a string</short>
 <descr>
+  The string must begin with a number and colon '&lt;n&gt;: &lt;parameter&gt;'
+  Check <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link> for more informations.
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TSpecDesc.SetString.AText">
-<short></short>
+<short>Text to set as Spec description</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TSpecDesc.IsSet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>defines if the Value was set at least once with one of the set functions</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TSpecDesc.Spec">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Spec value as it will be written to the MUI Field</short>
 </element>
 
 <!-- function Visibility: default -->
-<element name="ColComToMUI">
-<short></short>
+<element name="ColCompToMUI">
+<short>Convert a Byte Color component to a 32 bit MUI Longword Color component</short>
 <descr>
+  MUI uses 32bit LongWord for each color component for (0 = no color $ffffffff = full color) this converts the
+  standard bytes to the MUI LongWords by filling up the rest of the longword:
+  for example: byte = $42 ; LongWord $42424242
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="MUIToColComp">MUIToColComp()</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: default -->
-<element name="ColComToMUI.Result">
-<short></short>
+<element name="ColCompToMUI.Result">
+<short>Color Component as LongWord for MUI</short>
 </element>
 
 <!-- argument Visibility: default -->
-<element name="ColComToMUI.c">
-<short></short>
+<element name="ColCompToMUI.c">
+<short>Color Component as Byte</short>
 </element>
 
 <!-- function Visibility: default -->
 <element name="MUIToColComp">
-<short></short>
+<short>Convert a MUI LongWord Color component to a standard Byte Color component</short>
 <descr>
+  MUI uses 32bit LongWord for each color component for (0 = no color $ffffffff = full color) this converts the
+  MUI LongWords to standard bytes by cutting away the not needed bits :
+  for example: LongWord = $421bc512 ; byte = $42
 </descr>
-<errors>
-</errors>
 <seealso>
+  <link id="ColCompToMUI">ColCompToMUI()</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: default -->
 <element name="MUIToColComp.Result">
-<short></short>
+<short>Color component as byte</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="MUIToColComp.c">
-<short></short>
+<short>Color Component as MUI LongWord</short>
 </element>
 
 </module> <!-- MUIClass.Area -->
