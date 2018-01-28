@@ -159,8 +159,10 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIImage">
-<short></short>
+<short>Display an image</short>
 <descr>
+  Image class is used to display one of MUI's standard
+  images or some selfmade image data.
 </descr>
 <seealso>
 </seealso>
@@ -168,112 +170,152 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIImage.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill Taglist for image creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIImage.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIImage.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create Image object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIImage.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>destroy image object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIImage.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the image MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIImage.OldImage">
-<short></short>
+<short>[i] Pointer to a standard graphics.library PImage</short>
 <descr>
+Allows you to use any conventional image structure
+within a MUI window. The resulting object is always
+as big as the image and not resizable.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.FontMatch">
-<short></short>
+<short>[i] Scale the image size with font size</short>
 <descr>
+<p>If True, width and height of the given image will be
+scaled to match the current font. Images are always
+defined with a reference font of topaz/8, bigger fonts
+will make the image grow (as long as its maximum size
+is big enough).</p>
+<p>The arrows of a scroll bar are e.g. defined with FontMatch.</p>
 </descr>
 <seealso>
+  <link id="TMUIImage.FontMatchHeight">FontMatchHeight</link>
+  <link id="TMUIImage.FontMatchWidth">FontMatchWidth</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.FontMatchHeight">
-<short></short>
+<short>[i] Scale the image Height with font size</short>
 <descr>
+If True, the height of the given image will be scaled
+to match the current font. Images are always defined
+with a reference font of topaz/8, bigger fonts will
+make the image grow (as long as its maximum size
+is big enough).
 </descr>
 <seealso>
+  <link id="TMUIImage.FontMatch">FontMatch</link>
+  <link id="TMUIImage.FontMatchWidth">FontMatchWidth</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.FontMatchWidth">
-<short></short>
+<short>[i] Scale the image Width with font size</short>
 <descr>
+If True, the width of the given image will be scaled
+to match the current font. Images are always defined
+with a reference font of topaz/8, bigger fonts will
+make the image grow (as long as its maximum size
+is big enough).
 </descr>
 <seealso>
+  <link id="TMUIImage.FontMatch">FontMatch</link>
+  <link id="TMUIImage.FontMatchHeight">FontMatchHeight</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.FreeHoriz">
-<short></short>
+<short>[i] Tell the image if its allowed to get scaled horizontally.</short>
 <descr>
+  Defaults to False
 </descr>
 <seealso>
+  <link id="TMUIImage.FreeVert">FreeVert</link>
+  <link id="TMUIImage.FontMatch">FontMatch</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.FreeVert">
-<short></short>
+<short>[i] Tell the image if its allowed to get scaled vertically.</short>
 <descr>
+  Defaults to False
 </descr>
 <seealso>
+  <link id="TMUIImage.FreeHoriz">FreeHoriz</link>
+  <link id="TMUIImage.FontMatch">FontMatch</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.Spec">
-<short></short>
+<short>[i] Specify the type of your image.</short>
 <descr>
+<p>
+Usually, you will
+use one of the predefined standard images here,
+(one of the MUII_xxx definitions from mui.h),
+but you also can supply a string containing
+a MUI image specification. Image specifications
+always starts with a digit, followed by a ':',
+followed by some parameters. Currently, the
+following things are defined (all numeric
+parameters need to be ascii values!):
+</p>
+<dl>
+  <dt>'0:&lt;x&gt;'</dt><dd>where &lt;x&gt; is between MUII_BACKGROUND and MUII_FILLBACK2 identifying a builtin pattern.</dd>
+  <dt>'1:&lt;x&gt;'</dt><dd>where &lt;x&gt; identifies a builtin standard image. Don't use this, use '6:&lt;x&gt;' instead.</dd>
+  <dt>'2: &lt;r&gt;,&lt;g&gt;,&lt;b&gt;'</dt><dd>where &lt;r&gt;, &lt;g&gt; and &lt;b&gt; are 32-bit MUI RGB Longword color values specified as 8-digit hex string (e.g. 00000000 or ffffffff). Kick 2.x users will get an empty image.</dd>
+  <dt>'3:&lt;n&gt;'</dt><dd>where &lt;n&gt; is the name of an external boopsi image class.</dd>
+  <dt>'4:&lt;n&gt;'</dt><dd>where &lt;n&gt; is the name of an external MUI brush.</dd>
+  <dt>'5:&lt;n&gt;'</dt><dd>where &lt;n&gt; is the name of an external picture file that should be loaded with datatypes. Kick 2.x users will get an empty image.</dd>
+  <dt>'6:&lt;x&gt;'</dt><dd>where &lt;x&gt; is between MUII_WindowBack and MUII_Count-1 identifying a preconfigured image/background.</dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIImage.OldImage">OldImage</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIImage.State">
-<short></short>
+<short>State of the Image</short>
 <descr>
+<p>Some MUI images offer different states, you can select
+one of the by setting this attribute. Simply use
+one of the IDS_NORMAL, IDS_SELECTED, ... values
+defined in intuition.</p>
+<p><b>Note:</b>Objects that respond to user input will automatically toggle their state between
+IDS_NORMAL to IDS_SELECTED depending on their <link id="MUIClass.Area.TMUIArea.Selected">Selected</link> attribute.</p>
 </descr>
 <seealso>
 </seealso>
@@ -281,165 +323,228 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIBitmap">
-<short></short>
+<short>Shows an image as graphics.library bitmap object</short>
 <descr>
+<p>
+The Bitmap class allows including self-made image data in MUI
+applications. Usually, image class was intended to be used for
+this purpose but unfortunately, its design was not very useful.</p>
+<p>
+In its most simple usage, Bitmap class just display a given
+BitMap. However, you can also tell it to do automatic color
+remapping to match the current display context and you can
+define a transparent color to make the BitMap appear on any
+background.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIBitmap.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList to create the bitmap item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIBitmap.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIBitmap.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create an Bitmap object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIBitmap.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Creates the MUI bitmap item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIBitmap.Bitmap">
-<short></short>
+<short>Pointer to a graphics.library Bitmap</short>
 <descr>
+  This attribute specifies a pointer to a graphics.library BitMap. Note
+  that specifying only a BitMap isn't enough, you have to tell
+  MUI about the pixel width and height with <link id="TMUIBitmap.Width">Width</link>
+  and <link id="TMUIBitmap.Height">Height</link> too.
 </descr>
 <seealso>
+  <link id="TMUIBitmap.Width">Width</link>
+  <link id="TMUIBitmap.Height">Height</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIBitmap.MappingTable">
-<short></short>
+<short>Colortable to remape the Bitmap</short>
 <descr>
+<p>
+Address of an array of Bytes, one for each color of the
+source BitMap. MUI will remap the BitMap according to the
+contents of the array.</p>
+<p>
+Since MUI applications usually don't know about their
+display environment, this tag is rarely used. Instead,
+<link id="TMUIBitmap.SourceColors">SourceColors</link> can be used to allow context
+sensitive color remapping.</p>
 </descr>
 <seealso>
+  <link id="TMUIBitmap.SourceColors">SourceColors</link>
+  <link id="TMUIBitmap.Width">Width</link>
+  <link id="TMUIBitmap.Height">Height</link>
+  <link id="TMUIBitmap.Bitmap">Bitmap</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIBitmap.Precision">
-<short></short>
+<short>Precision of the Color Remapping</short>
 <descr>
+<p>
+Specify the precision value for remapping images. Use
+the same predefined values as for ObtainBestPen() here,
+e.g.</p>
+<ul>
+  <li>PRECISION_EXACT</li>
+  <li>PRECISION_IMAGE</li>
+  <li>PRECISION_ICON</li>
+  <li>PRECISION_GUI</li>
+</ul>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIBitmap.RemappedBitmap">
-<short></short>
+<short>Will hold the remapped Bitmap</short>
 <descr>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIBitmap.SourceColors">
-<short></short>
+<short>Defines the colortable of the Bitmap</short>
 <descr>
+<p>This attribute defines the color palette of the source
+BitMap. If specified, MUI will try to locate these colors
+on the current screen and remap the BitMap accordingly.</p>
+<p>
+You can e.g. specify some great looking 8-color images
+for several buttons of your application and MUI will
+ensure they look fine even on 4-color screens or on
+screens with completely different colors.</p>
+<p>
+  When running Kickstart V39 or higher, MUI will use
+ObtainBestPen() to find or create your colors.
+Below V39, a simple color-map search is performed
+to find the best matching entry, but no colors will
+be changed.</p>
+<p>
+The source palette is specified with an array of
+LongWord, three entries per color, 32 bits per gun.</p>
 </descr>
 <seealso>
+  <link id="TMUIBitmap.Width">Width</link>
+  <link id="TMUIBitmap.Height">Height</link>
+  <link id="TMUIBitmap.Bitmap">Bitmap</link>
+  <link id="TMUIBitmap.MappingTable">MappingTable</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIBitmap.UseFriend">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>This attribute will make MUI to try to allocate the remapped bitmap in a way that allows fastest displaying.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIBitmap.Height">
-<short></short>
+<short>efine the pixel height of the BitMap.</short>
 <descr>
+<b>Note:</b> By default, the bitmap object has a minimum size of
+1 pixel and an unlimited maxium size. If the space is
+too small to hold your BitMap, it will be clipped.
+Usually, you will use <link id="MUIClass.Area.TMUIArea.FixWidth">FixWidth</link>
+and <link id="MUIClass.Area.TMUIArea.FixHeight">FixHeight</link>
+with BitMap objects to make them always exactly as big as
+the bitmap.
 </descr>
 <seealso>
+  <link id="MUIClass.Area.TMUIArea.FixHeight">FixHeight</link>
+  <link id="MUIClass.Area.TMUIArea.FixWidth">FixWidth</link>
+  <link id="TMUIBitmap.Width">Width</link>
+  <link id="TMUIBitmap.Bitmap">Bitmap</link>
+  <link id="TMUIBitmap.MappingTable">MappingTable</link>
+  <link id="TMUIBitmap.SourceColors">SourceColors</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIBitmap.Width">
-<short></short>
+<short>Define the pixel width of the BitMap.</short>
 <descr>
+<b>Note:</b> By default, the bitmap object has a minimum size of
+1 pixel and an unlimited maxium size. If the space is
+too small to hold your BitMap, it will be clipped.
+Usually, you will use <link id="MUIClass.Area.TMUIArea.FixWidth">FixWidth</link>
+and <link id="MUIClass.Area.TMUIArea.FixHeight">FixHeight</link>
+with BitMap objects to make them always exactly as big as
+the bitmap.
 </descr>
 <seealso>
+  <link id="MUIClass.Area.TMUIArea.FixHeight">FixHeight</link>
+  <link id="MUIClass.Area.TMUIArea.FixWidth">FixWidth</link>
+  <link id="TMUIBitmap.Height">Height</link>
+  <link id="TMUIBitmap.Bitmap">Bitmap</link>
+  <link id="TMUIBitmap.MappingTable">MappingTable</link>
+  <link id="TMUIBitmap.SourceColors">SourceColors</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIBitmap.Transparent">
-<short></short>
+<short>Use color entry as Transparent color</short>
 <descr>
+<p>
+If specified, MUI will consider this color of the BitMap
+to be transparent. A mask plane will be generated and
+used for blitting, the background will shine through.</p>
+<p>
+Currently, only 0 is supported, i.e. only color 0 can
+be made the "shine through" color.</p>
 </descr>
 <seealso>
+  <link id="TMUIBitmap.Width">Width</link>
+  <link id="TMUIBitmap.Height">Height</link>
+  <link id="TMUIBitmap.Bitmap">Bitmap</link>
+  <link id="TMUIBitmap.MappingTable">MappingTable</link>
+  <link id="TMUIBitmap.SourceColors">SourceColors</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIPopButton">
-<short></short>
+<short>Image Button</short>
 <descr>
+  A button with an Image on it, for example the Popup button on the <link id="MUIClass.List.TMUIPopLiet">PopList</link>.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPopButton.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create an image button</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPopButton.Create.ASpec">
-<short></short>
+<short>Define the Image on the Button by a MUI <link id="MUIClass.Image.TMUIClass.Spec">image spec</link> description</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUICheckmark">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Checkmark object (Checkable Button, with checkmark on it)</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUICheckmark.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Checkmark object</short>
 </element>
 
 </module> <!-- MUIClass.Image -->
