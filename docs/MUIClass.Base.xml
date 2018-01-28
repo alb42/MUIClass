@@ -141,72 +141,60 @@
 
 <!-- procedure Visibility: default -->
 <element name="ComplainIOnly">
-<short></short>
+<short>Create debugoutput about an illegal field access</short>
 <descr>
+  Program tried to change a field which is only setable before the actual
+  MUI object is created aber the MUI object is created.
+  The value will be ignored and a message is sent to debugout.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="THookList">
-<short></short>
+<short>A List of Hooks, wich will be automatically destroyed on exit</short>
 <descr>
+  Often you need to instance Hooks, and keep the Hook pointer, but you don't actually need
+  the Hook itself (just the memory should be remembered).
+  The easiest way is to use this class for bookkeeping opened Hooks.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="THookList.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a new Hooklist</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="THookList.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy List, all Hooks are freed before</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="THookList.GetNewHook">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Get a new Hook, and add it to List</short>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="THookList.GetNewHook.Result">
-<short></short>
+<short>Hook to use for MUI events</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="THookList.RemoveHook">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Hook is not needed anymore, remove it from list, Hook is freed</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="THookList.RemoveHook.AHook">
-<short></short>
+<short>Hook to be removed and free, do not use the Poiner afterwards</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIRootClass">
-<short></short>
+<short>Base class for all MUI Class</short>
 <descr>
+  it does not make sense to instance itself
+  (it's even not possible)
 </descr>
 <seealso>
 </seealso>
@@ -214,377 +202,379 @@
 
 <!-- variable Visibility: protected -->
 <element name="TMUIRootClass.HookList">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>List of Hooks used in this class</short>
 </element>
 
 <!-- variable Visibility: protected -->
 <element name="TMUIRootClass.FFirstOpen">
-<short></short>
+<short>First visible on a open window</short>
 <descr>
+  Will be called by the open routine of the Window.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- variable Visibility: protected -->
 <element name="TMUIRootClass.FMUIObj">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>MUI Object, nil when MUI object sill not created or already destroyed</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Get a TagList to create the MUI Object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.DoFirstOpen">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Window with this object opens first Time</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.SetValue">
-<short></short>
+<short>Set a MUI object Value via Tag</short>
 <descr>
+   Set a Field Value via Tag and Value as in a Taglist to the internal MUI Object.
+   If internal MUI object not created will be ignored.
+   Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
+   the object exists.
 </descr>
 <seealso>
+  <link id="TMUIRootClass.MUIObj">MUIObj</link>
+  <link id="TMUIRootClass.HasObj">HasObj</link>
+  <link id="TMUIRootClass.GetIntValue">GetIntValue</link>
+  <link id="TMUIRootClass.GetBoolValue">GetBoolValue</link>
+  <link id="TMUIRootClass.GetPointerValue">GetPointerValue</link>
+  <link id="TMUIRootClass.GetStringValue">GetStringValue</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.SetValue.Tag">
-<short></short>
+<short>MUI Tag to set</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.SetValue.Value">
-<short></short>
+<short>Value to set</short>
 </element>
 
 <!-- function Visibility: protected -->
 <element name="TMUIRootClass.GetIntValue">
-<short></short>
+<short>Get a MUI Value via Tag as Integer</short>
 <descr>
+   Get a Field Value via Tag as Integer Value from the internal MUI Object.
+   If internal MUI object not created it will return 0.
+   Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
+   the object exists.
 </descr>
 <seealso>
+  <link id="TMUIRootClass.MUIObj">MUIObj</link>
+  <link id="TMUIRootClass.HasObj">HasObj</link>
+  <link id="TMUIRootClass.SetValue">SetValue</link>
+  <link id="TMUIRootClass.GetIntValue">GetIntValue</link>
+  <link id="TMUIRootClass.GetBoolValue">GetBoolValue</link>
+  <link id="TMUIRootClass.GetPointerValue">GetPointerValue</link>
+  <link id="TMUIRootClass.GetStringValue">GetStringValue</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: protected -->
 <element name="TMUIRootClass.GetIntValue.Result">
-<short></short>
+<short>Field Value as Integer or 0 if MUI Object is not created</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.GetIntValue.Tag">
-<short></short>
+<short>Field to get as Tag</short>
 </element>
 
 <!-- function Visibility: protected -->
 <element name="TMUIRootClass.GetBoolValue">
-<short></short>
+<short>Get a MUI Value via Tag as Boolean</short>
 <descr>
+  Get a Field Value via Tag as Boolean Value from the internal MUI Object.
+  If internal MUI object not created it will return False.
+  Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
+   the object exists.
 </descr>
 <seealso>
+  <link id="TMUIRootClass.MUIObj">MUIObj</link>
+  <link id="TMUIRootClass.HasObj">HasObj</link>
+  <link id="TMUIRootClass.SetValue">SetValue</link>
+  <link id="TMUIRootClass.GetIntValue">GetIntValue</link>
+  <link id="TMUIRootClass.GetBoolValue">GetBoolValue</link>
+  <link id="TMUIRootClass.GetPointerValue">GetPointerValue</link>
+  <link id="TMUIRootClass.GetStringValue">GetStringValue</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: protected -->
 <element name="TMUIRootClass.GetBoolValue.Result">
-<short></short>
+<short>Contents of the Field defined by Tag, or False when MUI Object is not created.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.GetBoolValue.Tag">
-<short></short>
+<short>Field to get as Tag</short>
 </element>
 
 <!-- function Visibility: protected -->
 <element name="TMUIRootClass.GetPointerValue">
-<short></short>
+<short>Get a MUI Value via Tag as Pointer</short>
 <descr>
+  Get a Field Value via Tag as Pointer Value from the internal MUI Object.
+  If internal MUI object not created it will return nil.
+  Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
+   the object exists.
 </descr>
 <seealso>
+  <link id="TMUIRootClass.MUIObj">MUIObj</link>
+  <link id="TMUIRootClass.HasObj">HasObj</link>
+  <link id="TMUIRootClass.SetValue">SetValue</link>
+  <link id="TMUIRootClass.GetIntValue">GetIntValue</link>
+  <link id="TMUIRootClass.GetBoolValue">GetBoolValue</link>
+  <link id="TMUIRootClass.GetPointerValue">GetPointerValue</link>
+  <link id="TMUIRootClass.GetStringValue">GetStringValue</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: protected -->
 <element name="TMUIRootClass.GetPointerValue.Result">
-<short></short>
+<short>Contents of the Field defined by Tag or nil if Object is not created</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.GetPointerValue.Tag">
-<short></short>
+<short>Field to get as Tag</short>
 </element>
 
 <!-- function Visibility: protected -->
 <element name="TMUIRootClass.GetStringValue">
-<short></short>
+<short>Get a MUI Value via Tag as String</short>
 <descr>
+  Get a Field Value via Tag as string Value from the internal MUI Object.
+  If internal MUI object not created it will return a empty string ('').
+  Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
+   the object exists.
 </descr>
 <seealso>
+  <link id="TMUIRootClass.MUIObj">MUIObj</link>
+  <link id="TMUIRootClass.HasObj">HasObj</link>
+  <link id="TMUIRootClass.SetValue">SetValue</link>
+  <link id="TMUIRootClass.GetIntValue">GetIntValue</link>
+  <link id="TMUIRootClass.GetBoolValue">GetBoolValue</link>
+  <link id="TMUIRootClass.GetPointerValue">GetPointerValue</link>
+  <link id="TMUIRootClass.GetStringValue">GetStringValue</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: protected -->
 <element name="TMUIRootClass.GetStringValue.Result">
-<short></short>
+<short>Contents of the Field defined by Tag or an empty string if Object is not created.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.GetStringValue.Tag">
-<short></short>
+<short>Field to get as Tag</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.ConnectHookObject">
-<short></short>
+<short>Connect a Event (via Hook) to a changing Field Value with given object</short>
 <descr>
+<p>
+  Set the Hook to the Hook function and install a Notify Event for the
+  given Field and Value. The Hook Data points to this Pascal object.
+  in principle it does something like:</p>
+  <code>
+  MH_SetHook(Hook, HookFunc, Self);
+  DoMethod(AObj, [MUI_Notify, MUIField, TriggerValue, MUIV_Notify_Self, 2, MUIM_CallHook, NativeUInt(Hook)]);
+  </code>
+  <p>
+  Better use the function which uses the interal object, it should be very seldom to use this function</p>
 </descr>
 <seealso>
+  <link id="TMUIRootClass.ConnectHook">ConnectHook</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHookObject.AObj">
-<short></short>
+<short>Object to set the Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHookObject.MUIField">
-<short></short>
+<short>Field to trigger</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHookObject.TriggerValue">
-<short></short>
+<short>Value when the Event should be fired or MUIV_EveryTime trigger for every change</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHookObject.HookFunc">
-<short></short>
+<short>Event function to call when event is triggered</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.ConnectHook">
-<short></short>
+<short>Connect a Event (via Hook) to a changing Field Value with internal object</short>
 <descr>
+<p>
+  Set the Hook to the Hook function and install a Notify Event for the
+  given Field and Value. The Hook Data points to this Pascal object.
+  in principle it does something like:</p>
+  <code>
+  MH_SetHook(Hook, HookFunc, Self);
+  DoMethod(MUIObj, [MUI_Notify, MUIField, TriggerValue, MUIV_Notify_Self, 2, MUIM_CallHook, NativeUInt(Hook)]);
+  </code>
+<p>
+  Best place to use that is inside <link id="TMUINotify.AfterCreateObject">AfterCreateObject</link>.</p>
 </descr>
 <seealso>
+  <link id="TMUINotify.AfterCreateObject">AfterCreateObject</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHook.MUIField">
-<short></short>
+<short>Field to Trigger</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHook.TriggerValue">
-<short></short>
+<short>Value when the Event should be fired or MUIV_EveryTime trigger for every change</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRootClass.ConnectHook.HookFunc">
-<short></short>
+<short>Event function to call when event is triggered</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.ClearObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>RootClass has no object to destroy</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRootClass.BeforeCloseWindow">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Called before the Window closes, to clean some stuff</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIRootClass.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Root class, there is no reason to instance a root class it self</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIRootClass.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy root class, no need to do that, because should not be crated in the first place</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIRootClass.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Root class object can not be created</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIRootClass.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Root class object can not be destroyed</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIRootClass.MUIObj">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>The MUI Object if created</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIRootClass.HasObj">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Is the MUI Object created and can be used</short>
 </element>
 
 <!-- specialized class type Visibility: default -->
 <element name="TChildList">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>List of Children</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUINotify">
-<short></short>
+<short>Notify class is superclass of all other MUI classes.</short>
 <descr>
+It's main purpose is to handle MUI's notification
+mechanism, but it also contains some other methods
+and attributes useful for every object.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUINotify.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events to the object</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUINotify.BeforeCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create Children or other connected MUI Object before creating this MUI Object</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUINotify.DoFirstOpen">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Called when Window with this object opens the first time</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUINotify.BeforeCloseWindow">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Called before the Window with this Object gets closed (and/or destroyed)</short>
 </element>
 
 <!-- property Visibility: protected -->
 <element name="TMUINotify.Childs">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>List of Children, be careful not all object can have children</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUINotify.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>it make no sense to instance Notify</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUINotify.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>It make no sense to instance Notify, or destroy it</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINotify.DestroyObject">
-<short></short>
-<descr>
-</descr>
+<short>It will destroy this class, and clear all children objects</short>
 <seealso>
+  <link id="TMUINotify.ClearObject">DestroyObject</link>
 </seealso>
+
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINotify.ClearObject">
-<short></short>
+<short>Clear the MUI Object and all it's Childs</short>
 <descr>
+  When a Parent MUI object is destroyed, it will destroy all it's childs automatically.
+  Usually only <link id="TMUINotify.DestroyObject">DestroyObject</link> is called for the most top most object,
+  (mostly <link id="TMUIApplication">Application</link>, which will do it itself, when the main window is closed) which will destroy
+  all other MUI objects as well. And this function will clean the MUI Object pointers in all Child Pascal Objects to reflect this.
 </descr>
 <seealso>
+  <link id="TMUIRootClass.DestroyObject">DestroyObject</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINotify.AddChild">
-<short></short>
+<short>Add an object as child to this Class, will be called by setting the Parent on this class</short>
 <descr>
+  There is no reason to directly call this function, assign this object as a Parent to an other Class, will do it already
 </descr>
 <seealso>
 </seealso>
@@ -592,13 +582,14 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUINotify.AddChild.AChild">
-<short></short>
+<short>Child to add</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINotify.RemoveChild">
-<short></short>
+<short>Removes a child from this class, will be called when Parent of the child class is changed</short>
 <descr>
+  There is no reason to directly call this function, assign another object (or nil) as a Parent to an other Class, will do it already
 </descr>
 <seealso>
 </seealso>
@@ -606,118 +597,134 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUINotify.RemoveChild.AChild">
-<short></short>
+<short>Object to remove</short>
 </element>
 
 <!-- class function Visibility: public -->
 <element name="TMUINotify.GetPasObject">
-<short></short>
+<short>Get the Pascal object which belongs to the MUI Object</short>
 <descr>
+  The Pascal Object is saved in the UserData of every MUI Object.
+  Could be used in Events.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUINotify.GetPasObject.Result">
-<short></short>
+<short>Pascal object of the MUI Object, or nil if no Pascal object is assigned</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUINotify.GetPasObject.AMUIObj">
-<short></short>
+<short>MUI Object to get the Pascal object from</short>
 </element>
 
 <!-- specialized class type Visibility: default -->
 <element name="TTimerList">
-<short></short>
-<descr>
+<short>List of Timers</short>
+<descr>List of Timer Objects, Timer can be just instanced and will be automatically connected to the global Application.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIApplication">
-<short></short>
+<short>The Application object, will be created as <link id="MUIApp">MUIApp</link> at start of the program.</short>
 <descr>
+  At the moment it's not planed to have multiple Application objects, thus it could make sense to emulate Modal windows.
+  Complain if you want to have that changed. The main application object will be automatically created at start of the
+  program and destroyed at the end.
 </descr>
 <seealso>
+  <link id="MUIApp">MUIApp</link>
 </seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIApplication.Create">
-<short></short>
+<short>Create the Application object</short>
 <descr>
+  At the moment it's not planed to have multiple Application objects, thus it could make sense to emulate Modal windows.
+  Complain if you want to have that changed. The main application object will be automatically created at start of the
+  program and destroyed at the end.
 </descr>
 <seealso>
+  <link id="MUIApp">MUIApp</link>
 </seealso>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIApplication.Destroy">
-<short></short>
+<short>Destroy the application object</short>
 <descr>
+  At the moment it's not planed to have multiple Application objects, thus it could make sense to emulate Modal windows.
+  Complain if you want to have that changed. The main application object will be automatically created at start of the
+  program and destroyed at the end.
 </descr>
 <seealso>
+</seealso>
+<seealso>
+  <link id="MUIApp">MUIApp</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill the Taglist with the informations to create the Application Object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.GetCreateTags.ATagList">
-<short></short>
+<short>TagLsit to Fill</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.CreateObject">
-<short></short>
+<short>Create the MUI application item</short>
 <descr>
+  This will be called by the <link id="TMUIApplication.Run">Run()</link> method. There is no reason to call that directly.
 </descr>
 <seealso>
+  <link id="TMUIApplication.Run">Run()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect events after MUI application object is created</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.DestroyObject">
-<short></short>
+<short>Destroy the MUI application item</short>
 <descr>
+  This will be called by the <link id="TMUIApplication.Run">Run()</link> method. There is no reason to call that directly.
 </descr>
 <seealso>
+  <link id="TMUIApplication.Run">Run()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.Run">
-<short></short>
+<short>Run the application.</short>
 <descr>
+  <p>
+  If you set everything in your program, configured every Window and item you can start the MUI application
+  with this Method. It will create all the MUI object open the Main Window and run the event loop.</p>
+  <p>
+  If the main window close it will destroy all MUI objects.</p>
+  <p><b>Note</b>: Make sure you set all fields which are marked with <b>[i]</b> (which means only set on Init) are set
+  before this call.</p>
+  <p>Run() will not return before the Application is finished.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.Terminate">
-<short></short>
+<short>Terminate the currently running application</short>
 <descr>
+  It will not terminate immidately, it will terminate when it reaches the event loop again.
+  Only effective after <link id="TMUIApplication.Run">Run()</link> was started
 </descr>
 <seealso>
 </seealso>
@@ -725,8 +732,10 @@
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.Terminated">
-<short></short>
+<short>True if the application got terminated</short>
 <descr>
+  True if the Application got terminated but did not returned to the Eventloop
+  to actually to it.
 </descr>
 <seealso>
 </seealso>
@@ -734,26 +743,21 @@
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.MainWindow">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Link to the Main Window which will terminate the application when closed</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.Childs">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>List of children of this application actually all <link id="TMUIApplication">TMUIApplication</link></short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.AddToDestroy">
-<short></short>
+<short>Add an object to destroy.</short>
 <descr>
+  When an object should be destroyed inside it's own eventhandler, it will crash.
+  Here it can be added to a list of delayed dstruction list, which will be cleared
+  on the next Eventloop cycle.
 </descr>
 <seealso>
 </seealso>
@@ -761,21 +765,17 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.AddToDestroy.AObj">
-<short></short>
+<short>Object to destroy</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.AboutMUI">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Open the About MUI Window</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.AboutMUI.Window">
-<short></short>
+<short>The About MUI Window will be centered over this window</short>
 </element>
 
 <!-- procedure Visibility: public -->

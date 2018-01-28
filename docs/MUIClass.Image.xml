@@ -523,7 +523,7 @@ be made the "shine through" color.</p>
 <element name="TMUIPopButton">
 <short>Image Button</short>
 <descr>
-  A button with an Image on it, for example the Popup button on the <link id="MUIClass.List.TMUIPopLiet">PopList</link>.
+  A button with an Image on it, for example the Popup button on the <link id="MUIClass.PopString.TMUIPopList">PopList</link>.
 </descr>
 </element>
 
@@ -534,7 +534,7 @@ be made the "shine through" color.</p>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPopButton.Create.ASpec">
-<short>Define the Image on the Button by a MUI <link id="MUIClass.Image.TMUIClass.Spec">image spec</link> description</short>
+<short>Define the Image on the Button by a MUI <link id="MUIClass.Image.TMUIImage.Spec">image spec</link> description</short>
 </element>
 
 <!-- class Visibility: default -->
