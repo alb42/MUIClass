@@ -1,0 +1,1135 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    MUIClass.Group
+  ====================================================================
+-->
+
+<module name="MUIClass.Group">
+<short></short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="fgl">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AmigaDOS">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Intuition">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="icon">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="mui">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="muihelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="tagsparamshelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Base">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Area">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.List">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Gadget">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIGroup">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIGroup.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGroup.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIGroup.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.Childs">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIGroup.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIGroup.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIGroup.InitChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIGroup.ExitChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.ActivePage">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.Columns">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.Horiz">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.HorizSpacing">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.PageMode">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.Rows">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.SameHeight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.SameSize">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.SameWidth">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.Spacing">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.VertSpacing">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIGroup.OnPageChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIListView">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIListView.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIListView.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIListView.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TMUIListView.Destroy">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIListView.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIListView.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIListView.DestroyObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIListView.ClearObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIListView.ClickColumn">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.DefClickColumn">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.DragType">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.Input">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.List">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.MultiSelect">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.ScrollerPos">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.OnSelectChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.OnClick">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIListView.OnDoubleClick">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIRegister">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIRegister.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIRegister.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIRegister.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIRegister.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRegister.Frame">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRegister.Titles">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIVirtGroup">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIVirtGroup.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIVirtGroup.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIVirtGroup.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIVirtGroup.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIVirtGroup.VirtHeight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIVirtGroup.VirtWidth">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIVirtGroup.VirtLeft">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIVirtGroup.VirtTop">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIVirtGroup.Input">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIScrollGroup">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIScrollGroup.BeforeCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIScrollGroup.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIScrollGroup.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIScrollGroup.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIScrollGroup.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TMUIScrollGroup.Destroy">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIScrollGroup.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIScrollGroup.DestroyObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIScrollGroup.ClearObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIScrollGroup.HorizBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIScrollGroup.VertBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIScrollGroup.Contents">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIScrollGroup.FreeHoriz">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIScrollGroup.FreeVert">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIScrollGroup.UseWinBorder">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIRadio">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIRadio.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIRadio.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIRadio.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIRadio.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIRadio.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRadio.Active">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRadio.Entries">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRadio.OnActiveChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUICycle">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUICycle.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUICycle.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUICycle.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUICycle.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUICycle.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUICycle.Active">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUICycle.Entries">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUICycle.OnActiveChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIColorAdjust">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIColorAdjust.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorAdjust.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIColorAdjust.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIColorAdjust.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIColorAdjust.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIColorAdjust.RGB">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorAdjust.Red">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorAdjust.Green">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorAdjust.Blue">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorAdjust.ModeID">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorAdjust.OnColorChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPalette">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPalette.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPalette.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPalette.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPalette.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIPalette.Entries">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPalette.Groupable">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPalette.Names">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+</module> <!-- MUIClass.Group -->
+
+</package>
+</fpdoc-descriptions>

@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    MUIClass.Window
+  ====================================================================
+-->
+
+<module name="MUIClass.Window">
+<short></short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="fgl">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AmigaDOS">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Intuition">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="icon">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="mui">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="muihelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="tagsparamshelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Base">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- enumeration type Visibility: default -->
+<element name="TCloseAction">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TCloseAction.caNone">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TCloseAction.caClose">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TCloseAction.caFree">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TCloseReqEvent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TCloseReqEvent.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TCloseReqEvent.CloseAction">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIWindow">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIWindow.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIWindow.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Childs">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIWindow.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TMUIWindow.Destroy">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.DestroyObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.AddChild">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIWindow.AddChild.AChild">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.RemoveChild">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIWindow.RemoveChild.AChild">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.Show">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.Close">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.GroupObj">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Horizontal">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.ScreenToBack">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.ScreenToFront">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.Snapshot">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.Unsnapshot">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.ToBack">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIWindow.ToFront">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Activate">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.ActiveObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.DefaultObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Open">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Screen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Window">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIWindow.Sleep">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.AltLeftEdge">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.AltTopEdge">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.AltHeight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.AltWidth">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.AppWindow">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.Backdrop">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.Borderless">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.CloseGadget">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.DepthGadget">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.SizeGadget">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.SizeRight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.DragBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.LeftEdge">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.TopEdge">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.Height">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.Width">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.ID">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.Menustrip">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.NoMenus">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.PublicScreen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.ScreenTitle">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.Title">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.UseBottomBorderScroller">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.UseLeftBorderScroller">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.UseRightBorderScroller">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.OnShow">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.OnActivate">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.OnCloseRequest">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIAboutMUI">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIAboutMUI.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIAboutMUI.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+</module> <!-- MUIClass.Window -->
+
+</package>
+</fpdoc-descriptions>

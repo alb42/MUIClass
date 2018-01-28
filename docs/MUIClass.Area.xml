@@ -1,0 +1,2802 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    MUIClass.Area
+  ====================================================================
+-->
+
+<module name="MUIClass.Area">
+<short>Area and some derived classes</short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="fgl">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AmigaDOS">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Intuition">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="agraphics">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="icon">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="mui">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="muihelper">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="tagsparamshelper">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Base">
+<short></short>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Window">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TSpecDesc">
+<short>Helper class to set Image descriptors.</short>
+<descr>
+  Image Descriptors can be set in different ways, mostly as string
+  but also as Integer constant. This class helps with setting up this.
+</descr>
+<errors>
+</errors>
+<seealso>
+  <link id="#MUIClass.MUIClass.Area.TMUIArea.Background">TMUIArea.Background</link>
+  <link id="#MUIClass.MUIClass.Image.TMUIImage.Spec">TMUIImage.Spec</link>
+</seealso>
+</element>
+
+<!-- record type Visibility: default -->
+<element name="TBubble">
+<short>Black box structure for a Bubble help</short>
+<descr>
+</descr>
+<seealso>
+  <link id="#MUIClass.MUIClass.Area.TMUIArea.CreateBubble">TMUIArea.CreateBubble()</link>
+  <link id="#MUIClass.MUIClass.Area.TMUIArea.DeleteBubble">TMUIArea.DeleteBubble()</link>
+   <link id="TMUIArea.DeleteAllBubbles">DeleteAllBubbles()</link>
+  <link id="#MUIClass.MUIClass.Area.PBubble">PBubble</link>
+</seealso>
+</element>
+
+<!-- pointer type Visibility: default -->
+<element name="PBubble">
+<short>Handle for a Bubble Help</short>
+<descr>
+</descr>
+<seealso>
+  <link id="#MUIClass.MUIClass.Area.TMUIArea.CreateBubble">TMUIArea.CreateBubble()</link>
+  <link id="#MUIClass.MUIClass.Area.TMUIArea.DeleteBubble">TMUIArea.DeleteBubble()</link>
+   <link id="TMUIArea.DeleteAllBubbles">DeleteAllBubbles()</link>
+</seealso>
+</element>
+
+<!-- specialized class type Visibility: default -->
+<element name="TBubbleList">
+<short>Type to keep a list of open Bubbles to close them after application is terminated</short>
+<descr>
+  The Bubbles are not automatically destroyed by MUI. Therefore we destroy them on the end of Application.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- record type Visibility: default -->
+<element name="TMUIRGB">
+<short>Type for a typical MUI RGB Color with three LongWords to describe the color.</short>
+<descr>
+  Attention: a white color will be $ffffffff, $ffffffff, $ffffffff (in contrast a $ff, $ff, $ff would be still black)
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMUIRGB.Red">
+<short>Red color part in 32 bit (0..$ffffffff)</short>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMUIRGB.Green">
+<short>Green color part in 32 bit (0..$ffffffff)</short>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMUIRGB.Blue">
+<short>Blue color part in 32 bit (0..$ffffffff)</short>
+</element>
+
+<!-- pointer type Visibility: default -->
+<element name="PMUIRGB">
+<short>Pointer to a list of MUI RGB color with three LongWords for every color</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIArea">
+<short>Super class for every other MUI class except windows and applications</short>
+<descr>
+  <p>
+  Area class is a super class for every other MUI class
+  except windows and applications. It holds information
+  about an objects current position, size and weight
+  and manages frames, fonts and backgrounds.</p>
+  <p>
+  Additionally, area class handles the user input. By
+  setting an objects <link id="#MUIClass.MUIClass.Area.TMUIArea.InputMode">MUIA_InputMode</link>, you can make it
+  behave like a button or like a toggle gadget. That's
+  why MUI doesn't offer an extra button class. A button
+  is simply a text object with a raised frame and a relverify
+  input mode. Since especially group class is a subclass
+  of area, you can create rather complex buttons consisting
+  of many other display elements.</p>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIArea.AfterCreateObject">
+<short>Started after the MUI Object is created to connect events.</short>
+<descr>Will be called by <link id="TMUIArea.CreateObject">CreateObject</link> there is no reason to call it yourself.
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIArea.BeforeCloseWindow">
+<short>Called before the window gets closed or the application get terminated to clean some contents</short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIArea.GetCreateTags">
+<short>Get the properties of this class as TagList to create the MUI Object</short>
+<descr>Will be called by <link id="TMUIArea.CreateObject">CreateObject</link> there is no reason to call it yourself.
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIArea.GetCreateTags.ATagList">
+<short>TagList to add the properties for this class.</short>
+</element>
+
+<!-- property Visibility: protected -->
+<element name="TMUIArea.FillArea">
+<short>Prevent MUI of drawing the background (Init only)</short>
+<descr>
+  Set this to False if you are a custom class and dont want area class to
+  clear your background during the DoSuperMethod() in your
+  draw method. Note that if you set this, your draw method
+  is responsible for filling every pixel of your objects
+  rectangle, otherwise some display trash will remain there.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIArea.Create">
+<short>Create the class and init the properties</short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TMUIArea.Destroy">
+<short>Destroy the class, if the MUI object is still alive it will be disconnected and destroyed as well.</short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIArea.CreateObject">
+<short>Create the MUI object.</short>
+<descr>
+  This will be called by the Parent class, usually you do not need to call this yourself.
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TMUIArea.CreateBubble">
+<short>Create a MUI Bubble</short>
+<descr>
+  <p>
+  Together with <link id="TMUIArea.DeleteBubble">DeleteBubble()</link>, this method provides an
+  interface for MUIs bubble mechanism. Applications can use
+  bubbles for their own purpose, e.g. for indicating error
+  conditions on certain gadgets.</p>
+  <p>
+  CreateBubble() creates a bubble at the specified
+  coordinates with the specified (textual) contents. It
+  returns a bubble "handle" that has to be passed to
+  <link id="TMUIArea.DeleteBubble">DeleteBubble()</link> when the bubble shall disappear.</p>
+  <p>
+  There's no limitation on the number of bubbles, you can create
+  lots of them at a time if you wish. Also, these custom bubbles
+  are completely independant of MUI's bubble help system and won't
+  disappear automatically when the mouse is moved.</p>
+  <p>
+  Note that bubbles will only show up when the object in question
+  is visible. Otherwise CreateBubble() returns nil. You are
+  responsible for deleting the bubble <b>before</b> the object get's
+  invisible. Good place to remove a custom bubble is e.g. the
+  Hide method of your object.</p>
+  <p>Defined flags:</p>
+  <dl>
+    <dt>MUIV_CreateBubble_DontHidePointer</dt><dd>prevents MUI from hiding the mouse pointer when displaying
+            the help bubble. It is recommended that you always set this,
+            unless your bubble is meant to disappear as soon as there
+            is some user input.</dd>
+  </dl>
+</descr>
+<errors>
+</errors>
+<seealso>
+  <link id="TMUIArea.DeleteBubble">DeleteBubble()</link>
+  <link id="TMUIArea.DeleteAllBubbles">DeleteAllBubbles()</link>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TMUIArea.CreateBubble.Result">
+<short>Bubble Handle use to close the bubble again with: <link id="TMUIArea.DeleteBubble">DeleteBubble()</link></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIArea.CreateBubble.x">
+<short>window related x position to open the bubble</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIArea.CreateBubble.y">
+<short>window related y position to open the bubble</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIArea.CreateBubble.Txt">
+<short>Text to show inside the bubble</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIArea.CreateBubble.Flags">
+<short>Flags for the bubble, see table</short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIArea.DeleteBubble">
+<short>Deletes a previously created Bubble</short>
+<descr><p>
+  Together with <link id="TMUIArea.CreateBubble">CreateBubble()</link>, this method provides an
+  interface for MUIs bubble mechanism. Applications can use
+  bubbles for their own purpose, e.g. for indicating error
+  conditions on certain gadgets.</p>
+<p>
+  DeleteBubble deletes a bubble that was previously
+  created with <link id="TMUIArea.CreateBubble">CreateBubble()</link>. Note that bubbles have to
+  be deleted before an object get's invisible!</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.CreateBubble">CreateBubble()</link>
+  <link id="TMUIArea.DeleteAllBubbles">DeleteAllBubbles()</link>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIArea.DeleteBubble.Bubble">
+<short>Bubble handle returned by  <link id="TMUIArea.CreateBubble">CreateBubble()</link></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIArea.DeleteAllBubbles">
+<short>Delete all bubbles which are created with  <link id="TMUIArea.CreateBubble">CreateBubble()</link> for this object</short>
+<descr>
+  The object remembers the open bubbles, with this method you can call all bubbles opened on this object.
+  Note: all the bubble handles become invalid in this moment.
+</descr>
+<errors>
+</errors>
+<seealso>
+   <link id="TMUIArea.CreateBubble">CreateBubble()</link>
+   <link id="TMUIArea.DeleteBubble">DeleteBubble()</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.LeftEdge">
+<short>Current left position of the object</short>
+<descr>
+<p>
+You can use this to read the current position and
+dimension of an object, if you e.g. need it to pop
+up some requester below.</p>
+<p>
+Of course, this attribute is only valid when the
+parent window of the object is currently open.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.TopEdge">
+<short>Current top position of the object</short>
+<descr>
+<p>
+You can use this to read the current position and
+dimension of an object, if you e.g. need it to pop
+up some requester below.</p>
+<p>
+Of course, this attribute is only valid when the
+parent window of the object is currently open.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.RightEdge">
+<short>Current Right edge of the object</short>
+<descr>
+<p>
+You can use this to read the current position and
+dimension of an object, if you e.g. need it to pop
+up some requester below.</p>
+<p>
+Of course, this attribute is only valid when the
+parent window of the object is currently open.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.BottomEdge">
+<short>Current bottom edge of the object</short>
+<descr>
+<p>
+You can use this to read the current position and
+dimension of an object, if you e.g. need it to pop
+up some requester below.</p>
+<p>
+Of course, this attribute is only valid when the
+parent window of the object is currently open.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.Height">
+<short>Current Height of the object</short>
+<descr>
+<p>
+You can use this to read the current position and
+dimension of an object, if you e.g. need it to pop
+up some requester below.</p>
+<p>
+Of course, this attribute is only valid when the
+parent window of the object is currently open.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.Width">
+<short>Current Width of the object</short>
+<descr>
+<p>
+You can use this to read the current position and
+dimension of an object, if you e.g. need it to pop
+up some requester below.</p>
+<p>
+Of course, this attribute is only valid when the
+parent window of the object is currently open.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.Pressed">
+<short>Mouse press state of the object</short>
+<descr>
+  <p>
+  The Pressed attribute of a gadget is triggered
+  by some user action, depending on the input mode:</p>
+  <dl>
+  <dt>MUIV_InputMode_RelVerify</dt><dd><ul><li>set when lmb is pressed.</li>
+           <li>cleared when lmb is released and the mouse
+             is still over the gadget (otherwise it will
+             be cleared too, but without triggering a
+             notification event).</li></ul></dd>
+  <dt>MUIV_InputMode_Immediate</dt><dd>undefined, use <link id="TMUIArea.Selected">Selected</link> for this.</dd>
+  <dt>MUIV_InputMode_Toggle</dt><dd>undefined, use <link id="TMUIArea.Selected">Selected</link> for this.</dd>
+  <dt></dt><dd></dd>
+  </dl>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.Window">
+<short>Pointer to the Intution structure PWindow</short>
+<descr>
+<p>
+This attribute can be used to get a pointer to the
+intuition window structure of the parent window
+ot the object. This pointer could e.g. be used
+in calls to asl.library.</p>
+<p>
+The result is only valid when the window is opened.</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.WindowObject">WindowObject</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIArea.WindowObject">
+<short>Get the Window object the object is placed in</short>
+<descr>
+  You can obtain a pointer to the window object
+  that some gadget belongs to by using this attribute.
+  Useful mainly within Events if you do not want
+  to deal with global variables.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Background">
+<short>[i] Adjust the background for an object.</short>
+<descr>
+<p>
+Every MUI object has its own background setting.
+The background is displayed "behind" the actual
+object contents, e.g. behind a the text of a
+text object or behind the image of an image object.</p>
+<p>
+This attribute takes the same values as MUIA_Image_Spec,
+please refer to autodocs of image class for a complete
+description.</p>
+<p>
+An object without a specific background setting will
+inherit the pattern from its parent group. The default
+background for a window and many other background
+patterns are adjustable with the preferences program.</p>
+<p>
+Only a few MUII_* tags make sense as background.</p>
+<p>Important are:</p>
+<dl>
+  <dt>MUII_ButtonBack</dt><dd>You have to set this when you create a button gadget. Thus, your button will be displayed in the users preferred style.</dd>
+  <dt>MUII_TextBack</dt><dd>Set this when you create a text object with a TextFrame, e.g. some kind of status line. Do *not* use MUII_TextBack for simple text without frame (e.g. gadget labels).</dd>
+  <dt>MUII_BACKGROUND,
+        MUII_SHADOW,
+        MUII_SHINE,
+        MUII_FILL,
+        MUII_SHADOWBACK,
+        MUII_SHADOWFILL,
+        MUII_SHADOWSHINE,
+        MUII_FILLBACK,
+        MUII_FILLSHINE,
+        MUII_SHINEBACK,
+        MUII_SHINEBACK2</dt><dd>One of MUI's predefined pattern. These are not
+           configurable by the user and will always look the
+           same.</dd>
+</dl>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.ControlChar">
+<short>Define a shortcut for the object</short>
+<descr>
+<p>Pressing the control char will have the same effect
+as pressing return if the object was active.</p>
+<p>
+This can be used to create old style key shortcuts.
+ </p>
+<p>Note: Using an uppercase control char will force the user to press shift.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.CycleChain">
+<short>Add the item to cycle chain</short>
+<descr>
+Set to one to add the object to the cycle chain. (can navigate with TAB through the items in the chain)
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Disabled">
+<short>Disable the item for user input and grey it out</short>
+<descr>
+<p>
+Disable or enable a gadget. Setting this attribute
+causes a gadget to become disabled, it gets a ghost
+pattern and doesn't respond to user input any longer.</p>
+<p>
+Disabled gadgets cannot be activated with the TAB key.</p>
+<p>
+Using Disable on a group of objects will disable
+all objects within that group.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Draggable">
+<short>Enable Drag'n'Drop for this object.</short>
+<descr>
+Set this if you want the complete object to be
+dragable for Drag'n'Drop operations.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Dropable">
+<short>Make the item as a drop destination</short>
+<descr>
+  Only objects with this attribute set to True will be asked
+  if they want to become an active Drag'n'Drop destination
+  at all. Though this attribute defaults to True, this doesn't
+  mean that every object automatically acepts Drag'nDrop actions,
+  because the DragQuery method is answered False when
+  it arrives at area class.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.FixHeight">
+<short>[i] Give your object a fixed pixel height.</short>
+<descr>
+This property is absolutely not needed in a general MUI application
+and only present for emergency situations. Please think twice before using it!
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.FixHeightTxt">
+<short>[i] Give your object a fixed pixel height. Defined by a text height</short>
+<descr>
+The height
+will match the height of the given string. This property is
+absolutely not needed in a general MUI application
+and only present for emergency situations. Please
+think twice before using it!
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.FixWidth">
+<short>[i] Give your object a fixed pixel width.</short>
+<descr>
+This property is absolutely not needed in a general MUI application
+and only present for emergency situations. Please think twice before using it!
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.FixWidthTxt">
+<short>[i] Give your object a fixed pixel width. Defined by a text width</short>
+<descr>
+  The Width
+will match the width of the given string. This property is
+absolutely not needed in a general MUI application
+and only present for emergency situations. Please
+think twice before using it!
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Font">
+<short>[i] Define the Font for the item</short>
+<descr>
+<p>Every MUI object can have its own font, just set it with
+this tag. Objects without an explicit font setting will
+inherit it from their parent group.</p>
+<p>
+You normally won't need to open a font yourself, just
+use one of the predefined values to get a font from
+the users preferences.</p>
+<p>Special Inputs:</p>
+<p><b>MUIV_Font_Inherit,
+MUIV_Font_Normal,
+MUIV_Font_List,
+MUIV_Font_Tiny,
+MUIV_Font_Fixed,
+MUIV_Font_Title,
+MUIV_Font_Big,
+MUIV_Font_Button,
+MUIV_Font_Slider,
+MUIV_Font_Gauge</b></p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Frame">
+<short>[i] Define a frame for the item.</short>
+<descr><p>
+Since area class
+is a superclass for all elements in a window, you can
+assign frames to every object you wish.</p>
+<p>
+You don't adjust the style of your frame directly,
+instead you only specify a type:</p>
+<dl>
+  <dt>MUIV_Frame_Button</dt><dd>for standard buttons with text in it.</dd>
+  <dt>MUIV_Frame_ImageButton</dt><dd>for small buttons with images, e.g. the arrows of a scrollbar.</dd>
+  <dt>MUIV_Frame_Text</dt><dd>for a text field, e.g. a status line display.</dd>
+  <dt>MUIV_Frame_String</dt><dd>for a string gadget.</dd>
+  <dt>MUIV_Frame_ReadList</dt><dd>for a read only list.</dd>
+  <dt>MUIV_Frame_InputList</dt><dd>for a list that handles input (has a cursor).</dd>
+  <dt>MUIV_Frame_Prop</dt><dd>for proportional gadgets.</dd>
+  <dt>MUIV_Frame_Group</dt><dd> for groups.</dd>
+</dl>
+<p>How the frame is going to look is adjustable via the
+preferences program.</p>
+<p>
+Four spacing values belong to each frame that tell
+MUI how many pixels should be left free between the
+frame and its contents. These spacing values are also
+user adjustable as long as you don't override them
+with one of <link id="TMUIArea.InnerLeft">InnerLeft</link>, <link id="TMUIArea.InnerRight">InnerRight</link>,
+<link id="TMUIArea.InnerTop">InnerTop</link> or <link id="TMUIArea.InnerBottom">InnerBottom</link>.</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.InnerLeft">InnerLeft</link>
+  <link id="TMUIArea.InnerRight">InnerRight</link>
+  <link id="TMUIArea.InnerTop">InnerTop</link>
+  <link id="TMUIArea.InnerBottom">InnerBottom</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.FramePhantomHoriz">
+<short>[i] Hide the horizontal frame part</short>
+<descr>
+<p>Setting this to True causes the specified frame to be
+a horizontal phantom frame. The frame will not appear
+but its vertical components (frame height, inner
+top and inner bottom spacing) will be used to calculate
+positions and dimensions (horizontal components are
+treated as 0).</p>
+<p>
+This is extremely useful for a correct labeling of objects.
+You would e.g. label a string gadget by using a text object
+with a phantom string frame. Thus, the label text will
+be always on the same vertical position as the string
+gadget text, no matter what spacing values the user
+configured.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.FrameTitle">
+<short>Define a frame title text</short>
+<descr>
+<p>This tag identifies a text string that will be displayed
+centered in the top line of a frame. This can become
+handy if you want to name groups of objects.</p>
+<p>
+You may not use FrameTitle without defining
+a <link id="TMUIArea.Frame">Frame</link>.</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.Frame">Frame</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.HorizDisappear">
+<short>Set horizontal disappear level</short>
+<descr>
+<p>Objects with a disappear level disappear automatically
+when their parent window gets too small to display them.
+Use this for things that make your GUI look nicer
+(e.g. Imagery) but are not absolutely necessary.</p>
+<p>
+By using disappearing objects, you can make nice GUIs
+which still work on crappy 640x200 screens.</p>
+<p>
+You can give horizontal or vertical disappear levels
+to objects which are used for horizontal or vertical
+layout calculations respectively.</p>
+<p>
+Objects with a small disappear level disappear before
+objects with a big disappear level.
+</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.VertDisappear">VertDisappear</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.VertDisappear">
+<short>Set vertical disappear level</short>
+<descr>
+<p>Objects with a disappear level disappear automatically
+when their parent window gets too small to display them.
+Use this for things that make your GUI look nicer
+(e.g. Imagery) but are not absolutely necessary.</p>
+<p>
+By using disappearing objects, you can make nice GUIs
+which still work on crappy 640x200 screens.</p>
+<p>
+You can give horizontal or vertical disappear levels
+to objects which are used for horizontal or vertical
+layout calculations respectively.</p>
+<p>
+Objects with a small disappear level disappear before
+objects with a big disappear level.
+</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.HorizDisappear">HorizDisappear</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.HorizWeight">
+<short>Adjust the horizontal weight of an object.</short>
+<descr>
+  Usually
+  you can simply use <link id="TMUIArea.Weight">Weight</link> instead of this tag
+  but in some two-dimensional groups it may become
+  handy to have different horizontal and vertical
+  weights.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.VertWeight">
+<short>Adjust the vertical weight of an object.</short>
+<descr>
+  Usually
+  you can simply use <link id="TMUIArea.Weight">Weight</link> instead of this tag
+  but in some two-dimensional groups it may become
+  handy to have different horizontal and vertical
+  weights.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.InnerLeft">
+<short>[i] Adjust the space between an object and its frame.</short>
+<descr>Usually you shouldn't use this tag since you will override the users preferred default setting.
+</descr>
+<seealso>
+  <link id="TMUIArea.Frame">Frame</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.InnerTop">
+<short>[i] Adjust the space between an object and its frame.</short>
+<descr>Usually you shouldn't use this tag since you will override the users preferred default setting.
+</descr>
+<seealso>
+  <link id="TMUIArea.Frame">Frame</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.InnerRight">
+<short>[i] Adjust the space between an object and its frame.</short>
+<descr>Usually you shouldn't use this tag since you will override the users preferred default setting.
+</descr>
+<seealso>
+  <link id="TMUIArea.Frame">Frame</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.InnerBottom">
+<short>[i] Adjust the space between an object and its frame.</short>
+<descr>Usually you shouldn't use this tag since you will override the users preferred default setting.
+</descr>
+<seealso>
+  <link id="TMUIArea.Frame">Frame</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.InputMode">
+<short>[i] Defines how the item react to user input</short>
+<descr>
+<p>efinition of reaction to user input:</p>
+<dl>
+  <dt>MUIV_InputMode_None</dt><dd>No input, this is not a gadget.</dd>
+  <dt>MUIV_InputMode_RelVerify</dt><dd>Item pressed down as long the mouse is pressed, up when Mouse is realeased. For buttons and similar stuff. </dd>
+  <dt>MUIV_InputMode_Immediate</dt><dd>Item changed the selection status to selected when clicked. Used e.g. in a radio button object.</dd>
+  <dt>MUIV_InputMode_Toggle</dt><dd>Item toggles its selection status when clicked. For things like checkmark gadgets.</dd>
+</dl>
+</descr>
+<seealso>
+  <link id="TMUIArea.Selected">Selected</link>
+  <link id="TMUIArea.Pressed">Pressed</link>
+  <link id="TMUIArea.OnClick">OnClick</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.MaxHeight">
+<short>[i] Specify a maximum height for an object (in pixels).</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.MaxWidth">
+<short>[i] Specify a maximum width for an object (in pixels).</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Selected">
+<short>Get and set the selected state of a gadget.</short>
+<descr>
+<p>
+This attribute can be triggered by the user
+clicking on the gadget (or using the keyboard),
+depending on the input mode:</p>
+<dl>
+  <dt>MUIV_InputMode_None</dt><dd><ul><li>set when lmb is pressed.</li>
+           <li>cleared when lmb is released.</li>
+           <li>cleared when the gadget is selected and the
+              mouse leaves the gadget box.</li>
+           <li>set when the mouse reenters the gadget box.</li></ul></dd>
+  <dt>MUIV_InputMode_RelVerify</dt><dd>Item pressed down as long the mouse is pressed, up when Mouse is realeased. For buttons and similar stuff. </dd>
+  <dt>MUIV_InputMode_Immediate</dt><dd>Item changed the selection status to selected when clicked. Used e.g. in a radio button object.</dd>
+  <dt>MUIV_InputMode_Toggle</dt><dd>Item toggles its selection status when clicked. For things like checkmark gadgets.</dd>
+</dl>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.ShortHelp">
+<short>Specify a string that is to be used as bubble help for this
+        object.</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.ShowSelState">
+<short>[i] Invert the Frame border when item is selected</short>
+<descr>
+Normally a gadget will reverse its frame and
+display the configured MUII_SelectedBack background
+pattern in its selected state. For some objects
+(e.g. checkmarks) this is not recommended and
+can be supressed by setting ShowSelState
+to False.
+</descr>
+<seealso>
+   <link id="TMUIArea.Selected">Selected</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.Weight">
+<short>The weight of an object determines how much room it will get during the layout process.</short>
+<descr>
+<p>This tag is a shorthand for <link id="TMUIArea.HorizWeight">HorizWeight</link> and
+<link id="TMUIArea.VertWeight">VertWeight</link>, it sets both weights at once.</p>
+<p>Imagine you have
+a 100 pixel wide horizontal group with two string
+gadgets. Usually, each gadget will get half of the
+room and be 50 pixels wide. If you feel the left
+gadget is more important and should be bigger,
+you can give it a weight of 200 (and 100 for
+the right gadget). Because the left gadget is
+twice as "heavy" as the right gadget, it will
+become twice as big (about 66 pixel) as the
+right one (34 pixel).</p>
+<p>Of course giving weights only makes sense if the
+object is resizable. A <link id="TMUIArea.VertWeight">VertWeight</link> for a
+(always fixed height) string gadget is useless.</p>
+<p>An object with a weight of 0 will always stay at its minimum size.</p>
+<p> By default, all objects have a weight of 100.</p>
+</descr>
+<seealso>
+  <link id="TMUIArea.HorizWeight">HorizWeight</link>
+  <link id="TMUIArea.VertWeight">VertWeight</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.OnClick">
+<short>Event when Item is clicked and in <link id="TMUIArea.InputMode">InputMode</link> = MUIV_InputMode_RelVerify </short>
+<descr>
+<p>Mainly use for Buttons to check when the Button is clicked. The event reacts on the release of <link id="TMUIArea.Pressed">Pressed</link> </p>
+</descr>
+<seealso>
+  <link id="TMUIArea.InputMode">InputMode</link>
+  <link id="TMUIArea.Pressed">Pressed</link>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIRectangle">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIRectangle.FBarTitle">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIRectangle.FHBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIRectangle.FVBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIRectangle.SetBarTitle">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIRectangle.SetBarTitle.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIRectangle.SetHBar">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIRectangle.SetHBar.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIRectangle.SetVBar">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIRectangle.SetVBar.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIRectangle.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIRectangle.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIRectangle.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIRectangle.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRectangle.BarTitle">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRectangle.HBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIRectangle.VBar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIBalance">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIBalance.FQuiet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIBalance.SetQuiet">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIBalance.SetQuiet.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIBalance.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIBalance.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIBalance.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIBalance.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIBalance.Quiet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIGauge">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIGauge.FCurrent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIGauge.FDivide">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIGauge.FHoriz">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIGauge.FInfoText">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIGauge.FMax">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIGauge.SetHoriz">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGauge.SetHoriz.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIGauge.SetCurrent">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGauge.SetCurrent.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIGauge.SetDivide">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGauge.SetDivide.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIGauge.SetMax">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGauge.SetMax.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIGauge.SetInfoText">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGauge.SetInfoText.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIGauge.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIGauge.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIGauge.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIGauge.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIGauge.Current">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIGauge.Divide">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIGauge.InfoText">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIGauge.Max">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIGauge.Horiz">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIScale">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIScale.FHoriz">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIScale.SetHoriz">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIScale.SetHoriz.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIScale.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIScale.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIScale.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIScale.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIScale.Horiz">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIColorfield">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FBlue">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FBlueSet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FRed">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FRedSet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FGreen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FGreenSet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIColorfield.FPen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIColorfield.SetBlue">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorfield.SetBlue.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIColorfield.SetRed">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorfield.SetRed.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIColorfield.SetGreen">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorfield.SetGreen.AValue">
+<short></short>
+</element>
+
+<!-- function Visibility: private -->
+<element name="TMUIColorfield.GetPen">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: private -->
+<element name="TMUIColorfield.GetPen.Result">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIColorfield.SetPen">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorfield.SetPen.AValue">
+<short></short>
+</element>
+
+<!-- function Visibility: private -->
+<element name="TMUIColorfield.GetRGB">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: private -->
+<element name="TMUIColorfield.GetRGB.Result">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIColorfield.SetRGB">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorfield.SetRGB.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIColorfield.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIColorfield.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIColorfield.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIColorfield.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIColorfield.Pen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIColorfield.RGB">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorfield.Blue">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorfield.Red">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIColorfield.Green">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIText">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIText.FContents">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIText.FHiChar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIText.FPreParse">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIText.FSetMax">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIText.FSetMin">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIText.FSetVMax">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIText.SetContents">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.SetContents.AContents">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIText.SetHiChar">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.SetHiChar.AHiChar">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIText.SetPreParse">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.SetPreParse.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIText.SetSetMax">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.SetSetMax.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIText.SetSetMin">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.SetSetMin.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIText.SetSetVMax">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.SetSetVMax.AValue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIText.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIText.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIText.Create.AContents">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIText.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIText.Contents">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIText.HiChar">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIText.PreParse">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIText.SetMax">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIText.SetMin">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIText.SetVMax">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPenDisplay">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIPenDisplay.FSpec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TMUIPenDisplay.FOnSpecChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: private -->
+<element name="TMUIPenDisplay.GetPen">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: private -->
+<element name="TMUIPenDisplay.GetPen.Result">
+<short></short>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TMUIPenDisplay.SetSpec">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetSpec.AValue">
+<short></short>
+</element>
+
+<!-- function Visibility: private -->
+<element name="TMUIPenDisplay.GetSpec">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: private -->
+<element name="TMUIPenDisplay.GetSpec.Result">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPenDisplay.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPenDisplay.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPenDisplay.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPenDisplay.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPenDisplay.SetColormap">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetColormap.ColorMap">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPenDisplay.SetMUIPen">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetMUIPen.MUIPen">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPenDisplay.SetRGB">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetRGB.Red">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetRGB.Green">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetRGB.Blue">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPenDisplay.SetRGB8">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetRGB8.Red">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetRGB8.Green">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPenDisplay.SetRGB8.Blue">
+<short></short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIPenDisplay.Pen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIPenDisplay.Spec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPenDisplay.OnSpecChange">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPopPen">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopPen.CreateObject">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIButton">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIButton.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIButton.Create.ATitle">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIHSpace">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIHSpace.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIHSpace.Create.Space">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIVSpace">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIVSpace.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIVSpace.Create.Space">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIHBar">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIHBar.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIHBar.Create.Space">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIVBar">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIVBar.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIVBar.Create.Space">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIBarTitle">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIBarTitle.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIBarTitle.Create.ALabel">
+<short></short>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TSpecDesc.FText">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TSpecDesc.FSpec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: private -->
+<element name="TSpecDesc.FIsSet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: private -->
+<element name="TSpecDesc.SetFSpec">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetFSpec.ASpec">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TSpecDesc.Create">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetStdPattern">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetStdPattern.APattern">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetRGB">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetRGB.R">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetRGB.G">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetRGB.B">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetRGB32">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetRGB32.R">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetRGB32.G">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetRGB32.B">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetBoopsiName">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetBoopsiName.AName">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetMUIBrush">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetMUIBrush.AName">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetPicture">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetPicture.PicPath">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetPreConf">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetPreConf.ABack">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TSpecDesc.SetString">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TSpecDesc.SetString.AText">
+<short></short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TSpecDesc.IsSet">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TSpecDesc.Spec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: default -->
+<element name="ColComToMUI">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: default -->
+<element name="ColComToMUI.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="ColComToMUI.c">
+<short></short>
+</element>
+
+<!-- function Visibility: default -->
+<element name="MUIToColComp">
+<short></short>
+<descr>
+</descr>
+<errors>
+</errors>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: default -->
+<element name="MUIToColComp.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="MUIToColComp.c">
+<short></short>
+</element>
+
+</module> <!-- MUIClass.Area -->
+
+</package>
+</fpdoc-descriptions>

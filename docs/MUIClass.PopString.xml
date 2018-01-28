@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    MUIClass.PopString
+  ====================================================================
+-->
+
+<module name="MUIClass.PopString">
+<short></short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="fgl">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AmigaDOS">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Intuition">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="agraphics">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="icon">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="mui">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="muihelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="tagsparamshelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Base">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Group">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Area">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Gadget">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TClosePopEvent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TClosePopEvent.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TClosePopEvent.Success">
+<short></short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPopString">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopString.BeforeCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopString.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPopString.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopString.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPopString.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TMUIPopString.Destroy">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopString.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopString.DestroyObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopString.ClearObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopString.Open">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopString.Close">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPopString.Close.Result">
+<short></short>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopString.Toggle">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopString.Button">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopString.StringObj">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopString.OnOpen">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopString.OnClose">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPopObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopObject.BeforeCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopObject.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPopObject.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopObject.AfterCreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPopObject.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TMUIPopObject.Destroy">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopObject.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopObject.DestroyObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopObject.ClearObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopObject.Follow">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopObject.Light">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopObject.PopObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopObject.Volatile">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopObject.OnStrObj">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPoplist">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPoplist.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPoplist.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPoplist.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPoplist.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPoplist.LArray">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIPopASL">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIPopASL.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIPopASL.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIPopASL.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIPopASL.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIPopASL.Active">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopASL.ASLType">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+</module> <!-- MUIClass.PopString -->
+
+</package>
+</fpdoc-descriptions>

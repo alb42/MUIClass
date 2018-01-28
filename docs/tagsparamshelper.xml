@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    TagsParamsHelper
+  ====================================================================
+-->
+
+<module name="TagsParamsHelper">
+<short></short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- record type Visibility: default -->
+<element name="TTagItem">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TTagItem.ti_Tag">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TTagItem.ti_Data">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- pointer type Visibility: default -->
+<element name="PTagItem">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constant Visibility: default -->
+<element name="TAG_DONE">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constant Visibility: default -->
+<element name="TagTrue">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constant Visibility: default -->
+<element name="TagFalse">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- object Visibility: default -->
+<element name="TATagList">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TATagList.Clear">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TATagList.GetTagPointer">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TATagList.GetTagPointer.Result">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TATagList.AddTag">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TATagList.AddTag.Tag">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TATagList.AddTag.Data">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TATagList.AddTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TATagList.AddTags.AList">
+<short></short>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TATagList.DebugPrint">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- object Visibility: default -->
+<element name="TAParamList">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TAParamList.SetParams">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TAParamList.SetParams.AList">
+<short></short>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TAParamList.GetParamPointer">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TAParamList.GetParamPointer.Result">
+<short></short>
+</element>
+
+<!-- operator Visibility: default -->
+<element name="assign(TATagList):PTagItem">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: default -->
+<element name="assign(TATagList):PTagItem.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="assign(TATagList):PTagItem.AList">
+<short></short>
+</element>
+
+<!-- operator Visibility: default -->
+<element name="assign(TAParamList):Pointer">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: default -->
+<element name="assign(TAParamList):Pointer.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="assign(TAParamList):Pointer.APList">
+<short></short>
+</element>
+
+<!-- operator Visibility: default -->
+<element name="assign(TAParamList):PNativeInt">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: default -->
+<element name="assign(TAParamList):PNativeInt.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="assign(TAParamList):PNativeInt.APList">
+<short></short>
+</element>
+
+</module> <!-- TagsParamsHelper -->
+
+</package>
+</fpdoc-descriptions>

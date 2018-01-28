@@ -1,0 +1,973 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    MUIClass.DrawPanel
+  ====================================================================
+-->
+
+<module name="MUIClass.DrawPanel">
+<short></short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="fgl">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AmigaDOS">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Intuition">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="icon">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AGraphics">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="inputevent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="keymap">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="layers">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="mui">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="muihelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="tagsparamshelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Base">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Area">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- enumeration type Visibility: default -->
+<element name="TMUIMouseBtn">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIMouseBtn.mmbLeft">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIMouseBtn.mmbMiddle">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIMouseBtn.mmbRight">
+<short></short>
+</element>
+
+<!-- set type Visibility: default -->
+<element name="TMUIShiftState">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIShiftState.mssShift">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIShiftState.mssCtrl">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIShiftState.mssLShift">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIShiftState.mssRShift">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIShiftState.mssLAlt">
+<short></short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TMUIShiftState.mssRAlt">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TMUIDrawEvent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawEvent.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawEvent.Rp">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawEvent.DrawRect">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TMUIMouseEvent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseEvent.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseEvent.MouseBtn">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseEvent.X">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseEvent.Y">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseEvent.EatEvent">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TMUIMouseWheel">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseWheel.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseWheel.ScrollUp">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseWheel.EatEvent">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TMUIMouseMove">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseMove.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseMove.X">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseMove.Y">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIMouseMove.EatEvent">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TMUIKeyDown">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyDown.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyDown.Shift">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyDown.Code">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyDown.Key">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyDown.EatEvent">
+<short></short>
+</element>
+
+<!-- procedure type Visibility: default -->
+<element name="TMUIKeyUp">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyUp.Sender">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyUp.Shift">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyUp.Code">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyUp.Key">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIKeyUp.EatEvent">
+<short></short>
+</element>
+
+<!-- record type Visibility: default -->
+<element name="TMouseClickTime">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMouseClickTime.LSecs">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMouseClickTime.LMicros">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMouseClickTime.MSecs">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMouseClickTime.MMicros">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMouseClickTime.RSecs">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="TMouseClickTime.RMicros">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TDrawBuffer">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: public -->
+<element name="TDrawBuffer.RP">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: public -->
+<element name="TDrawBuffer.Width">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: public -->
+<element name="TDrawBuffer.Height">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TDrawBuffer.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TDrawBuffer.Create.AWidth">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TDrawBuffer.Create.AHeight">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TDrawBuffer.Create.ADepth">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TDrawBuffer.Create.AFriend">
+<short></short>
+</element>
+
+<!-- destructor Visibility: public -->
+<element name="TDrawBuffer.Destroy">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TMUIDrawPanel">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: protected -->
+<element name="TMUIDrawPanel.MUIEvent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: protected -->
+<element name="TMUIDrawPanel.MUIEvent.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.MUIEvent.cl">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.MUIEvent.Obj">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.MUIEvent.Msg">
+<short></short>
+</element>
+
+<!-- function Visibility: protected -->
+<element name="TMUIDrawPanel.DoSetup">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: protected -->
+<element name="TMUIDrawPanel.DoSetup.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoSetup.cl">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoSetup.Obj">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoSetup.Msg">
+<short></short>
+</element>
+
+<!-- function Visibility: protected -->
+<element name="TMUIDrawPanel.DoCleanup">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: protected -->
+<element name="TMUIDrawPanel.DoCleanup.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoCleanup.cl">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoCleanup.Obj">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoCleanup.Msg">
+<short></short>
+</element>
+
+<!-- function Visibility: protected -->
+<element name="TMUIDrawPanel.DoAskMinMax">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: protected -->
+<element name="TMUIDrawPanel.DoAskMinMax.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoAskMinMax.cl">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoAskMinMax.Obj">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoAskMinMax.Msg">
+<short></short>
+</element>
+
+<!-- function Visibility: protected -->
+<element name="TMUIDrawPanel.DoDraw">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: protected -->
+<element name="TMUIDrawPanel.DoDraw.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoDraw.cl">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoDraw.Obj">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoDraw.Msg">
+<short></short>
+</element>
+
+<!-- function Visibility: protected -->
+<element name="TMUIDrawPanel.DoHandleEvent">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: protected -->
+<element name="TMUIDrawPanel.DoHandleEvent.Result">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoHandleEvent.cl">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoHandleEvent.Obj">
+<short></short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.DoHandleEvent.Msg">
+<short></short>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIDrawPanel.ResetDblClickTime">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: protected -->
+<element name="TMUIDrawPanel.GetCreateTags">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDrawPanel.GetCreateTags.ATagList">
+<short></short>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TMUIDrawPanel.Create">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIDrawPanel.CreateObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: public -->
+<element name="TMUIDrawPanel.RedrawObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.MinWidth">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.MinHeight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.MaxWidth">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.MaxHeight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.DefWidth">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.DefHeight">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnDrawObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnMouseDown">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnMouseUp">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnDblClick">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnMouseWheel">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnMouseMove">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnMouseLeave">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnKeyDown">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.OnKeyUp">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.FillArea">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.Width">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.Height">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- variable Visibility: default -->
+<element name="MUIPBType">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+</module> <!-- MUIClass.DrawPanel -->
+
+</package>
+</fpdoc-descriptions>
