@@ -53,8 +53,11 @@ end;
 begin
   Win := TMyWindow.Create;      // create the window
   DP := TMUIDrawPanel.Create;   // create the Draw Buffer
-  DP.MinWidth := 256;           // Not smaller than the DrawBuffer (not needed but looks nicer)
+  DP.MinWidth := 256;
   DP.MinHeight := 256;
+  DP.MaxWidth := 256;
+  DP.MaxHeight := 256;
+  DP.FillArea := False; //we paint the whole window no flickering
   DP.OnMouseDown := @Win.MouseDown; // Connect the events for mouse and draw
   DP.OnMouseUp := @Win.MouseUp;
   DP.OnMouseMove := @Win.MouseMove;

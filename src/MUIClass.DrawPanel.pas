@@ -60,9 +60,6 @@ type
     FOnMUIKeyDown: TMUIKeyDown;
     FOnMUIKeyUp: TMUIKeyUp;
     FOnMUIMouseLeave: TNotifyEvent;
-  private
-    function GetWidth: Integer;
-    function GetHeight: Integer;
   protected
     function MUIEvent(cl: PIClass; Obj: PObject_; Msg: intuition.PMsg): PtrUInt; virtual;
     //
@@ -80,7 +77,8 @@ type
     procedure CreateObject; override;
 
     procedure RedrawObject;
-
+  published
+    property FillArea;
     property MinWidth: Integer read FMinWidth write FMinWidth;
     property MinHeight: Integer read FMinHeight write FMinHeight;
     property MaxWidth: Integer read FMaxWidth write FMaxWidth;
@@ -98,9 +96,6 @@ type
     property OnMouseLeave: TNotifyEvent read FOnMUIMouseLeave write FOnMUIMouseLeave;
     property OnKeyDown: TMUIKeyDown read FOnMUIKeyDown write FOnMUIKeyDown;
     property OnKeyUp: TMUIKeyUp read FOnMUIKeyUp write FOnMUIKeyUp;
-
-    property Width: Integer read GetWidth;
-    property Height: Integer read GetHeight;
   end;
 
 var
@@ -168,24 +163,6 @@ begin
     Pointer(INST_DATA(MUIPBType^.mcc_Class, Pointer(FMUIObj))^) := Self;
     AfterCreateObject;
   end;
-end;
-
-
-// Get actual width
-function TMUIDrawPanel.GetWidth: Integer;
-begin
-  // use DefWidth if MuiObject not there (should never happen)
-  Result := FDefWidth;
-  if HasObj then
-    Result := Obj_Width(FMUIObj);
-end;
-
-// get actual height
-function TMUIDrawPanel.GetHeight: Integer;
-begin
-  Result := FDefHeight;
-  if HasObj then
-    Result := Obj_Height(FMUIObj);
 end;
 
 // Call to redraw the object
