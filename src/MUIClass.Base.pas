@@ -62,10 +62,15 @@ type
 
   TMUINotify = class(TMUIRootClass)
   private
+    FHelpLine: Integer;
+    FHelpNode: string;
     FChilds: TChildList;
+    procedure SetHelpLine(AValue: Integer);
+    procedure SetHelpNode(AValue: string);
   protected
-    procedure AfterCreateObject; virtual;
     procedure BeforeCreateObject; virtual;
+    procedure GetCreateTags(var ATagList: TATagList); override;
+    procedure AfterCreateObject; virtual;
     procedure DoFirstOpen; override;
     procedure BeforeCloseWindow; override;
     property Childs: TChildList read FChilds;
@@ -80,6 +85,9 @@ type
     procedure RemoveChild(AChild: TMUINotify); virtual;
 
     class function GetPasObject(AMUIObj: PObject_): TMUINotify;
+
+    property HelpLine: Integer read FHelpLine write SetHelpLine;
+    property HelpNode: string read FHelpNode write SetHelpNode;
   end;
 
   TTimerList = specialize TFPGObjectList<TMUITimer>;
@@ -245,7 +253,7 @@ type
     function Find(Id: LongWord): Pointer;
     function Merge(DS: TMUIDataSpace): Integer;
     function ReadIFF(IFFHandle: Pointer): Integer;
-    function WriteIFF(IFFHandle: Pointer): Integer;
+    function WriteIFF(IFFHandle: Pointer; typ: LongWord; id: LongWord): Integer;
     function Remove(Id: LongWord): Boolean;
     //Field
     property Pool: Pointer read FPool write SetPool;
@@ -448,6 +456,8 @@ constructor TMUINotify.Create;
 begin
   inherited;
   FChilds := TChildList.Create(False);
+  FHelpLine := 0;
+  FHelpNode := '';
 end;
 
 
@@ -469,6 +479,15 @@ var
 begin
   for i := 0 to FChilds.Count - 1 do
     FChilds[i].CreateObject;
+end;
+
+procedure TMUINotify.GetCreateTags(var ATagList: TATagList);
+begin
+  inherited;
+  if FHelpLine <> 0 then
+    ATagList.AddTag(MUIA_HelpLine, AsTag(FHelpLine));
+  if FHelpNode <> '' then
+    ATagList.AddTag(MUIA_HelpNode, AsTag(PChar(FHelpNode)));
 end;
 
 procedure TMUINotify.DestroyObject;
@@ -542,6 +561,26 @@ begin
     p := TObject(MH_Get(AMUIObj, MUIA_UserData));
     if p is TMUINotify then
       Result := TMUINotify(p);
+  end;
+end;
+
+procedure TMUINotify.SetHelpLine(AValue: Integer);
+begin
+  if AValue <> FHelpLine then
+  begin
+    FHelpLine := AValue;
+    if HasObj then
+      SetValue(MUIA_HelpLine, AsTag(FHelpLine));
+  end;
+end;
+
+procedure TMUINotify.SetHelpNode(AValue: string);
+begin
+  if AValue <> FHelpNode then
+  begin
+    FHelpNode := AValue;
+    if HasObj then
+      SetValue(MUIA_HelpNode, AsTag(PChar(FHelpNode)));
   end;
 end;
 
@@ -970,7 +1009,7 @@ begin
     if Assigned(FMUIObj) then
       ComplainIOnly(Self, 'MUIA_Application_Title', Title)
     else
-      FTitle := AValue;
+      FTitle := Copy(AValue, 1, 30);
   end;
 end;
 
@@ -1248,11 +1287,11 @@ begin
     Result := DoMethod(MUIObj, [MUIM_Dataspace_ReadIFF, AsTag(IFFHandle)]);
 end;
 
-function TMUIDataspace.WriteIFF(IFFHandle: Pointer): Integer;
+function TMUIDataspace.WriteIFF(IFFHandle: Pointer; typ: LongWord; ID: LongWord): Integer;
 begin
   Result := -1;
   if HasObj then
-    Result := DoMethod(MUIObj, [MUIM_Dataspace_WriteIFF, AsTag(IFFHandle)]);
+    Result := DoMethod(MUIObj, [MUIM_Dataspace_WriteIFF, AsTag(IFFHandle), AsTag(Typ), AsTag(ID)]);
 end;
 
 function TMUIDataspace.Remove(Id: LongWord): Boolean;

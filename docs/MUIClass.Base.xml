@@ -619,6 +619,23 @@ and attributes useful for every object.
 <short>MUI Object to get the Pascal object from</short>
 </element>
 
+<element name="TMUINotify.GetCreateTags">
+<short>Fill Taglist with informations for creation</short>
+</element>
+
+<element name="TMUINotify.GetCreateTags.ATagList">
+<short>TagList to Fill</short>
+</element>
+
+<element name="TMUINotify.HelpNode">
+<short>Define a node in a help file specified with <link id="TMUIApplication.HelpFile">MUIApp.HelpFile</link></short>
+</element>
+
+<element name="TMUINotify.HelpLine">
+<short>Define a line in a help file specified with <link id="TMUIApplication.HelpFile">MUIApp.HelpFile</link></short>
+</element>
+
+
 <!-- specialized class type Visibility: default -->
 <element name="TTimerList">
 <short>List of Timers</short>
@@ -780,120 +797,242 @@ and attributes useful for every object.
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.AddInputHandler">
-<short></short>
+<short>Adds an Input handler to for your object</short>
 <descr>
+To be able to react on signals, you must fill out a
+PMUI_InputHandlerNode structure (probably located in
+your classes instance data) and call
+AddInputHandler() with the structure
+as parameter. From now on, your class will receive
+the specified method whenever one of the given signals
+arrives.
 </descr>
 <seealso>
+  <link id="TMUIApplication.RemInputHandler">RemInputHandler()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.AddInputHandler.IhNode">
-<short></short>
+<short>Pointer to an initialized TMUI_InputHandlerNode</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.RemInputHandler">
-<short></short>
+<short>Remove the Eventhandler for your object</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIApplication.AddInputHandler">AddInputHandler()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.RemInputHandler.IhNode">
-<short></short>
+<short>Pointer to an initialized TMUI_InputHandlerNode used for <link id="TMUIApplication.AddInputHandler">AddInputHandler()</link></short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.CheckRefresh">
-<short></short>
+<short>Check if a MUI Item need a refresh, when blocked by ASL requester.</short>
 <descr>
+<p>
+This method checks all currently open windows if they
+need refreshing and refreshes them if necessary.</p>
+<p>
+You won't need to call this method if you are within
+your traditional MUI main loop. However, if you e.g.
+spawn some kind of synchronous requester (AslRequest),
+MUI cannot react on IDCMP_REFRESHWINDOW messages.</p>
+<p>
+The result is that the user may see a damaged MUI window
+if he moves around a file requester and MUI is configured
+for simple refresh.</p>
+<p>CheckRefresh() is the solution for this problem. just call this function inside the IntuiMsgHook
+of the ASL Requester.</p>
 </descr>
 <seealso>
+  <link id="TMUIApplication.InputBuffered">InputBuffered</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.InputBuffered">
-<short></short>
+<short>Buffer Input Messages on time consuming operations</short>
 <descr>
+<p>
+Imagine your application does some time consuming
+operation, e.g. copying a disk, and you are for
+some reasons unable to react on return ids during
+this period. One solution would be to simply
+put your application to sleep, it will get a
+busy pointer and the user knows whats going on.</p>
+<p>
+However, this will make it impossible for the user
+to resize your applications windows or iconify it,
+he will have to wait until you are done with your
+operation.</p>
+<p>
+InputBuffered() offers a solution
+for this problem. Using this method, you needn't
+set to sleep your application. Just call it on a
+regular basis and MUI will be able to handle
+all actions concerning the GUI. You do not need
+to pay attention on return values, they remain
+on an internal stack until your next call to
+the non buffered input method.
+</p>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Sleep">Sleep</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.Load">
-<short></short>
+<short>Load program configuration for items with <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link></short>
 <descr>
+<p>
+  Each gadget with <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link> &lt;&gt;0 will get
+  its contents saved during <link id="TMUIApplication.Save">Save()</link> and
+  restored during Load(). This makes
+  it very easy to design a configuration window
+  with "Save", "Use" and "Cancel" buttons to allow
+  the user storing the settings. When the application
+  starts, you would just have to call Load()
+  and the stored settings will be read and installed.
+</p>
+<p>
+  Not all classes are able to import and export their
+  contents. Currently, you may define a <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link> for
+</p>
+  <dl>
+    <dt><link id="MUIClass.Gadget.TMUIString">String</link> class</dt><dd><link id="MUIClass.Gadget.TMUIString.Contents">String.Contents</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Group.TMUIRadio">Radio</link> class</dt><dd><link id="MUIClass.Group.TMUIRadio.Active">Radio.Active</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Group.TMUICycle">Cycle</link> class</dt><dd><link id="MUIClass.Group.TMUICycle.Active">Cycle.Active</link> is ex/imported</dd>
+    <dt><link id="MUIClass.List.TMUIList">List</link> class</dt><dd><link id="MUIClass.List.TMUIList.Active">List.Active</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Area.TMUIText">Text</link> class</dt><dd><link id="MUIClass.Area.TMUIText.Contents">Text.Contents</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Area.TMUIArea">Area</link> class</dt><dd><link id="MUIClass.Area.TMUIArea.Selected">Area.Selected</link> is ex/imported (e.g. CheckMarks)</dd>
+    <dt><link id="MUIClass.Menu.TMUIMenuItem">MenuItem</link> class</dt><dd><link id="MUIClass.Menu.TMUIMenuItem.Checked">MenuItem.Checked</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Group.TMUIGroup">Group</link> class</dt><dd><link id="MUIClass.Group.TMUIGroup.ActivePage">Group.ActivePage</link> is ex/imported</dd>
+  </dl>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Save">Save()</link>
+  <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.Load.FromEnvarc">
-<short></short>
+<short>True = load from EnvArc:; False Load from ENV:</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.OpenConfigWindow">
-<short></short>
+<short>Open application specific configuration window.</short>
 <descr>
+<p>
+  MUI applications can open their own MUI configuration
+  window to allow users to adjust the local preferences without
+  the need of an external program. Programmers are supposed to
+  include a "Settings/MUI..." menu item which simply calls
+  OpenConfigWindow(). MUI will then automatically
+  show the preferences window without blocking the rest of the
+  program.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.Save">
-<short></short>
+<short>Save program configuration for items with <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link>s</short>
 <descr>
+<p>
+  Each gadget with <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link> &lt;&gt;0 will get
+  its contents saved during Save() and
+  restored during <link id="TMUIApplication.Load">Load()</link>. This makes
+  it very easy to design a configuration window
+  with "Save", "Use" and "Cancel" buttons to allow
+  the user storing the settings. When the application
+  starts, you would just have to call Load()
+  and the stored settings will be read and installed.
+</p>
+<p>
+  Not all classes are able to import and export their
+  contents. Currently, you may define a <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link> for
+</p>
+  <dl>
+    <dt><link id="MUIClass.Gadget.TMUIString">String</link> class</dt><dd><link id="MUIClass.Gadget.TMUIString.Contents">String.Contents</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Group.TMUIRadio">Radio</link> class</dt><dd><link id="MUIClass.Group.TMUIRadio.Active">Radio.Active</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Group.TMUICycle">Cycle</link> class</dt><dd><link id="MUIClass.Group.TMUICycle.Active">Cycle.Active</link> is ex/imported</dd>
+    <dt><link id="MUIClass.List.TMUIList">List</link> class</dt><dd><link id="MUIClass.List.TMUIList.Active">List.Active</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Area.TMUIText">Text</link> class</dt><dd><link id="MUIClass.Area.TMUIText.Contents">Text.Contents</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Area.TMUIArea">Area</link> class</dt><dd><link id="MUIClass.Area.TMUIArea.Selected">Area.Selected</link> is ex/imported (e.g. CheckMarks)</dd>
+    <dt><link id="MUIClass.Menu.TMUIMenuItem">MenuItem</link> class</dt><dd><link id="MUIClass.Menu.TMUIMenuItem.Checked">MenuItem.Checked</link> is ex/imported</dd>
+    <dt><link id="MUIClass.Group.TMUIGroup">Group</link> class</dt><dd><link id="MUIClass.Group.TMUIGroup.ActivePage">Group.ActivePage</link> is ex/imported</dd>
+  </dl>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Load">Load()</link>
+  <link id="MUIClass.Area.TMUIArea.ObjectID">ObjectID</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.Save.ToEnvarc">
-<short></short>
+<short>True = save to EnvArc:; False Save to ENV:</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIApplication.ShowHelp">
-<short></short>
+<short>Show an AmigaGuide help file.</short>
 <descr>
+The application will be
+put to sleep until the file is displayed.
+Usually, you don't need to call this method directly.
+MUI comes with a sophisticated online help system,
+you just need to supply your gadgets with help nodes
+and everything will be handled automatically.
 </descr>
 <seealso>
+  <link id="TMUIApplication.HelpFile">HelpFile</link>
+  <link id="TMUINotify.HelpNode">HelpNode</link>
+  <link id="TMUINotify.HelpLine">HelpLine</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.ShowHelp.Window">
-<short></short>
+<short>Help will be open on tehe same screen as this window, nil for public screen</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.ShowHelp.HelpFileName">
-<short></short>
+<short>Filename of the AmigaGuide file, if '' it will use the <link id="TMUIApplication.HelpFile">MUIApp.HelpFile</link></short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.ShowHelp.Node">
-<short></short>
+<short>Node to open in the File</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIApplication.ShowHelp.LineNum">
-<short></short>
+<short>Automatically jump to this line</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.Broker">
-<short></short>
+<short>Commodities Broker</short>
 <descr>
+<p>
+If you need to attach some additional commodities objects
+to your application (e.g. because you need lots of hotkeys),
+you can obtain a pointer to the applications Broker structure
+and add some commodities objects.</p>
+<p>
+MUI will free the complete broker when the application is
+disposed, no need for you to free your objects yourself.</p>
 </descr>
 <seealso>
 </seealso>
@@ -901,107 +1040,250 @@ and attributes useful for every object.
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.DiskObject">
-<short></short>
+<short>Iconify Icon</short>
 <descr>
+Pointer to a struct DiskObject, e.g. obtained
+from GetDiskObject(). If present, MUI will use
+this object for the AppIcon when your application
+gets iconified.
+
+Otherwise MUI will try to locate "env:sys/dev_mui.info"
+and, if not present, fall back to a default icon.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.ForceQuit">
-<short></short>
+<short>Quit without questions</short>
 <descr>
+When your input loop receives a Terminate,
+you should query this attribute. In case its True, your program
+should exit quietly without popping up any safety requesters or
+other stuff.
+MUI will e.g. set this if the user issued a "QUIT FORCE" ARexx
+command to your application.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.Iconified">
-<short></short>
+<short>Iconify the Application</short>
 <descr>
+<p>
+Setting this attribute to TRUE causes the application
+to become iconified. Every open window will be closed
+and a (configurable) AppIcon will appear on the workbench.</p>
+<p>
+Same thing happens when the user hits the iconify gadget
+in the window border or uses commodities Exchange to
+hide your applications interface.</p>
+<p>
+There is no way for you to prevent your application from
+being iconified. However, you can react on the iconification
+by listening to the OnIconify Event. This allows you to free some resources
+you don't need in iconified state.</p>
+<p>
+When an application is iconified and you try to open a
+window, the window won't open immediately. Instead MUI
+remembers this action and opens the window once the
+application is uniconified again.</p>
 </descr>
 <seealso>
+  <link id="TMUIApplication.DiskObject">DiskObject</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIApplication.Sleep">
-<short></short>
+<short>Put a whole application to sleep.</short>
 <descr>
+<p>
+  All open windows get disabled and a busy
+pointer appears.</p>
+<p>
+This attribute contains a nesting count, if you tell
+your application to sleep twice, you will have to tell
+it to wake up twice too.</p>
+<p>
+If you need to do some time consuming actions, you
+always should set this attribute to inform the user
+that you are currently unable to handle input.</p>
+<p>
+A sleeping application's windows cannot be resized.</p>
 </descr>
 <seealso>
+  <link id="MUIClass.Window.TMUIWindow.Sleep">Window.Sleep</link>
+  <link id="TMUIApplication.InputBuffered">InputBuffered()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Active">
-<short></short>
+<short>Active Status of the Commodities Setting (in Exchange))</short>
 <descr>
+This attribute reflects the state that the user adjusted
+with commodities Exchange. MUI itself doesn't pay any
+attention to it, this is up to you.
 </descr>
 <seealso>
+  <link id="TMUIApplication.Broker">Broker</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Author">
-<short></short>
+<short>[i] Name of the applications author.</short>
 <descr>
+  <p>
+  <b>Example</b> </p>
+<code>
+MUIApp.Title := 'WBMan';
+MUIApp.Version := '$VER: WbMan 0.24 (19.7.93)';
+MUIApp.Copyright := '© 1993 by Klaus Melchior';
+MUIApp.Author := 'Klaus Melchior';
+MUIApp.Description := 'Manages the WBStartup.';
+MUIApp.Base := 'WBMAN';</code>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Copyright">MUIApp.Copyright</link>
+  <link id="TMUIApplication.Version">MUIApp.Version</link>
+  <link id="TMUIApplication.Description">MUIApp.Description</link>
+  <link id="TMUIApplication.Base">MUIApp.Base</link>
+  <link id="TMUIApplication.Title">MUIApp.Title</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Base">
-<short></short>
+<short>[i] Basename for an application</short>
 <descr>
+<p>The basename for an application. This name is used
+for the builtin ARexx port and for some internal
+file management.</p>
+<p>
+A basename must neither contain spaces nor any
+special characters such as ":/()#?*...".</p>
+<p>
+When your program is a single task application
+(i.e. <link id="TMUIApplication.SingleTask">MUIApp.SingleTaks</link> is True), the
+base name will be used without further modification.
+</p>
+<p>Otherwise, it gets a ".1", ".2", etc. appended,
+depending on how many applications are already
+running. If you need to know the name of your
+ARexx port, you can query the base name attribute
+after the application is created.</p>
+<p>
+  <b>Example</b></p>
+<code>
+MUIApp.Title := 'WBMan';
+MUIApp.Version := '$VER: WbMan 0.24 (19.7.93)';
+MUIApp.Copyright := '© 1993 by Klaus Melchior';
+MUIApp.Author := 'Klaus Melchior';
+MUIApp.Description := 'Manages the WBStartup.';
+MUIApp.Base := 'WBMAN';</code>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Copyright">MUIApp.Copyright</link>
+  <link id="TMUIApplication.Version">MUIApp.Version</link>
+  <link id="TMUIApplication.Description">MUIApp.Description</link>
+  <link id="TMUIApplication.Author">MUIApp.Author</link>
+  <link id="TMUIApplication.Title">MUIApp.Title</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.BrokerPri">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>[i] Adjust the priority of an applications broker.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Copyright">
-<short></short>
+<short>[i] A copyright string, containing the year and the company.</short>
 <descr>
+  <p>
+  <b>Example</b> </p>
+<code>
+MUIApp.Title := 'WBMan';
+MUIApp.Version := '$VER: WbMan 0.24 (19.7.93)';
+MUIApp.Copyright := '© 1993 by Klaus Melchior';
+MUIApp.Author := 'Klaus Melchior';
+MUIApp.Description := 'Manages the WBStartup.';
+MUIApp.Base := 'WBMAN';</code>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Version">MUIApp.Version</link>
+  <link id="TMUIApplication.Description">MUIApp.Description</link>
+  <link id="TMUIApplication.Author">MUIApp.Author</link>
+  <link id="TMUIApplication.Base">MUIApp.Base</link>
+  <link id="TMUIApplication.Title">MUIApp.Title</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Description">
-<short></short>
+<short>[i] Short description, about 40 characters. Shown e.g. in commodities exchange.</short>
 <descr>
+  <p>
+  <b>Example</b> </p>
+<code>
+MUIApp.Title := 'WBMan';
+MUIApp.Version := '$VER: WbMan 0.24 (19.7.93)';
+MUIApp.Copyright := '© 1993 by Klaus Melchior';
+MUIApp.Author := 'Klaus Melchior';
+MUIApp.Description := 'Manages the WBStartup.';
+MUIApp.Base := 'WBMAN';</code>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Copyright">MUIApp.Copyright</link>
+  <link id="TMUIApplication.Version">MUIApp.Version</link>
+  <link id="TMUIApplication.Author">MUIApp.Author</link>
+  <link id="TMUIApplication.Base">MUIApp.Base</link>
+  <link id="TMUIApplication.Title">MUIApp.Title</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.HelpFile">
-<short></short>
+<short>AmigaGuide style file to be displayed when the user requests online help.</short>
 <descr>
+<p>When the HELP button is pressed and the application
+defines a HelpFile, MUI tries to obtain
+<link id="TMUINotify.HelpNode">HelpNode</link> from the current object (the one under
+the mouse pointer). If <link id="TMUINotify.HelpNode">HelpNode</link> is not defined,
+MUI continues asking the parent object for this
+attribute (usually a group, but remember: the parent
+of a windows root object is the window itself, the
+parent of a window is the application).</p>
+<p>
+When a set <link id="TMUINotify.HelpNode">HelpNode</link> is found, the same procedure
+is applied to <link id="TMUINotify.HelpLine">HelpLine</link>. Then MUI puts the application
+to sleep and displays the file at the position specified
+with <link id="TMUINotify.HelpNode">HelpNode</link> and/or <link id="TMUINotify.HelpLine">HelpLine</link>.</p>
+<p>
+This behaviour allows you to define one
+HelpFile for your application object
+and different help nodes and lines for your applications
+windows and/or gadgets.</p>
 </descr>
 <seealso>
+  <link id="TMUINotify.HelpNode">HelpNode</link>
+  <link id="TMUINotify.HelpLine">HelpLine</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Menustrip">
-<short></short>
+<short>[i] Specify a menu strip object for the application.</short>
 <descr>
+<p>
+The object
+is treated as a child of the application and will be disposed
+when the application is disposed.</p>
+<p>
+Menustrip objects defined for the application are used
+as menu for every window of the application, as long as
+the window doesn't define its private menu.</p>
 </descr>
 <seealso>
 </seealso>
@@ -1009,8 +1291,20 @@ and attributes useful for every object.
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.SingleTask">
-<short></short>
+<short>[i] Set application as a single task program</short>
 <descr>
+<p>
+When set to TRUE, MUI will
+refuse to create more than one application object.</p>
+<p>
+In this case, the already running application gets its
+<link id="TMUIApplication.OnDoubleStart">OnDoubleStart</link> Event. You
+can listen to this and take appropriate actions, e.g.
+pop up a requester.</p>
+<p>
+Examples for single task applications are the system
+preferences program. It doesn't make sense for them
+to run more than once.</p>
 </descr>
 <seealso>
 </seealso>
@@ -1018,17 +1312,45 @@ and attributes useful for every object.
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Title">
-<short></short>
+<short>[i] Title of an application</short>
 <descr>
+<p>
+The title is e.g. shown in Commodities Exchange
+or in the MUI preferences program.</p>
+<p>
+An application title shall not contain any version
+information, just the pure title. Also, special
+characters such as ":/()#?*..." are not allowed.</p>
+<p>
+You should use a quite long and unique name for
+your applications. Naming it "Viewer" or "Browser"
+is not a wise choice.
+</p>
+<p>The length of the name must not exceed 30 characters! Strings longer than 30 chars will be cut.</p>
+  <p>
+  <b>Example</b> </p>
+<code>
+MUIApp.Title := 'WBMan';
+MUIApp.Version := '$VER: WbMan 0.24 (19.7.93)';
+MUIApp.Copyright := '© 1993 by Klaus Melchior';
+MUIApp.Author := 'Klaus Melchior';
+MUIApp.Description := 'Manages the WBStartup.';
+MUIApp.Base := 'WBMAN';</code>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Copyright">MUIApp.Copyright</link>
+  <link id="TMUIApplication.Version">MUIApp.Version</link>
+  <link id="TMUIApplication.Description">MUIApp.Description</link>
+  <link id="TMUIApplication.Author">MUIApp.Author</link>
+  <link id="TMUIApplication.Base">MUIApp.Base</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.UseCommodities">
-<short></short>
-<descr>
+<short>[i] Run the application without a commodities interface</short>
+<descr> When set to FALSE, the application will run without a
+        commodities interface. Think very well before using this
 </descr>
 <seealso>
 </seealso>
@@ -1036,71 +1358,98 @@ and attributes useful for every object.
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.Version">
-<short></short>
+<short>[i] Version string for the application.</short>
 <descr>
+<p>
+This string shall follow standard version string convetions</p>
+<p>
+<b>Example</b> </p>
+<code>
+MUIApp.Title := 'WBMan';
+MUIApp.Version := '$VER: WbMan 0.24 (19.7.93)';
+MUIApp.Copyright := '© 1993 by Klaus Melchior';
+MUIApp.Author := 'Klaus Melchior';
+MUIApp.Description := 'Manages the WBStartup.';
+MUIApp.Base := 'WBMAN';</code>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Copyright">MUIApp.Copyright</link>
+  <link id="TMUIApplication.Title">MUIApp.Title</link>
+  <link id="TMUIApplication.Description">MUIApp.Description</link>
+  <link id="TMUIApplication.Author">MUIApp.Author</link>
+  <link id="TMUIApplication.Base">MUIApp.Base</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.OnActivate">
-<short></short>
-<descr>
-</descr>
+<short>Application got activated by Exchange</short>
 <seealso>
+  <link id="TMUIApplication.Active">Active</link>
+  <link id="TMUIApplication.OnDeactivate">OnDeactivate</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.OnDeactivate">
-<short></short>
-<descr>
-</descr>
+<short>Application got deactivated by Exchange</short>
 <seealso>
+  <link id="TMUIApplication.Active">Active</link>
+  <link id="TMUIApplication.OnActivate">OnActivate</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.OnDoubleStart">
-<short></short>
+<short>Second start of a single task application</short>
 <descr>
+This event is triggered when the user
+tries to start a <link id="TMUIApplication.SingleTask">SingleTask</link> application
+twice. You can react on this and take appropriate actions,
+e.g. pop up a requester or quit yourself.
 </descr>
 <seealso>
+  <link id="TMUIApplication.SingleTask">SingleTask</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.OnIdle">
-<short></short>
+<short>Event on every message loop cycle</short>
 <descr>
+  Useful if you want to trigger something on a very short timeframe.
+  (for example script execution)
+  But be carfull to time consuming routines here can slow down the
+  message loop very much resulting in a lagging GUI. Better use a <link id="TMUITimer">Timer</link> in these cases.
 </descr>
 <seealso>
+  <link id="TMUITimer">Timer</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.OnIconify">
-<short></short>
-<descr>
-</descr>
+<short>Event triggered when the application got iconified</short>
 <seealso>
+  <link id="TMUIApplication.OnRestore">OnRestore</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIApplication.OnRestore">
-<short></short>
+<short>Event triggered when application got restored from iconified state</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIApplication.OnIconify">OnIconify</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIWithParent">
-<short></short>
+<short>Subclass of TNotify to introduce the Parent relation</short>
 <descr>
+  Not in <link id="TMUINotify">Notify</link> because <link id="TMUIApplication">Application should not have a Parent</link>
 </descr>
 <seealso>
 </seealso>
@@ -1108,49 +1457,54 @@ and attributes useful for every object.
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIWithParent.SetParent">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Set function for the Parent, maybe overriden by other classes</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIWithParent.SetParent.AParent">
-<short></short>
+<short>Parent class to set</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIWithParent.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>No need to create directly</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWithParent.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>No need to create directly</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWithParent.Parent">
-<short></short>
-<descr>
+<short>Parent of the Object</short>
+_<descr>
+  if the parent MUI object gets destroyed, this one also gets destroyed.
+  If the parent Object is destroyed this object is also destroyed.
+  Unlink the Parent by setting it to nil.
+  An Object without Parent you have to destroy yourself at the end of the program.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIFamily">
-<short></short>
+<short>Base class with list of children</short>
 <descr>
+<p>
+Family class is the base class for objects that are able
+to handle a list of children. This is e.g. the case for
+MUIs Menustrip, Menu and Menuitem objects.</p>
+<p>
+Family class defines methods and attributes to
+add and remove children, sort children, and transfer
+children to other Family objects.</p>
+<p>
+Group class and application class should also be a
+subclass of Family class, but due to BOOPSI system
+limitations, this is currently impossible. If the
+future will allow more logical class trees, things
+might change, but everything will be done in a
+compatible manner.</p>
 </descr>
 <seealso>
 </seealso>
@@ -1158,52 +1512,44 @@ and attributes useful for every object.
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIFamily.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill Taglist for creating the MUI item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIFamily.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIFamily.Childs">
-<short></short>
+<short>List of Children</short>
 <descr>
+When a family is disposed, all of its children will also get deleted.
+But you should not directly write Childs here but assign this object to
+the Childobject as Parent. It will automatically add it to this list
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUISemaphore">
-<short></short>
+<short>Exec Semaphore as MUI Object</short>
 <descr>
+The semaphore class helps to access dataspace objects
+from different tasks. Its methods are identical to the
+exec.library semaphore functions and work on the
+semaphore thats contained in the Semaphore classes
+instance data.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUISemaphore.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create Semaphore MUI item</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUISemaphore.Attempt">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Emulates exec.library/AttemptSemaphore.</short>
 </element>
 
 <!-- function result Visibility: public -->
@@ -1213,11 +1559,7 @@ and attributes useful for every object.
 
 <!-- function Visibility: public -->
 <element name="TMUISemaphore.AtteptShared">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Emulates exec.library/AttemptSemaphoreShared.</short>
 </element>
 
 <!-- function result Visibility: public -->
@@ -1227,35 +1569,36 @@ and attributes useful for every object.
 
 <!-- procedure Visibility: public -->
 <element name="TMUISemaphore.Obtain">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Emulates exec.library/ObtainSemaphore.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUISemaphore.ObtainShared">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Emulates exec.library/ObtainSemaphoreShared.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUISemaphore.Release">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Emulates exec.library/ReleaseSemaphore.</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIDataspace">
-<short></short>
+<short>A very simple container for all kinds of data</short>
 <descr>
+<p>
+The Dataspace class serves as a very simple container for
+all kinds of data. You can add data items and reference them
+later through an ID. Furthermore, Dataspace class features
+methods to import/export a complete Dataspace from/to an IFF
+file handle.</p>
+<p>
+MUI uses subclasses of dataspace class to handle all its
+configuration data and thats probably the main purpose of a
+dataspace.
+</p>
+<p>This Class is only added for completeness reasons, you might would prefer to use
+TList, TObjectList and such classes as usual.</p>
 </descr>
 <seealso>
 </seealso>
@@ -1263,77 +1606,68 @@ and attributes useful for every object.
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIDataspace.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList fpr creation of the MUI item</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.GetCreateTags.ATagList">
-<short></short>
+<short>TagList To Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIDataspace.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a DataSpace object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIDataspace.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIDataspace.Add">
-<short></short>
+<short>Adds a new entry to the dataspace.</short>
 <descr>
+If an entry
+with the same ID already exists, it will be replaced with
+the new entry.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUIDataspace.Add.Result">
-<short></short>
+<short>False on Failure (probably because of a memory
+shortage) or True on success.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.Add.Data">
-<short></short>
+<short>Pointer to data</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.Add.Len">
-<short></short>
+<short>Length of Data</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.Add.Id">
-<short></short>
+<short>reference ID</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIDataspace.Clear">
-<short></short>
+<short>Clear all the contents of a dataspace</short>
 <descr>
+Depending
+on the state of the memory pool that the dataspace object uses,
+this may or may not result in more free memory.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIDataspace.Find">
-<short></short>
+<short>Find data by it's reference ID'</short>
 <descr>
 </descr>
 <seealso>
@@ -1342,18 +1676,22 @@ and attributes useful for every object.
 
 <!-- function result Visibility: public -->
 <element name="TMUIDataspace.Find.Result">
-<short></short>
+<short>Pointer to the Data or nil if not found</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.Find.Id">
-<short></short>
+<short>Reference ID of the data to get</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIDataspace.Merge">
-<short></short>
+<short>Add two Dataspace objects contents together</short>
 <descr>
+This method adds all the contents of the merge dataspace
+specified as parameter to the objects dataspace.
+As with <link id="TMUIDataspace.Add">Add</link>M, entries with equal IDs
+will be replaced.
 </descr>
 <seealso>
 </seealso>
@@ -1361,75 +1699,117 @@ and attributes useful for every object.
 
 <!-- function result Visibility: public -->
 <element name="TMUIDataspace.Merge.Result">
-<short></short>
+<short>Returns the number of entries that have been
+added/replaced in the objects dataspace. If this
+number doesnt match the number of entries in the
+merge dataspace, something probably went wrong.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.Merge.DS">
-<short></short>
+<short>dataspace objects whichs contents should be merged.</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIDataspace.ReadIFF">
-<short></short>
+<short>Adds the contents of an IFF handle from iffparse.library to the dataspace.</short>
 <descr>
+<p>
+As always, objects with the same ID that
+are already in the dataspace will be replaced.</p>
+<p>
+This method does not look for any chunk types and chunk ids
+itself. Instead, it expects that you have already located
+the chunk which contains your data and does nothing
+but ReadChunkBytes() until all dataspace entries of
+the current chunk are read.</p>
+<p>
+Do not call ReadIFF if your handle is
+positioned on chunks that were not written with
+<link id="TMUIDataspace.WriteIFF">WriteIFF</link>
+or strange things may happen!
+</p>
 </descr>
 <seealso>
+  <link id="TMUIDataspace.WriteIFF">WriteIFF</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUIDataspace.ReadIFF.Result">
-<short></short>
+<short>Returns 0 on success or some IFFERR_xxx on failure.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.ReadIFF.IFFHandle">
-<short></short>
+<short>
+pointer to a struct IFFHandle from
+iffparse.library/AllocIFF(). The handle must
+already be open, initialized for reading and
+positioned on a chunk that was created with
+<link id="TMUIDataspace.WriteIFF">WriteIFF</link>.</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIDataspace.WriteIFF">
-<short></short>
+<short>Writes the contents of a dataspace to an IFF handle of iffparse.library.</short>
 <descr>
+In detail, a chunk with the specified type and id is created
+with PushChunk(), the contents of the dataspace are written
+with WriteChunkBytes() and the chunk is terminated with
+PopChunk().
 </descr>
 <seealso>
+  <link id="TMUIDataspace.ReadIFF">ReadIFF</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUIDataspace.WriteIFF.Result">
-<short></short>
+<short>Returns 0 on success or some IFFERR_xxx on failure.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.WriteIFF.IFFHandle">
-<short></short>
+<short>pointer to a struct IFFHandle from
+iffparse.library/AllocIFF(). The handle must
+already be open and initialized for writing.</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDataspace.WriteIFF.typ">
+<short>type of chunk to create</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TMUIDataspace.WriteIFF.ID">
+<short>ID of chunk to create</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIDataspace.Remove">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Removes an entry from the dataspace.</short>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUIDataspace.Remove.Result">
-<short></short>
+<short>True if found and removed.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDataspace.Remove.Id">
-<short></short>
+<short>Reference ID to remove</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIDataspace.Pool">
-<short></short>
+<short>[i] Specify your own Memory Pool</short>
 <descr>
+If you specify a memory pool from exec.library/CreatePool()
+here, the dataspace object will use this pool for all its
+entries.
+If leave this field to nil, the dataspace object
+will create its own memory pool instead.
 </descr>
 <seealso>
 </seealso>
@@ -1437,35 +1817,32 @@ and attributes useful for every object.
 
 <!-- class Visibility: default -->
 <element name="TMUITimer">
-<short></short>
+<short>A simple Timer object</short>
 <descr>
+  Timers are automatically connected to the MUIApp, therefore you don't need to destroy them.
+  They will be destroyed automatically on program end by the Application object.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUITimer.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a new Timer object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUITimer.Destroy">
-<short></short>
+<short>Destroy this Timer Object</short>
 <descr>
+  Usually this is not needed, the Timer will be automatically destroyed with the application.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUITimer.Enabled">
-<short></short>
+<short>Enable/Disable the Timer</short>
 <descr>
+  Do not forget to connect the <link id="TMUITimer.OnTimer">OnTimer</link> event and the <link id="TMUITimer.Interval">Interval</link>. The Timer can only run,
+  when the Messageloop is running.
 </descr>
 <seealso>
 </seealso>
@@ -1473,43 +1850,66 @@ and attributes useful for every object.
 
 <!-- property Visibility: published -->
 <element name="TMUITimer.Interval">
-<short></short>
+<short>Interval the Timer should trigger the <link id="TMUITimer.OnTimer">OnTimer</link> event</short>
 <descr>
+  Please remember this time is a minimal time, when the time is due
+  the message loop will call the event handler, therefore it can be a little be delayed.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUITimer.OnTimer">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event to be called when the <link id="TMUITimer.Interval">Interval</link> is due</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="ComplainIOnly.AClass">
-<short></short>
+<short>Class where the field was called (the classname will be printed)</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="ComplainIOnly.Field">
-<short></short>
+<short>Name of the init-only field tried to change on runtime</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="ComplainIOnly.Value">
-<short></short>
+<short>Value the init-only field should be set (and will be ignored)</short>
 </element>
 
 <!-- variable Visibility: default -->
 <element name="MUIApp">
-<short></short>
+<short>The global MUI Application object</short>
 <descr>
+  <p>
+  This Application object is created at start of the program and destroyed on it's end.
+  Create some <link id="MUIClass.Window.TMUIWindow">Windows</link> they will be automatically connected to the application</p>
+  <code>Window := TMUIWindow.Create;</code>
+  <p>and start the application with</p>
+  <code>MUIApp.Run;</code>
+  <p>You can terminate the application by closing the main window
+  e.g. <link id="MUIClass.Window.TMUIWindow">TMUIWindow</link>(MUIApp.<link id="TMUIApplication.MainWindow">MainWindow</link>).<link id="MUIClass.Window.TMUIWindow.Close">Close()</link>
+  or by calling <link id="TMUIApplication.Terminate">MUIApp.Terminate()</link></p>
+<p>
+<b>Example:</b></p>
+<code>
+program HelloWorld;
+uses
+  MUIClass.Window, MUIClass.Area, MUIClass.Base;
+begin
+  with TMUIText.Create do
+  begin
+    Contents := 'Hello World';
+    Parent := TMUIWindow.Create;
+  end;
+  MUIApp.Run;
+end.
+</code>
+
+
 </descr>
 <seealso>
+  <link id="TMUIApplication.Run">MUIApp.Run</link>
 </seealso>
 </element>
 

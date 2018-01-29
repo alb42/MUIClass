@@ -57,6 +57,7 @@ type
     FShortHelp: string;
     FShowSelState: Boolean;
     FWeight: Integer;
+    FObjectID: LongWord;
     function GetLeftEdge: Integer;
     function GetTopEdge: Integer;
     function GetRightEdge: Integer;
@@ -101,6 +102,7 @@ type
     procedure SetWeight(AValue: Integer);
     function GetWindow: PWindow;
     function GetWindowObject: TMUIWindow;
+    procedure SetObjectID(AValue: LongWord);
   protected
     procedure AfterCreateObject; override;
     procedure BeforeCloseWindow; override;
@@ -158,6 +160,7 @@ type
     property ShortHelp: string read FShortHelp write SetShortHelp;
     property ShowSelState: Boolean read FShowSelState write SetShowSelState default True;  // defaults to true
     property Weight: Integer read FWeight write SetWeight default 100;
+    property ObjectID: LongWord read FObjectID write SetObjectID default 0;
     // Events
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
   end;
@@ -441,6 +444,7 @@ begin
   FShortHelp := '';
   FShowSelState := True;
   FWeight := 100;
+  FObjectID := 0;
 end;
 
 destructor TMUIArea.Destroy;
@@ -514,6 +518,8 @@ begin
     ATagList.AddTag(MUIA_ShowSelState, AsTag(FShowSelState));
   if FWeight <> 100 then
     ATagList.AddTag(MUIA_Weight, AsTag(FWeight));
+  if FObjectID <> 0 then
+    ATagList.AddTag(MUIA_ObjectID, AsTag(FObjectID));
 end;
 
 procedure TMUIArea.CreateObject;
@@ -971,6 +977,18 @@ begin
       ComplainIOnly(Self, 'MUIA_Weight', IntToStr(AValue))
     else
       FWeight := AValue;
+  end;
+end;
+
+procedure TMUIArea.SetObjectID(AValue: LongWord);
+begin
+  if AValue <> FObjectID then
+  begin
+    FObjectID := AValue;
+    if HasObj then
+    begin
+      SetValue(MUIA_ObjectID, AsTag(FObjectID));
+    end;
   end;
 end;
 

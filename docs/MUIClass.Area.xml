@@ -942,6 +942,15 @@ object is resizable. A <link id="TMUIArea.VertWeight">VertWeight</link> for a
 </seealso>
 </element>
 
+<element name="TMUIArea.ObjectID">
+<short>
+  Objects with a ObjectID &lt;&gt;0 export their
+  contents during <link id="TMUIApplication.Save">MUIApp.Save()</link> and import
+  them during <link id="TMUIApplication.Load">MUIApp.Load()</link>.
+  You have to use different ExportIDs for your objects!
+</short>
+</element>
+
 <!-- property Visibility: published -->
 <element name="TMUIArea.OnClick">
 <short>Event when Item is clicked and in <link id="TMUIArea.InputMode">InputMode</link> = MUIV_InputMode_RelVerify </short>
