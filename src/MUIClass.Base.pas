@@ -278,7 +278,7 @@ type
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 
 var
-  MUIApp: TMUIApplication;
+  MUIApp: TMUIApplication = nil;
 
 
 implementation

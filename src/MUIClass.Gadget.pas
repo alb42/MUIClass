@@ -260,18 +260,10 @@ begin
 end;
 
 function TMUIString.GetContents: string;
-var
-  PC: PChar;
 begin
   Result := FContents;
   if HasObj then
-  begin
-    PC := GetPointerValue(MUIA_String_Contents);
-    if Assigned(PC) then
-      Result := PC
-    else
-      Result := '';
-  end;
+    Result := GetStringValue(MUIA_String_Contents);
 end;
 
 procedure TMUIString.SetContents(AValue: string);

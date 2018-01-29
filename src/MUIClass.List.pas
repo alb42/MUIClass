@@ -1004,16 +1004,10 @@ begin
 end;
 
 function TMUIDirList.GetPath: string;
-var
-  PC: PChar;
 begin
   Result := '';
   if HasObj then
-  begin
-    PC := GetPointerValue(MUIA_DirList_Path);
-    if Assigned(PC) then
-      Result := PC;
-  end;
+    Result := GetStringValue(MUIA_DirList_Path);
 end;
 
 procedure TMUIDirList.SetRejectIcons(AValue: Boolean);

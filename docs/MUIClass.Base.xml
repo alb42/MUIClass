@@ -9,8 +9,20 @@
 -->
 
 <module name="MUIClass.Base">
-<short></short>
+<short>Base Objects and Application</short>
 <descr>
+  <p>
+  Unit contains the very basic classes, most of them are not meant to
+  create by the user but only used as base classes for the more
+  complex objects.</p>
+  <p>The only user object in this unit is the <link id="TMUITimer">Timer</link> object.</p>
+  <p>
+    <link id="MUIApp">MUIApp</link> is the global MUI application object for
+    all actions. Therefore the user do not need to create (or destroy) and application
+    object. (it will be created in the initialization and destroyed in the finalization part
+    of this unit).
+  </p>
+  <p>Check <link id="MUIApp">MUIApp</link> for a simple Hello world example source.</p>
 </descr>
 
 <!-- uses unit Visibility: default -->
@@ -153,9 +165,22 @@
 <element name="THookList">
 <short>A List of Hooks, wich will be automatically destroyed on exit</short>
 <descr>
+<p>
   Often you need to instance Hooks, and keep the Hook pointer, but you don't actually need
   the Hook itself (just the memory should be remembered).
-  The easiest way is to use this class for bookkeeping opened Hooks.
+  The easiest way is to use this class for bookkeeping opened Hooks.</p>
+<p><b>Example:</b></p>
+<code>
+var
+  Hook: PHook;
+begin
+  Hook := HookList.GetNewHook;        // get a new Hook Pointer
+  MH_SetHook(Hook^, PressFunc, Self); // set the Hook fields
+  //Connect the Hook to the Pressed property of Area
+  DoMethod(ButtonObj, [MUIM_Notify, MUIA_Pressed, AsTag(False), AsTag(AObj), 2, MUIM_CallHook, AsTag(Hook)]);
+  // you do not need to keep the Hook anymore, it will be destroyed on HookList.destroy
+end;
+</code>
 </descr>
 </element>
 
@@ -237,10 +262,16 @@
 <element name="TMUIRootClass.SetValue">
 <short>Set a MUI object Value via Tag</short>
 <descr>
+  <p>
    Set a Field Value via Tag and Value as in a Taglist to the internal MUI Object.
    If internal MUI object not created will be ignored.
    Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
-   the object exists.
+   the object exists.</p>
+   <p><b>Example:</b></p>
+<code>
+if HasObj then // Check if the MUI object is asigned
+  SetValue(MUIA_Disabled, AsTag(FDisabled)); // Do the actual setting
+</code>
 </descr>
 <seealso>
   <link id="TMUIRootClass.MUIObj">MUIObj</link>
@@ -266,10 +297,17 @@
 <element name="TMUIRootClass.GetIntValue">
 <short>Get a MUI Value via Tag as Integer</short>
 <descr>
+<p>
    Get a Field Value via Tag as Integer Value from the internal MUI Object.
    If internal MUI object not created it will return 0.
    Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
-   the object exists.
+   the object exists.</p>
+<p><b>Example:</b></p>
+<code>
+Page := -1; // Illegal Value as Default, when object is not created
+if HasObj then
+  Page := GetIntValue(MUIA_Group_ActivePage);
+</code>
 </descr>
 <seealso>
   <link id="TMUIRootClass.MUIObj">MUIObj</link>
@@ -296,10 +334,17 @@
 <element name="TMUIRootClass.GetBoolValue">
 <short>Get a MUI Value via Tag as Boolean</short>
 <descr>
+<p>
   Get a Field Value via Tag as Boolean Value from the internal MUI Object.
   If internal MUI object not created it will return False.
   Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
-   the object exists.
+   the object exists.</p>
+<p><b>Example:</b></p>
+<code>
+IsEnabled := False; // No enabled, when no object is there
+if HasObj then
+  IsEnabled := not GetBoolValue(MUIA_Disabled); // Get the field contents
+</code>
 </descr>
 <seealso>
   <link id="TMUIRootClass.MUIObj">MUIObj</link>
@@ -326,10 +371,17 @@
 <element name="TMUIRootClass.GetPointerValue">
 <short>Get a MUI Value via Tag as Pointer</short>
 <descr>
+<p>
   Get a Field Value via Tag as Pointer Value from the internal MUI Object.
   If internal MUI object not created it will return nil.
   Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
-   the object exists.
+   the object exists.</p>
+<p><b>Example:</b></p>
+<code>
+Window := nil; // when no object is there
+if HasObj then
+  Window := GetPointerValue(MUIA_Window); // Get intuition window structure
+</code>
 </descr>
 <seealso>
   <link id="TMUIRootClass.MUIObj">MUIObj</link>
@@ -356,10 +408,17 @@
 <element name="TMUIRootClass.GetStringValue">
 <short>Get a MUI Value via Tag as String</short>
 <descr>
+<p>
   Get a Field Value via Tag as string Value from the internal MUI Object.
   If internal MUI object not created it will return a empty string ('').
   Would be a good idea to test <link id="TMUIRootClass.HasObj">HasObj</link> before to make sure
-   the object exists.
+   the object exists.</p>
+<p><b>Example:</b></p>
+<code>
+Text := ''; // when no object is there
+if HasObj then
+  Text := GetStringValue(MUIA_String_Contents); // Get intuition window structure
+</code>
 </descr>
 <seealso>
   <link id="TMUIRootClass.MUIObj">MUIObj</link>
@@ -395,7 +454,7 @@
   DoMethod(AObj, [MUI_Notify, MUIField, TriggerValue, MUIV_Notify_Self, 2, MUIM_CallHook, NativeUInt(Hook)]);
   </code>
   <p>
-  Better use the function which uses the interal object, it should be very seldom to use this function</p>
+  Better use <link id="TMUIRootClass.ConnectHook">ConnectHook</link> which uses the internal object, it should be very seldom to use this explicit function</p>
 </descr>
 <seealso>
   <link id="TMUIRootClass.ConnectHook">ConnectHook</link>
@@ -436,6 +495,19 @@
   </code>
 <p>
   Best place to use that is inside <link id="TMUINotify.AfterCreateObject">AfterCreateObject</link>.</p>
+<p><b>Example:</b></p>
+<code>
+function PressFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PasObj: TMUIArea;
+begin
+  Result := 0;
+  PasObj := TMUIArea(Hook^.h_Data);
+  writeln('Got a click event of Object ', PasObj.Classname);
+end;
+
+// in AfterCreateObject() connect the Event
+ConnectHook(MUIA_Pressed, MUI_FALSE, @PressFunc);</code>
 </descr>
 <seealso>
   <link id="TMUINotify.AfterCreateObject">AfterCreateObject</link>
@@ -479,7 +551,27 @@
 
 <!-- procedure Visibility: public -->
 <element name="TMUIRootClass.CreateObject">
-<short>Root class object can not be created</short>
+<short>Creates the MUI item</short>
+<descr>
+<p><b>Root class object can not be created</b></p>
+<p>Derived classes <b>must</b> override this function but <b>not</b> call inherited
+(also when overriding classes which have this function implemented)</p>
+<p>A typical CreateObject() implementation looks like this:</p>
+<code>
+procedure TMUIMyNewClass.CreateObject;
+var
+  TagList: TATagList;  // Taglist for the creation tags
+begin
+  if not Assigned(FMUIObj) then  // if already created, just skip,
+  begin
+    BeforeCreateObject;     // you have to implement if your class has childs which are not in childlist and needs to be created
+    GetCreateTags(TagList); // implement to add Tags to the creation TagList (already some inside from inherited classes)
+    FMUIObj := MUI_NewObjectA(MUIC_XXX, TagList.GetTagPointer); // here also possible NewObjectA() for own subclasses
+    AfterCreateObject;      // implement if you need to setup events or other values to set after the object is created
+  end;
+end;
+</code>
+</descr>
 </element>
 
 <!-- procedure Visibility: public -->
@@ -650,6 +742,7 @@ and attributes useful for every object.
   At the moment it's not planed to have multiple Application objects, thus it could make sense to emulate Modal windows.
   Complain if you want to have that changed. The main application object will be automatically created at start of the
   program and destroyed at the end.
+  See <link id="MUIApp">MUIApp</link> for an example.
 </descr>
 <seealso>
   <link id="MUIApp">MUIApp</link>
@@ -733,6 +826,7 @@ and attributes useful for every object.
   <p><b>Note</b>: Make sure you set all fields which are marked with <b>[i]</b> (which means only set on Init) are set
   before this call.</p>
   <p>Run() will not return before the Application is finished.</p>
+  <p>See <link id="MUIApp">MUIApp</link> for an example</p>
 </descr>
 </element>
 
@@ -740,8 +834,17 @@ and attributes useful for every object.
 <element name="TMUIApplication.Terminate">
 <short>Terminate the currently running application</short>
 <descr>
-  It will not terminate immidately, it will terminate when it reaches the event loop again.
-  Only effective after <link id="TMUIApplication.Run">Run()</link> was started
+  <p>
+  It will not terminate immedately, it will terminate when it reaches the event loop again.
+  Only effective after <link id="TMUIApplication.Run">Run()</link> was started.</p>
+<p><b>Example:</b></p>
+<code>
+// Event connected to a Button
+procedure TMyWindow.CloseButtonEvent(Sender: TObject);
+begin
+  MUIApp.Terminate; // kill the application
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -751,8 +854,10 @@ and attributes useful for every object.
 <element name="TMUIApplication.Terminated">
 <short>True if the application got terminated</short>
 <descr>
+  <p>
   True if the Application got terminated but did not returned to the Eventloop
   to actually to it.
+  </p>
 </descr>
 <seealso>
 </seealso>
@@ -940,6 +1045,21 @@ the non buffered input method.
   OpenConfigWindow(). MUI will then automatically
   show the preferences window without blocking the rest of the
   program.</p>
+<p><b>Example:</b></p>
+<code>
+procedure TMyWindow.ConfigMenu(Sender: TObject);
+begin
+  MUIApp.OpenConfigWindow();
+end;
+
+// somewhere in the Object creation
+with TMUIMenuItem.Create do
+begin
+  Title := 'Settings/MUI...'; // the menu item text
+  OnTrigger := @ConfigMenu;   // connect event handler
+  Parent := Menu;             // put to the Menu
+end;
+</code>
 </descr>
 </element>
 
@@ -1042,13 +1162,16 @@ disposed, no need for you to free your objects yourself.</p>
 <element name="TMUIApplication.DiskObject">
 <short>Iconify Icon</short>
 <descr>
+<p>
 Pointer to a struct DiskObject, e.g. obtained
 from GetDiskObject(). If present, MUI will use
 this object for the AppIcon when your application
-gets iconified.
-
-Otherwise MUI will try to locate "env:sys/dev_mui.info"
-and, if not present, fall back to a default icon.
+gets iconified.</p>
+<p>
+Otherwise MUI use the Icon of the current Program and if
+this does not exists it will try to locate "env:sys/dev_mui.info"
+or use a generic one.
+</p>
 </descr>
 </element>
 
@@ -1478,11 +1601,39 @@ e.g. pop up a requester or quit yourself.
 <!-- property Visibility: public -->
 <element name="TMUIWithParent.Parent">
 <short>Parent of the Object</short>
-_<descr>
+<descr>
+<p>
   if the parent MUI object gets destroyed, this one also gets destroyed.
   If the parent Object is destroyed this object is also destroyed.
   Unlink the Parent by setting it to nil.
   An Object without Parent you have to destroy yourself at the end of the program.
+</p>
+<p><b>Example:</b></p>
+<code>
+constructor TMyWindow.Create;
+var
+  Grp: TMUIGroup;
+begin
+  inherited;
+  Grp := TMUIGroup.Create; // create a group
+  Grp.Horizontal := True;  // make it horizontal
+  Grp.Parent := Self;      // put the Group into the Window
+  //
+  for i := 1 to 3 do      // Create some Buttons
+  begin
+    with TMUIButton.Create do
+    begin
+      Contents := 'Button ' + IntToStr(i); // proper names
+      Parent := Grp;       // put into the Group, therefore next to each other
+    end;
+  end;
+  //
+  with TMUIText.Create do        // Put a text under the Buttons
+  begin
+    Contents := 'Example Text'; // just some text
+    Parent := Self;             // put into the Window (the window is by default a vertical group)
+  end;
+end;</code>
 </descr>
 </element>
 
@@ -1524,9 +1675,19 @@ compatible manner.</p>
 <element name="TMUIFamily.Childs">
 <short>List of Children</short>
 <descr>
+<p>
 When a family is disposed, all of its children will also get deleted.
 But you should not directly write Childs here but assign this object to
-the Childobject as Parent. It will automatically add it to this list
+the Childobject as Parent. It will automatically add it to this list.</p>
+<p><b>Example:</b></p>
+<code>
+// Disable all the Buttons in this Group, and only the Buttons (not recursively)
+for i := 0 to Group.Childs.Count - 1 do
+begin
+  if Group.Childs[i] is TMUIButton then
+    TMUIButton(Group.Childs[i]).Disabled := True;
+end;
+</code>
 </descr>
 </element>
 
@@ -1819,8 +1980,29 @@ will create its own memory pool instead.
 <element name="TMUITimer">
 <short>A simple Timer object</short>
 <descr>
+<p>
   Timers are automatically connected to the MUIApp, therefore you don't need to destroy them.
-  They will be destroyed automatically on program end by the Application object.
+  They will be destroyed automatically on program end by the Application object.</p>
+<p><b>Example:</b></p>
+<code>
+// Timer event
+procedure TMyWindow.TimerEvent(Sender: TObject);
+begin
+  writeln('Timer triggered');
+end;
+
+// Create a new Timer if needed
+procedure TMyWindow.ButtonClick(Sender: TObject);
+begin
+  if not Assigned(Timer) then
+  begin
+    Timer := TMUITimer.Create;
+    Timer.Interval := 1000; // in ms -> 1 second
+    Timer.OnTimer := @TimerEvent; // connect the event
+  end;
+  Timer.Enabled := not Timer.Enabled; // Toggle timer on Button Click
+end;
+</code>
 </descr>
 </element>
 
@@ -1850,9 +2032,9 @@ will create its own memory pool instead.
 
 <!-- property Visibility: published -->
 <element name="TMUITimer.Interval">
-<short>Interval the Timer should trigger the <link id="TMUITimer.OnTimer">OnTimer</link> event</short>
+<short>Interval the Timer should trigger the <link id="TMUITimer.OnTimer">OnTimer</link> event in Milliseconds</short>
 <descr>
-  Please remember this time is a minimal time, when the time is due
+  Please remember this time is a minimal millisecond time, when the time is due
   the message loop will call the event handler, therefore it can be a little be delayed.
 </descr>
 </element>
