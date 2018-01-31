@@ -4,11 +4,18 @@ unit MUIClass.Base;
 interface
 uses
   Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, icon, Commodities,
+  Exec, Utility, AmigaDOS, Intuition, icon,
+  {$ifndef AmigaOS4} // OS4 still no commodities unit
+  Commodities,
+  {$endif}
   mui, muihelper,
   tagsparamshelper;
 
 type
+  {$ifdef AmigaOS4}
+  PCxObj = Pointer;
+  {$endif}
+
   TMUITimer = class;
 
   THookList = class

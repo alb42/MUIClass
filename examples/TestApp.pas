@@ -307,9 +307,9 @@ begin
     with Colors[i] do
     begin
       mpe_ID := i;
-      mpe_Red := ColCompToMUI(Random(255));
-      mpe_Green := ColCompToMUI(Random(255));
-      mpe_Blue := ColCompToMUI(Random(255));
+      mpe_Red := ColCompToMUI(System.Random(255));
+      mpe_Green := ColCompToMUI(System.Random(255));
+      mpe_Blue := ColCompToMUI(System.Random(255));
       mpe_Group := i div 3;
     end;
     Names[i] := 'Color' + IntToStr(i);
@@ -397,8 +397,8 @@ begin
   W2 := TMUIWindow.Create;
   with W2 do
   begin
-    LeftEdge := Random(300);
-    TopEdge := Random(300);
+    LeftEdge := System.Random(300);
+    TopEdge := System.Random(300);
     OnCloseRequest := @DynWindowsClose;
     Title := 'Win ' + IntToStr(Count);
   end;
@@ -409,9 +409,9 @@ begin
   end;
   with TMUIColorAdjust.Create do
   begin
-    Red := ColCompToMUI(Random(255));
-    Green := ColCompToMUI(Random(255));
-    Blue := ColCompToMUI(Random(255));
+    Red := ColCompToMUI(System.Random(255));
+    Green := ColCompToMUI(System.Random(255));
+    Blue := ColCompToMUI(System.Random(255));
     OnColorChange := @ColorChange;
     Parent := W2;
   end;

@@ -17,8 +17,7 @@ type
   TMUIMouseEvent = procedure(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean) of object;
   TMUIMouseWheel = procedure(Sender: TObject; ScrollUp: Boolean; var EatEvent: Boolean) of object;
   TMUIMouseMove = procedure(Sender: TObject; X,Y: Integer; var EatEvent: Boolean) of object;
-  TMUIKeyDown = procedure(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean) of object;
-  TMUIKeyUp = procedure(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean) of object;
+  TMUIKeyEvent = procedure(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean) of object;
 
   TMouseClickTime = record
     LSecs, LMicros: LongWord;
@@ -31,11 +30,15 @@ type
     li: PLayer_Info;
     Bitmap: PBitmap;
     Layer: PLayer;
+    FRP: PRastPort;
+    FWidth: Integer;
+    FHeight: Integer;
   public
-    RP: PRastPort;
-    Width, Height: Integer;
     constructor Create(AWidth, AHeight, ADepth: Integer; AFriend: PBitmap = nil); virtual;
     destructor Destroy; override;
+    property RP: PRastPort read FRP;
+    property Width: Integer read FWidth;
+    property Height: Integer read FHeight;
   end;
 
   TMUIDrawPanel = class(TMUIArea)
@@ -57,8 +60,8 @@ type
     FOnMUIDblClick: TMUIMouseEvent;
     FOnMUIMouseWheel: TMUIMouseWheel;
     FOnMUIMouseMove: TMUIMouseMove;
-    FOnMUIKeyDown: TMUIKeyDown;
-    FOnMUIKeyUp: TMUIKeyUp;
+    FOnMUIKeyDown: TMUIKeyEvent;
+    FOnMUIKeyUp: TMUIKeyEvent;
     FOnMUIMouseLeave: TNotifyEvent;
   protected
     function MUIEvent(cl: PIClass; Obj: PObject_; Msg: intuition.PMsg): PtrUInt; virtual;
@@ -94,8 +97,8 @@ type
     property OnMouseWheel: TMUIMouseWheel read FOnMUIMouseWheel write FOnMUIMouseWheel;
     property OnMouseMove: TMUIMouseMove read FOnMUIMouseMove write FOnMUIMouseMove;
     property OnMouseLeave: TNotifyEvent read FOnMUIMouseLeave write FOnMUIMouseLeave;
-    property OnKeyDown: TMUIKeyDown read FOnMUIKeyDown write FOnMUIKeyDown;
-    property OnKeyUp: TMUIKeyUp read FOnMUIKeyUp write FOnMUIKeyUp;
+    property OnKeyDown: TMUIKeyEvent read FOnMUIKeyDown write FOnMUIKeyDown;
+    property OnKeyUp: TMUIKeyEvent read FOnMUIKeyUp write FOnMUIKeyUp;
   end;
 
 var
@@ -105,15 +108,15 @@ implementation
 
 constructor TDrawBuffer.Create(AWidth, AHeight, ADepth: Integer; AFriend: PBitmap);
 begin
-  Width := AWidth;
-  Height := AHeight;
+  FWidth := AWidth;
+  FHeight := AHeight;
   li := NewLayerInfo(); // Layerinfo we also need
   if Assigned(AFriend) then
     Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_MINPLANES or BMF_DISPLAYABLE, AFriend)
   else
     Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_MINPLANES, nil);
   Layer := CreateUpFrontLayer(li, Bitmap, 0, 0, AWidth - 1, AHeight - 1, LAYERSIMPLE, nil);
-  RP := Layer^.RP;
+  FRP := Layer^.RP;
 end;
 
 destructor TDrawBuffer.Destroy;
