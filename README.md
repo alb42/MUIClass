@@ -16,6 +16,7 @@ Wrapper to use Amiga MUI Objects with standard Pascal objects
 <tr><td>MUIClass.Numeric</td><td>Numeric, Knop, Levelmeter, NumericButton, Slider</td></tr>
 <tr><td>MUIClass.DrawPanel</td><td>DrawPanel (not an actual MUI Object, just an Area with more Events like Paint, Mouse,  Key)</td></tr>
 </table>
+
 ## Basic usage
 
 Make a new class for your Window.
