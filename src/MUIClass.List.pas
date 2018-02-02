@@ -519,7 +519,7 @@ end;
 
 class function TMUIList.ListImageToString(Img: PListImage): string;
 begin
-  Result := #27'O' + HexStr(Img);
+  Result := #27'O[' + HexStr(Img) + ']';
 end;
 
 procedure TMUIList.Exchange(Pos1, Pos2: Integer);
@@ -666,7 +666,7 @@ begin
     if Assigned(FOnConstruct) then
       SetValue(MUIA_List_ConstructHook, AsTag(@ConstructHook))
     else
-      SetValue(MUIA_List_ConstructHook, AsTag(nil));
+      SetValue(MUIA_List_ConstructHook, AsTag(MUIV_List_ConstructHook_String));
   end;
 end;
 
@@ -689,7 +689,7 @@ begin
     if Assigned(FOnDestruct) then
       SetValue(MUIA_List_DestructHook, AsTag(@DestructHook))
     else
-      SetValue(MUIA_List_DestructHook, AsTag(nil));
+      SetValue(MUIA_List_DestructHook, AsTag(MUIV_List_DestructHook_String));
   end;
 end;
 

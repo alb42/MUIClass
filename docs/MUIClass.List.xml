@@ -9,7 +9,7 @@
 -->
 
 <module name="MUIClass.List">
-<short></short>
+<short>List and related classes</short>
 <descr>
 </descr>
 
@@ -168,165 +168,168 @@
 
 <!-- procedure type Visibility: default -->
 <element name="TDisplayEvent">
-<short></short>
-<descr>
-</descr>
+<short>Event type for displaying a line in the <link id="TMUIList">List</link>.</short>
 <seealso>
+  <link id="TMUIList.OnDisplay">List.OnDisplay</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDisplayEvent.Sender">
-<short></short>
+<short>List object who sends the Display event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDisplayEvent.ToPrint">
-<short></short>
+<short>Array of the texts to print, for every column one Entry</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDisplayEvent.Entry">
-<short></short>
+<short>Pointer to the Entry to display</short>
 </element>
 
 <!-- function type Visibility: default -->
 <element name="TCompareEvent">
-<short></short>
-<descr>
-</descr>
+<short>Event type for sorting the list, compare two values of the <link id="TMUIList">List</link></short>
 <seealso>
+  <link id="TMUIList.OnCompare">List.OnComnpare</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: default -->
 <element name="TCompareEvent.Result">
-<short></short>
+<short>&lt; 0 if Entry2 is bigger than Entry 1; = 0 if Both are the same, &gt; 0 if Entry1 is bigger than Entry2</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TCompareEvent.Sender">
-<short></short>
+<short>List which should be sorted</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TCompareEvent.Entry1">
-<short></short>
+<short>1st Entry to compare</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TCompareEvent.Entry2">
-<short></short>
+<short>2nd Entry to compare</short>
 </element>
 
 <!-- function type Visibility: default -->
 <element name="TConstructEvent">
-<short></short>
-<descr>
-</descr>
+<short>Event type to create a <link id="TMUIList">List</link> Entry</short>
 <seealso>
+  <link id="TMUIList.OnConstruct">List.OnConstruct</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: default -->
 <element name="TConstructEvent.Result">
-<short></short>
+<short>Pointer to the created Entry memory</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TConstructEvent.Sender">
-<short></short>
+<short>The List which sends the Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TConstructEvent.Pool">
-<short></short>
+<short>Memory Pool of List to create the Memory with AllocPooled()</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TConstructEvent.Str">
-<short></short>
+<short>Pointer to the Data supplied with the <link id="TMUIList.Insert">List.Insert</link> command</short>
 </element>
 
 <!-- procedure type Visibility: default -->
 <element name="TDestructEvent">
-<short></short>
-<descr>
-</descr>
+<short>Event type when an Entry of <link id="TMUIList">List</link> is removed</short>
 <seealso>
+  <link id="TMUIList.OnDestruct">List.OnConstrcut</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDestructEvent.Sender">
-<short></short>
+<short>The List which sends the Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDestructEvent.Pool">
-<short></short>
+<short>Memory Pool of the List, which was used on the Contruct Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDestructEvent.Entry">
-<short></short>
+<short>Entry to destroy</short>
 </element>
 
 <!-- function type Visibility: default -->
 <element name="TMultiTestEvent">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event type for <link id="TMUIList.OnMultiTest">List.OnMultiTest</link> Event</short>
 </element>
 
 <!-- function result Visibility: default -->
 <element name="TMultiTestEvent.Result">
-<short></short>
+<short>Allow to multi select the Entry</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMultiTestEvent.Sender">
-<short></short>
+<short>List which sents the Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMultiTestEvent.Entry">
-<short></short>
+<short>Entry to determine if allowed to multiselect</short>
 </element>
 
 <!-- record type Visibility: default -->
 <element name="TListImage">
-<short></short>
-<descr>
-</descr>
+<short>Black box type to hold Images for <link id="TMUIList">List</link></short>
 <seealso>
+  <link id="TMUIList">List</link>
 </seealso>
 </element>
 
 <!-- pointer type Visibility: default -->
 <element name="PListImage">
-<short></short>
-<descr>
-</descr>
+<short>Black box type to hold Images for <link id="TMUIList">List</link></short>
 <seealso>
+  <link id="TMUIList.CreateImage">List.CreateImage()</link>
+  <link id="TMUIList.DeleteImage">List.DeleteImage()</link>
+  <link id="TMUIList.ListImageToString">List.ListImageToString()</link>
 </seealso>
 </element>
 
 <!-- array type Visibility: default -->
 <element name="TStringArray">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Array of strings type for all lists of strings</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIList">
-<short></short>
+<short>List of items drawn as text list</short>
 <descr>
+<p>
+MUI's list class is very powerful. It handles all types
+of entries, from a simple string to a complicated structure
+with many associated resources. Multi column lists are
+also supported, the format for a column is adjustable.</p>
+<p>
+Lists support any kind of sorting, multi selection and
+an active entry that can be controlled with the mouse
+or the cursor keys.</p>
+<p>
+<b>Note</b>: A list object alone doesn't make much sense, you
+should always use it as child of a <link id="MUIClass.Group.TMUIListView">ListView</link> object.
+This one attaches a scrollbar and handles all user
+input.
+</p>
 </descr>
 <seealso>
 </seealso>
@@ -334,168 +337,198 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIList.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fille TagList for creation of the List</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIList.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI object creation</short>
 </element>
 
 <!-- function Visibility: protected -->
 <element name="TMUIList.CreateImage">
-<short></short>
+<short>Create an Image to use in the List</short>
 <descr>
+<p>If you want to have custom images in a listview (e.g.
+like the little monitor icons in PSI), you should create
+them as Bitmap objects (or Bodychunk objects) in the
+create method of your list class. </p>
+<p>
+After that, pass the newly created object pointer to
+CreateImage and use the result in your display
+hook. Use <link id="TMUIList.ListImageToString">ListImageToString()</link> to create
+the string which represents your Image.</p>
+<p>
+When your list is done (i.e. in the Destroy method),
+kill your image with <link id="TMUIList.DeleteImage">DeleteImage()</link> and
+dispose your object.</p>
 </descr>
 <seealso>
+  <link id="TMUIList.ListImageToString">ListImageToString()</link>
+  <link id="TMUIList.DeleteImage">DeleteImage()</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: protected -->
 <element name="TMUIList.CreateImage.Result">
-<short></short>
+<short>The result you get is a black box pointer, it's not valid to assume anything about it. Use it for <link id="TMUIList.ListImageToString">ListImageToString()</link> to get the string for the display</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.CreateImage.Bitmap">
-<short></short>
+<short>Bitmap object with the Image to convert to the</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.CreateImage.Flags">
-<short></short>
+<short>none defined yes, pass a 0</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIList.DeleteImage">
-<short></short>
-<descr>
-</descr>
+<short>Delete the image pointer returned from <link id="TMUIList.CreateImage">CreateImage()</link>.</short>
 <seealso>
+  <link id="TMUIList.ListImageToString">ListImageToString()</link>
+  <link id="TMUIList.CreateImage">CreateImage()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.DeleteImage.Img">
-<short></short>
+<short>List image from <link id="TMUIList.CreateImage">CreateImage()</link></short>
 </element>
 
 <!-- class function Visibility: protected -->
 <element name="TMUIList.ListImageToString">
-<short></short>
+<short>Convert the Blackbox Image to a string for Display Event</short>
 <descr>
+  Converts an ListImage to a string which can be used as result for <link id="TMUIList.OnDisplay">OnDisplay</link>.
 </descr>
 <seealso>
+  <link id="TMUIList.CreateImage">CreateImage()</link>
+  <link id="TMUIList.OnDisplay">OnDisplay</link>
 </seealso>
 </element>
 
 <!-- function result Visibility: protected -->
 <element name="TMUIList.ListImageToString.Result">
-<short></short>
+<short>Image link as string</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.ListImageToString.Img">
-<short></short>
+<short>Image from <link id="TMUIList.CreateImage">CreateImage()</link> to convert</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIList.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the List object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI List item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Exchange">
-<short></short>
+<short>Exchange two entries in a list.</short>
 <descr>
+<p>Possible special Entries</p>
+<dl>
+  <dt>MUIV_List_Exchange_Top</dt><dd>Exchange with the Top Entry</dd>
+  <dt>MUIV_List_Exchange_Active</dt><dd>Exchange with the <link id="TMUIList.Active">Active</link> Entry</dd>
+  <dt>MUIV_List_Exchange_Bottom</dt><dd>Exchange with the Last Entry</dd>
+  <dt>MUIV_List_Exchange_Next</dt><dd>Exchange with the Next Entry</dd>
+  <dt>MUIV_List_Exchange_Previous</dt><dd>Exchange with the Previous Entry</dd>
+</dl>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Exchange.Pos1">
-<short></short>
+<short>Index of 1st Entry to exchange</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Exchange.Pos2">
-<short></short>
+<short>Index of 2nd Entry to exchange</short>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIList.GetEntry">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Get an entry by Index. If the entry is not available (either because you are out of bounds or because there is no active entry), you will receive a nil.</short>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUIList.GetEntry.Result">
-<short></short>
+<short>Pointer to the Entry</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.GetEntry.Pos">
-<short></short>
+<short>Number of entry, MUIV_List_GetEntry_Active can be used to get the active entry.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Insert">
-<short></short>
+<short>Insert new entries into a list.</short>
 <descr>
+  <p>When the list has a <link id="TMUIList.OnConstruct">OnConstruct</link> Event, the given pointers
+   won't be inserted directly but instead passed through
+   to the construct Event.</p>
+<p>Special Position Values:</p>
+<dl>
+  <dt>MUIV_List_Insert_Top</dt><dd>Insert as first entry.</dd>
+  <dt>MUIV_List_Insert_Active</dt><dd>Insert in front of the active entry.</dd>
+  <dt>MUIV_List_Insert_Sorted</dt><dd>Insert sorted.</dd>
+  <dt>MUIV_List_Insert_Bottom</dt><dd>Insert as last entry.</dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIList.OnConstruct">OnConstruct</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Insert.Entries">
-<short></short>
+<short>pointer to an array of pointers to be inserted. Warning: This is a pointer to a pointer.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Insert.Count">
-<short></short>
+<short>Number of elements to be inserted. If count=-1, entries will be inserted until nil pointer in the entries array is found.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Insert.Pos">
-<short></short>
+<short>New entries will be added in front of this entry. MUIV_List_Insert_*</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.InsertSingle">
-<short></short>
+<short>Insert one new entry into a list.</short>
 <descr>
+<p>Using <link id="TMUIList.Insert">Insert()</link> has
+caused some confusion since it takes an array to items instead
+a single item. To insert single items, InsertSingle
+is the better choice.
+</p>
+<p>When the list has a <link id="TMUIList.OnConstruct">OnConstruct</link> Event connected, the given pointer
+won't be inserted directly but instead passed through
+to the construct hook.</p>
+<p>Special Position Values:</p>
+<dl>
+  <dt>MUIV_List_Insert_Top</dt><dd>Insert as first entry.</dd>
+  <dt>MUIV_List_Insert_Active</dt><dd>Insert in front of the active entry.</dd>
+  <dt>MUIV_List_Insert_Sorted</dt><dd>Insert sorted.</dd>
+  <dt>MUIV_List_Insert_Bottom</dt><dd>Insert as last entry.</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -503,32 +536,47 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.InsertSingle.Entry">
-<short></short>
+<short>Item to insert.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.InsertSingle.Pos">
-<short></short>
+<short>New entry will be added in front of this entry.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Jump">
-<short></short>
+<short>Scroll any entry into the visible part of a list.</short>
 <descr>
+<p><b>Note</b>: Jumping to an entry doesn't mean to make this
+entry the active one. This can be done by
+setting the <link id="TMUIList.Active">Active</link> attribute.
+</p>
 </descr>
 <seealso>
+  <link id="TMUIList.Active">Active</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Jump.Pos">
-<short></short>
+<short>Number of the entry that should be made visible.
+Use MUIV_List_Jump_Active to jump to the active
+entry.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Move">
-<short></short>
+<short>Move an entry from one position to another.</short>
 <descr>
+<p>Possible special Entries</p>
+<dl>
+  <dt>MUIV_List_Move_Top</dt><dd>Move as or to Top Entry</dd>
+  <dt>MUIV_List_Move_Active</dt><dd>Move the or to active the <link id="TMUIList.Active">Active</link> Entry</dd>
+  <dt>MUIV_List_Move_Bottom</dt><dd>Move the or to the Last Entry</dd>
+  <dt>MUIV_List_Move_Next</dt><dd>Move One Entry Down (only as to position)</dd>
+  <dt>MUIV_List_Move_Previous</dt><dd>Move One Entry Up (only as to position)</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -536,18 +584,42 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Move.FromPos">
-<short></short>
+<short>number of the first entry.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Move.ToPos">
-<short></short>
+<short>number of the second entry.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.NextSelected">
-<short></short>
+<short>Iterate through the selected entries of a list.</short>
 <descr>
+<p>
+This method steps through the contents of a (multi
+select) list and returns every entry that is currently
+selected. When no entry is selected but an entry is
+active, only the active entry will be returned.</p>
+<p>
+This behaviour will result in not returning the
+active entry when you have some other selected
+entries somewhere in your list. Since the active
+entry just acts as some kind of cursor mark,
+this seems to be the only sensible possibility
+to handle multi selection together with keyboard
+control.</p>
+<p><b>Example:</b></p>
+<code>
+Pos := MUIV_List_NextSelected_Start; // Start Value
+repeat
+  List.NextSelected(Pos); // Get next Entry
+  if Pos = MUIV_List_NextSelected_End then // Check for End of List
+    Break;
+  Entry := List.GetEntry(Pos);
+  // do something with your Entry
+until False;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -555,13 +627,26 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.NextSelected.Pos">
-<short></short>
+<short>A longword that will hold the number
+of the returned entry. Must be set to
+MUIV_List_NextSelected_Start at start of iteration.
+Is set to MUIV_List_NextSelected_End when iteration
+is finished.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Redraw">
-<short></short>
+<short>Redraw an List Entry</short>
 <descr>
+<p>
+If you made some changes to an entry of your list and
+        want these changes to be shown in the display, you will
+        have to call this method.</p>
+<p>Special Inputs:</p>
+<dl>
+  <dt>MUIV_List_Redraw_Active</dt><dd>redraw the active line (if any)</dd>
+  <dt>MUIV_List_Redraw_All</dt><dd>redraw all lines.</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -569,13 +654,20 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Redraw.Pos">
-<short></short>
+<short>Number of the line to redraw. When the line is not currently visible, nothing will happen. </short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Remove">
-<short></short>
+<short>Remove an entry from a list.</short>
 <descr>
+<p>Special Entried</p>
+<p>MUIV_List_Remove_First
+MUIV_List_Remove_Active
+MUIV_List_Remove_Last
+MUIV_List_Remove_Selected
+When the active entry is removed, the following entry
+will become active.</p>
 </descr>
 <seealso>
 </seealso>
@@ -583,12 +675,13 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Remove.Pos">
-<short></short>
+<short>Number of the entry to be removed</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Select">
-<short></short>
+<short>Select/deselect a list entry or ask an entry if its
+        selected.</short>
 <descr>
 </descr>
 <seealso>
@@ -597,31 +690,38 @@
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Select.Pos">
-<short></short>
+<short>Number of the entry or
+MUIV_List_Select_Active for the active entry.
+MUIV_List_Select_All    for all entries.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Select.SelType">
-<short></short>
+<short>MUIV_List_Select_Off     unselect entry.
+MUIV_List_Select_On      select entry.
+MUIV_List_Select_Toggle  toggle entry.
+MUIV_List_Select_Ask     just ask about the state.
+</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIList.Select.State">
-<short></short>
+<short>This will be filled with the current selection state</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIList.Sort">
-<short></short>
+<short>Sort the list. MUI uses an iterative quicksort algorithm, no stack problems will occur.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIList.OnCompare">OnCompare</link>
 </seealso>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUIList.TestPos">
-<short></short>
+<short>Find out which line/column of a listview is currently displayed at a certain position.</short>
 <descr>
 </descr>
 <seealso>
@@ -645,71 +745,111 @@
 
 <!-- property Visibility: public -->
 <element name="TMUIList.DropMark">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>After a successfull drop operation, this attribute holds the position where we should insert the new entry(ies).</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.Entries">
-<short></short>
-<descr>
-</descr>
+<short>Get the current number of entries in the list.</short>
 <seealso>
+  <link id="TMUIList.First">First</link>
+  <link id="TMUIList.Visible">Visible</link>
+  <link id="TMUIList.Active">Active</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.First">
-<short></short>
+<short>Get the number of the entry displayed on top of the list.</short>
 <descr>
+You have to be prepared to get a result
+of -1, which means that the list is not visible
+at all (e.g. when the window is iconifed).
 </descr>
 <seealso>
+  <link id="TMUIList.Entries">Entries</link>
+  <link id="TMUIList.Visible">Visible</link>
+  <link id="TMUIList.Active">Active</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.InsertPosition">
-<short></short>
+<short>Position of the last inserted Entry</short>
 <descr>
+After insertion of an element with <link id="TMUIList.Insert">Insert()</link>,
+you can query the position of the new entry by
+getting this attribute.
 </descr>
 <seealso>
+  <link id="TMUIList.Insert">Insert()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.Pool">
-<short></short>
+<short>Memory Pool for the Entry memory</short>
 <descr>
+<p>
+Pass something from CreatePool() here if you dont want the list
+to create its own memory pool but use this one instead. Note
+that list class does <b>not</b> use semaphore protection when
+accessing the pool, you must <b>not</b> use pools which are
+accessed from different tasks than the applications main
+task.</p>
+<p>
+The Pool Pointer is passed as parameter when the <link id="TMUIList.OnConstruct">OnConstruct</link>
+or <link id="TMUIList.OnDestruct">OnDestruct</link> is called.</p>
 </descr>
 <seealso>
+  <link id="TMUIList.PoolThreshSize">PoolThreshSize</link>
+  <link id="TMUIList.PoolPuddleSize">PoolPuddleSize</link>
+  <link id="TMUIList.OnConstruct">OnConstruct</link>
+  <link id="TMUIList.OnDestruct">OnDestruct</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.PoolPuddleSize">
-<short></short>
+<short>Specify the puddle size for the lists memory pool.</short>
 <descr>
+Defaults to 2008. Is ignored if you specify your own pool with <link id="TMUIList.Pool">Pool</link>.
 </descr>
 <seealso>
+  <link id="TMUIList.Pool">Pool</link>
+  <link id="TMUIList.PoolThreshSize">PoolThreshSize</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.PoolThreshSize">
-<short></short>
+<short>Specify the thresh size for the lists memory pool.</short>
 <descr>
+Defaults to 1024. Is ignored if you specify your own pool with <link id="TMUIList.Pool">Pool</link>.
 </descr>
 <seealso>
+  <link id="TMUIList.Pool">Pool</link>
+  <link id="TMUIList.PoolPuddleSize">PoolPuddleSize</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIList.Quiet">
-<short></short>
+<short>Block redrawing, when many Entries are added or removed</short>
 <descr>
+<p>
+If you add/remove lots of entries to/from a currently visible
+list, this will cause lots of screen action and slow down
+the operation. Setting Quiet to true will
+temporarily prevent the list from being refreshed, this
+refresh will take place only once when you set it back
+to false again.</p>
+<p><b>Example:</b></p>
+<code>
+List.Quiet := True;
+AddThousandEntries(List);
+List.Quiet := False;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -717,53 +857,94 @@
 
 <!-- property Visibility: public -->
 <element name="TMUIList.Visible">
-<short></short>
+<short>Get the current number of visible entries in the list.</short>
 <descr>
+You have to be prepared to get a result
+of -1, which means that the list is not visible
+at all (e.g. when the window is iconifed).
 </descr>
 <seealso>
+  <link id="TMUIList.First">First</link>
+  <link id="TMUIList.Entries">Entries</link>
+  <link id="TMUIList.Active">Active</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.Active">
-<short></short>
+<short>Active Entry in the List</short>
 <descr>
+<p>
+Reading this attribute will return the number of
+the active entry (the one with the cursor on it).
+The result is between 0 and <link id="TMUIList.Entries">Entries</link> - 1
+or MUIV_List_Active_Off, in which case there is
+currently no active entry.</p>
+<p>
+Setting the attribute will cause the list to
+move the cursor to the new position and scroll
+this position into the visible area.</p>
+<p><b>Special Values:</b></p>
+<p>MUIV_List_Active_Off,
+MUIV_List_Active_Top,
+MUIV_List_Active_Bottom,
+MUIV_List_Active_Up,
+MUIV_List_Active_Down,
+MUIV_List_Active_PageUp,
+MUIV_List_Active_PageDown</p>
 </descr>
 <seealso>
+  <link id="TMUIList.First">First</link>
+  <link id="TMUIList.Entries">Entries</link>
+  <link id="TMUIList.Visible">Visible</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.AdjustHeight">
-<short></short>
+<short>The complete List has the Height of it's Entries, no free Space</short>
 <descr>
+A list with AdjustHeight set to true is exactly
+as high as all of its entries and not resizable. This is
+only possible when the list is filled *before* the window
+is opened.
 </descr>
 <seealso>
+  <link id="TMUIList.AdjustWidth">AdjustWidth</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.AdjustWidth">
-<short></short>
+<short>The complete List has the Height of it's longest Entry, no free Space</short>
 <descr>
+A list with AdjustWidth set to true is exactly
+as wide as the widest entry and not resizable. This is
+only possible when the list is filled *before* the window
+is opened.
 </descr>
 <seealso>
+  <link id="TMUIList.AdjustHeight">AdjustHeight</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.AutoVisible">
-<short></short>
+<short>Set this to make your lists automatically jump to the active entry when they are displayed.
+</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIList.Active">Active</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.DragSortable">
-<short></short>
+<short>Enable Drag and Drop for the Entries</short>
 <descr>
+If you set this attribute to True, the user will be able
+to move around entries in the list by using drag'n'drop.
 </descr>
 <seealso>
 </seealso>
@@ -771,17 +952,133 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIList.Format">
-<short></short>
+<short>Format the Columns of the List</short>
 <descr>
+<p>
+MUI has the ability to handle multi column lists. To define
+how many columns should be displayed and how they should be
+formatted, you specify a format string.</p>
+<p>
+This format string must contain one entry for each column
+you want to see. Entries are seperated by commas, one
+entry is parsed via dos.library/ReadArgs().</p>
+<p>
+The template for a single entry looks like this:</p>
+<p>
+DELTA=D/N,PREPARSE=P/K,WEIGHT=W/N,MINWIDTH=MIW/N,MAXWIDTH=MAW/N,COL=C/N,BAR/S</p>
+<dl>
+  <dt>DELTA</dt><dd>Space in pixel between this column and the next.
+           the last displayed column ignores this setting.
+           Defaults to 4.</dd>
+  <dt>PREPARSE</dt><dd>A preparse value for this column. Setting this
+           e.g. to #27'c' would make the column centered.
+           See <link id="MUIClass.Area.TMUIText.Contents">Text.Contents</link> for other control codes.</dd>
+  <dt>WEIGHT</dt><dd>The weight of the column. As with MUI's group
+           class, columns are layouted with a minimum
+           size, a maximum size and weight. A column with
+           a weight of 200 would gain twice the space than
+           a column with a weight of 100.
+           Defaults to 100.</dd>
+  <dt>MINWIDTH</dt><dd>Minimum percentage width for the current column.
+           If your list is 200 pixel wide and you set this
+           to 25, your column will at least be 50 pixel.
+           The special value -1 for this parameter means that
+           the minimum width is as wide as the widest entry in
+           this column. This ensures that every entry will be
+           completely visible (as long as the list is wide enough).
+           Defaults to -1.</dd>
+  <dt>MAXWIDTH</dt><dd>Maximum percentage width for the current column.
+           If your list is 200 pixel wide and you set this
+           to 25, your column will not be wider as 50 pixel.
+           The special value -1 for this parameter means that
+           the maximum width is as wide as the widest entry in
+           this column.
+           Defaults to -1.</dd>
+  <dt>COL</dt><dd>This value adjusts the number of the current column.
+           This allows you to adjust the order of your columns
+           without having to change your display event. See
+           example for details.
+           Defaults to current entry number (0,1,...)</dd>
+  <dt>BAR</dt><dd>you can enable a
+           vertical bar between this and the next column by
+           using this switch.</dd>
+</dl>
+<p>
+If your list object gets so small there is not enough
+place for the minwidth of a column, this column will
+be hidden completely and the remaining space is
+distributed between the remaining columns. This is not
+true if the column is the first column, in this case
+the entries will simply be clipped.</p>
+<p>
+<b>Note:</b> You will have as many columns in your list as
+entries in the format string (i.e. number of
+commas + 1). Empty entries, e.g. with a format
+string of ',,,,' are perfectly ok.</p>
+<p>
+The default list format is an empty string (''), this
+means a one column list without special formatting.</p>
+<p><b>Examples:</b></p>
+<code>
+// Three column list without further formatting:
+List.Format := ',,';
+
+// Three column list, middle column centered:
+List.Format := ',P='#27'c,';
+
+// Three column list, display order 2 1 0:
+List.Format := 'COL=2,COL=1,COL=0';
+
+// now something more complex.
+// the display event defines six entries:
+
+procedure TMyWindow.DisplayEvent(Sender: TObject; ToPrint: PPChar; Entry: PChar);
+var
+  At: PArticle;
+begin
+  At := PArticle(Entry);
+  ToPrint[0] := At^.FromName; // col 0
+  ToPrint[1] := At^.FromPath; // col 1
+  ToPrint[2] := At^.ToName;   // col 2
+  ToPrint[3] := At^.ToPath;   // col 3
+  ToPrint[4] := At^.Date;     // col 4
+  ToPrint[5] := At^.Subject;  // col 5
+end;
+
+// but we only want to have fromname, date and subject
+// actually displayed, subject shoud be centered:
+List.Format := 'COL=0,COL=4,COL=5 P='#27'c';
+
+{ maybe this looks kind of silly, why not make our
+ display hook only fill in these three columns.
+ well, if you would e.g. make the format string
+ user configurable and document what your display
+ hook puts into the array, the user could decide
+ what columns he actually wants to see.
+ The supplied example DFView does something like
+ that.
+
+ two column list:   ! Eye    1234 !
+                    ! Foot     22 !
+                    ! Nose  22331 ! }
+
+List.Format := 'MAW=100,P='#27'r';
+</code>
 </descr>
+<errors>
+Currently there is a maximum of 64 columns for a list.
+</errors>
 <seealso>
+  <link id="TMUIList.OnDisplay">OnDisplay</link>
+  <link id="MUIClass.Area.TMUIText.Contents">Text.Contents</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.MinLineHeight">
-<short></short>
+<short>Sets the minimum line height for lists in pixels.</short>
 <descr>
+  Useful e.g. if you have custom images.
 </descr>
 <seealso>
 </seealso>
@@ -789,16 +1086,21 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIList.ShowDropMarks">
-<short></short>
+<short>Indicate the place where a new line on drag and drop would be inserted with some horizontal lines.</short>
 <descr>
+Showing this place doesnt make much sense if you dont care
+about the drop position anyway, e.g. because your list is
+always alphabetically sorted. You should set this attribute
+to False in these cases.
 </descr>
 <seealso>
+  <link id="TMUIList.DropMark">DropMark</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.SourceStrings">
-<short></short>
+<short>Initial Contents of the List</short>
 <descr>
 </descr>
 <seealso>
@@ -807,16 +1109,59 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIList.Title">
-<short></short>
+<short>Specify a title for the current list.</short>
 <descr>
+<p>
+The title is displayed
+at the very first line and doesn't scroll away when the list
+top position moves.</p>
+<p>
+Usually, the title is just a string. However, if you have
+a multi column list with a custom display hook and you
+want to have seperate titles for each of your columns,
+you can set this attribute to True. In this case, whenever
+MUI feels that the list title has to be drawn, it will
+call your display hook with a nil entry pointer. Your
+hook has to check for this nil entry and fill the
+given string array with your column titles. Layout of
+the column titles follows the same rules as layout
+of the lists entries.</p>
+<p><b>Example:</b></p>
+<code>
+// display function for a multi columned file list with titles
+procedure TMyWindow.DisplayEvent(Sender: TObject; ToPrint: PPChar; Entry: PChar);
+var
+  E: PEntry;
+begin
+  if Assigned(Entry) then
+  begin
+    ToPrint[0] := E^.Name;
+    ToPrint[1] := E^.Size;
+    ToPrint[2] := E^.Date;
+    ToPrint[3] := E^.Time;
+    ToPrint[4] := E^.Flags;
+    ToPrint[5] := E^.Comment;
+  end
+  else
+  begin
+    ToPrint[0] := 'Name';
+    ToPrint[1] := 'Size';
+    ToPrint[2] := 'Date';
+    ToPrint[3] := 'Time';
+    ToPrint[4] := 'Flags';
+    ToPrint[5] := 'Comment';
+  end;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIList.OnDisplay">OnDisplay</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnActiveChange">
-<short></short>
+<short><link id="TMUIList.Active">Active</link> Changed</short>
 <descr>
 </descr>
 <seealso>
@@ -825,17 +1170,48 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnDisplay">
-<short></short>
+<short>Define what should be printed in a list row</short>
 <descr>
+<p>
+Since MUI's lists can handle any kind of entries,
+        you have to supply a display hook to specify what
+        should actually be shown in the display.</p>
+<p>
+You must fill the ToPrint array with the strings that
+you want to display.</p>
+<p>
+<b>Note:</b> You can of course use MUI's text engine
+facilities here to create e.g. right aligned
+or centered columns.</p>
+<p>
+Without a display Event, MUI expects a simple one
+columned string list.</p>
+<p>
+See <link id="TMUIList.Format">Format</link> for details about column handling.</p>
 </descr>
 <seealso>
+  <link id="TMUIList.Format">Format</link>
+  <link id="MUIClass.Area.TMUIText.Contents">Text.Contents</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnCompare">
-<short></short>
+<short>Event to compare two entries for sorting</short>
 <descr>
+<p>
+If you plan to have the entries of your list sorted
+(either by inserting them sorted or by using the
+<link id="TMUIList.Sort">Sort()</link> method) and if the entries of your
+list are not simple strings, you <b>must</b> supply
+a compare hook.</p>
+<table>
+<caption>The Event should return something like:</caption>
+  <th><td>Result Value </td><td>Entry relation</td></th>
+  <tr><td> &lt; 0 </td><td> Entry1 &lt; Entry2</td></tr>
+  <tr><td> = 0 </td><td> Entry1 = Entry2</td></tr>
+  <tr><td> &gt; 0 </td><td> Entry1 &gt; Entry2</td></tr>
+</table>
 </descr>
 <seealso>
 </seealso>
@@ -843,26 +1219,88 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnConstruct">
-<short></short>
+<short>Constrcut a new List Entry</short>
 <descr>
+<p>
+The construct event is called whenever you add an
+entry to your list. MUI will not insert the given
+pointer directly, but instead call the construct
+hook and add its result code.</p>
+<p>
+Imagine you want to display a list of entries
+in a directory. You could step through it
+using Examine()/ExNext() and directly use the
+<link id="TMUIList.Insert">Insert()</link> method on your file info block
+buffer.</p>
+<p>
+Your construct event will be called with this
+file info block as parameter, makes a copy of
+it and returns the address of that copy. Thats
+what is actually added to the list.</p>
+<p>
+The corresponding destruct hook is called whenever
+an entry shall be removed. It's task would simply be
+to free the memory and maybe other resources concering
+this entry that were allocated by the construct event.</p>
+<p>
+Using these two functions, you will never have to
+worry about freeing the memory used by your list
+entries. Clearing the list or disposing the list
+object will automatically remove all entries and
+thus free the associated resources.</p>
+<p>
+If the construct Event returns Nil, nothing will be added to the list.</p>
+<p>
+There is a builtin construct Event available (do not connect this Event or set to nil).
+This expects that you only add strings to your list and will make
+a local copy of this string to allow you destroying
+the original. Of course you <b>must</b> also not connect the
+Destruct Event in this case.</p>
 </descr>
 <seealso>
+  <link id="TMUIList.OnDestruct">OnDestruct</link>
+  <link id="TMUIList.OnDisplay">OnDisplay</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnDestruct">
-<short></short>
+<short>Destroy an Entry which is removed from the List</short>
 <descr>
+  Set up a destruct Event for your list. For detailed
+    explanation see <link id="TMUIList.OnConstruct">OnConstrcut</link>.
 </descr>
 <seealso>
+  <link id="TMUIList.OnConstruct">OnConstrcut</link>
+  <link id="TMUIList.OnDisplay">OnDisplay</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnMultiTest">
-<short></short>
+<short>Check if an Entry can be selected in a multiselection</short>
 <descr>
+<p>
+If you plan to have a multi selecting list but not
+all of your entries are actually multi selectable
+(e.g. in a file requester), you can connect the
+OnMultiTest event.</p>
+<p>
+Return True if the entry is multi selectable, False otherwise.</p>
+<p><b>Example:</b></p>
+<code>
+function TMyWindow.MultiTestEvent(Sender: TObject; Entry: PChar): Boolean;
+var
+  fib: PFileInfoBlock;
+begin
+  Result := True;
+  if Assigned(Entry) then
+  begin
+    fib := PFileInfoBlock(Entry);
+    Result := fib^.fib_DirEntryType &lt; 0;
+  end;
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -870,7 +1308,7 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIList.OnDrop">
-<short></short>
+<short>Drop operation finished, shows where the new Entry should be inserted</short>
 <descr>
 </descr>
 <seealso>
@@ -879,8 +1317,12 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIFloatText">
-<short></short>
+<short>Long Text output</short>
 <descr>
+Floattext class is a subclass of list class that takes
+a big text string as input and splits it up into several
+lines to be dislayed. Formatting capabilities include
+paragraphs an justified text with word wrap.
 </descr>
 <seealso>
 </seealso>
@@ -888,76 +1330,105 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIFloatText.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fille TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIFloatText.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIFloatText.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a FloatText object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIFloatText.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIFloatText.Justify">
-<short></short>
+<short>Decide the Alignment of your Text</short>
 <descr>
+Indicate whether you want your the text aligned
+to the left and right border. MUI will try to
+insert spaces between words to reach this goal.
+If you want right aligned or centered text,
+use the <link id="TMUIList.Format">Format</link> attribute.
 </descr>
 <seealso>
+  <link id="TMUIFloatText.Text">Text</link>
+  <link id="TMUIList.Format">Format</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIFloatText.SkipChars">
-<short></short>
+<short>Defines an array of characters that shall be skipped when displaying the text.</short>
 <descr>
+If you e.g. want to
+display a fido message and know it has some CTRL-A
+control characters in it, you could set this
+attribute to #1 to prevent floattext class
+from displaying unreadable crap.
 </descr>
 <seealso>
+  <link id="TMUIFloatText.Text">Text</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIFloatText.TabSize">
-<short></short>
+<short>Adjust the tab size for a text.</short>
 <descr>
+The tab size is measured
+in spaces, so if you plan to use tabs not only at the
+beginning of a paragraph, you should consider using
+the fixed width font.
+
+Tab size defaults to 8.
 </descr>
 <seealso>
+  <link id="TMUIFloatText.Text">Text</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIFloatText.Text">
-<short></short>
+<short>String of characters to be displayed as floattext.</short>
 <descr>
+<p>
+This string may contain linefeeds to mark the end
+of paragraphs or tab characters for indention.</p>
+<p>
+MUI will automatically format the text according
+to the width of the floattext object. If a word
+won't fit into the current line, it will be wrapped.</p>
+<p>
+If you plan to use tabs not only at the beginning
+of a line you should consider using the configured
+fixed width font.</p>
+<p>
+Please note that justification and word wrap with
+proportional fonts is a complicated operation and
+may take a considerable amount of time, especially
+with long texts on slow machines.</p>
 </descr>
 <seealso>
+  <link id="TMUIFloatText.Justify">Justify</link>
+  <link id="TMUIFloatText.TabSize">TabSize</link>
+  <link id="TMUIFloatText.SkipChars">SkipChars</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIVolumeList">
-<short></short>
-<descr>
+<short>Volumelist generates a list of all available volumes.</short>
+<descr>Since you shouldn't use your own file requester
+in every application, this class is probably not
+of much use.
 </descr>
 <seealso>
 </seealso>
@@ -965,193 +1436,245 @@
 
 <!-- procedure Visibility: public -->
 <element name="TMUIVolumeList.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create MUI item</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIDirList">
-<short></short>
+<short>Dirlist class provides a quick and easy way of showing entries in a directory. </short>
 <descr>
+<p>
+It features lots of control
+attributes, many of them known from the popular asl
+file requester.</p>
+<p>
+This class is <b>not</b> intended to replace asl.library!
+Nobody wants to see every MUI application coming with
+another selfmade file requester. Please continue using ASL
+for real file requesting purposes!</p>
+<p>
+However, sometimes it may be useful to have a little directory
+list placed somewhere in your user interface. Imagine an
+answering machine tool that stores incoming calls in a
+preconfigured directory. Using a dirlist object, you can
+include the GUI for selecting a call in your window with
+lots of other gadgets like "Play", "Delete", etc.</p>
+<p>
+Dirlist class offers all of a files attributes:
+name, size, date, time, flags and comment. Using the
+<link id="TMUIList.Format">Format</link> attribute, you can control which of
+them shall be displayed.
+</p>
+<p>
+If you want to read the entries of your directory,
+just send the dirlist object a <link id="TMUIList.GetEntry">GetEntry</link>
+method. You will receive a pointer to a
+struct TFileInfoBlock which remains valid until
+your next call to <link id="TMUIList.GetEntry">GetEntry</link>.
+</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIDirList.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDirList.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIDirList.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIDirList.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a DirList Object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIDirList.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIDirList.ReRead">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Force the dirlist object to reread the current directory. </short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIDirList.NumBytes">
-<short></short>
+<short>Number of Bytes in the Directory</short>
 <descr>
+When <link id="TMUIDirList.Status">Status</link> is MUIV_Dirlist_Valid,
+you can obtain the number of bytes occupied by the directory from this tag.
 </descr>
 <seealso>
+  <link id="TMUIDirList.NumDrawers">NumDrawers</link>
+  <link id="TMUIDirList.NumFiles">NumFiles</link>
+  <link id="TMUIDirList.Status">Status</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIDirList.NumDrawers">
-<short></short>
+<short>Number of Drawers in the Directory</short>
 <descr>
+When <link id="TMUIDirList.Status">Status</link> is MUIV_Dirlist_Valid, you can
+obtain the number of drawers in the displayed directory
+from this tag.
 </descr>
 <seealso>
+  <link id="TMUIDirList.NumBytes">NumBytes</link>
+  <link id="TMUIDirList.NumFiles">NumFiles</link>
+  <link id="TMUIDirList.Status">Status</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIDirList.NumFiles">
-<short></short>
+<short>Number of Files in the Directory</short>
 <descr>
+When <link id="TMUIDirList.Status">Status</link> is MUIV_Dirlist_Valid, you can
+obtain the number of files in the displayed directory
+from this tag.
 </descr>
 <seealso>
+  <link id="TMUIDirList.NumBytes">NumBytes</link>
+  <link id="TMUIDirList.NumDrawers">NumDrawers</link>
+  <link id="TMUIDirList.Status">Status</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIDirList.Path">
-<short></short>
+<short>Path of the Active Entry</short>
 <descr>
+When <link id="TMUIDirList.Status">Status</link> is MUIV_Dirlist_Valid and
+you have an active entry in the list (<link id="TMUIList.Active">Active</link>
+not equal MUIV_List_Active_Off), you will receive
+a pointer to the complete path specification of
+the selected file. Otherwise you get a ''.
 </descr>
 <seealso>
+  <link id="TMUIDirList.Status">Status</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIDirList.Status">
-<short></short>
+<short>Read the status of the dirlist object.</short>
 <descr>
+<p>The result is one of</p>
+<dl>
+   <dt>MUIV_Dirlist_Status_Invalid</dt><dd>object contains no valid directory.</dd>
+   <dt>MUIV_Dirlist_Status_Reading</dt><dd>object is currently reading a new directory.</dd>
+   <dt>MUIV_Dirlist_Status_Valid</dt><dd>object contains a valid directory.</dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIDirList.Directory">Directory</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.AcceptPattern">
-<short></short>
-<descr>
+<short>Entries not matching this pattern are rejected.</short>
+<descr>Note that the pattern has to be parsed with dos.library/ParsePatternNoCase().
 </descr>
 <seealso>
+  <link id="TMUIDirList.RejectPattern">RejectPattern</link>
+  <link id="TMUIDirList.FilterDrawers">FilterDrawers</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.Directory">
-<short></short>
+<short>Set a new directory for the dirlist object.</short>
 <descr>
+<p>
+Since reading a directory can take a long long
+time, MUI delegates this work to a sub task.</p>
+<p>
+Setting this attribute causes the object to clear
+the current directory (if any) and start loading
+a new one. <link id="TMUIDirList.Status">Status</link> will be set to
+MUIV_Dirlist_Status_Reading and the sub task will
+be launched.</p>
+<p>
+By listening to <link id="TMUIDirList.Status">Status</link>, you can learn
+if the directory reading is completed or if something
+went wrong.</p>
 </descr>
 <seealso>
+  <link id="TMUIDirList.Status">Status</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.DrawersOnly">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Indicate whether you only want drawers to be displayed.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.FilesOnly">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Indicate whether you only want files to be displayed.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.FilterDrawers">
-<short></short>
+<short>Filter the contents</short>
 <descr>
+Indicate whether you want drawers matched agains
+<link id="TMUIDirList.RejectPattern">RejectPattern</link> and
+<link id="TMUIDirList.AcceptPattern">AcceptPattern</link>.
+Defaults to False.
 </descr>
 <seealso>
+  <link id="TMUIDirList.RejectPattern">RejectPattern</link>
+  <link id="TMUIDirList.AcceptPattern">AcceptPattern</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.MultiSelDirs">
-<short></short>
+<short>Allows multi selection of directories.</short>
 <descr>
+  Defaults to FALSE.
 </descr>
 <seealso>
+  <link id="TMUIDirList.FilterDrawers">FilterDrawers</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.RejectIcons">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Indicate whether you want icons (*.info files) to be rejected.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.RejectPattern">
-<short></short>
-<descr>
+<short>Entries matching this pattern are rejected.</short>
+<descr>Note that the pattern has to be parsed with dos.library/ParsePatternNoCase().
 </descr>
 <seealso>
+  <link id="TMUIDirList.FilterDrawers">FilterDrawers</link>
+  <link id="TMUIDirList.AcceptPattern">AcceptPattern</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.SortDirs">
-<short></short>
+<short>Adjust the place where directories shall be displayed.</short>
 <descr>
+<dl>
+  <dt>MUIV_Dirlist_SortDirs_First</dt><dd>Directory before the Files</dd>
+  <dt>MUIV_Dirlist_SortDirs_Last</dt><dd>Directory after Files </dd>
+  <dt>MUIV_Dirlist_SortDirs_Mix</dt><dd>Directory and Files Mixed</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -1159,19 +1682,21 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.OnStatusValid">
-<short></short>
+<short>Event called when <link id="TMUIDirList.Status">Status</link> changed to Valid</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIDirList.OnStatusInvalid">OnStatusInvalid</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIDirList.OnStatusInvalid">
-<short></short>
+<short>Event called when <link id="TMUIDirList.Status">Status</link> changed to Invalid</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIDirList.OnStatusValid">OnStatusValid</link>
 </seealso>
 </element>
 

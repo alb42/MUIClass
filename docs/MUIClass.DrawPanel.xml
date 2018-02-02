@@ -9,7 +9,7 @@
 -->
 
 <module name="MUIClass.DrawPanel">
-<short></short>
+<short>Generic class for Drawing capturing all mouse and key events.</short>
 <descr>
 </descr>
 
@@ -186,258 +186,221 @@
 
 <!-- enumeration type Visibility: default -->
 <element name="TMUIMouseBtn">
-<short></short>
-<descr>
-</descr>
+<short>Defines which mouse button was Pressed or released</short>
 <seealso>
+  <link id="TMUIDrawPanel.OnMouseDown">DrawPanel.OnMouseDown</link>
+  <link id="TMUIDrawPanel.OnMouseUp">DrawPanel.OnMouseUp</link>
 </seealso>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIMouseBtn.mmbLeft">
-<short></short>
+<short>Left Button was pressed or released</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIMouseBtn.mmbMiddle">
-<short></short>
+<short>Middle Button was pressed or released</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIMouseBtn.mmbRight">
-<short></short>
+<short>Right Button was pressed or released (Menu Button)</short>
 </element>
 
 <!-- set type Visibility: default -->
 <element name="TMUIShiftState">
-<short></short>
-<descr>
-</descr>
+<short>Which modifier Key is pressed together with a normal key</short>
 <seealso>
+  <link id="TMUIDrawPanel.OnKeyDown">DrawPanel.OnKeyDown</link>
+  <link id="TMUIDrawPanel.OnKeyDown">DrawPanel.OnKeyUp</link>
 </seealso>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIShiftState.mssShift">
-<short></short>
+<short>Right or left Shift</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIShiftState.mssCtrl">
-<short></short>
+<short>Control key</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIShiftState.mssLShift">
-<short></short>
+<short>Left Shift</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIShiftState.mssRShift">
-<short></short>
+<short>Right Shift</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIShiftState.mssLAlt">
-<short></short>
+<short>LEft Alt</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TMUIShiftState.mssRAlt">
-<short></short>
+<short>Right Alt</short>
 </element>
 
 <!-- procedure type Visibility: default -->
 <element name="TMUIDrawEvent">
-<short></short>
-<descr>
-</descr>
+<short>Event type for <link id="TMUIDrawPanel.OnDrawObject">DrawPanel.OnDrawObject</link></short>
 <seealso>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDrawEvent.Sender">
-<short></short>
+<short>the <link id="TMUIDrawPanel">DrawPanel</link> who wants to be drawn.</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDrawEvent.Rp">
-<short></short>
+<short>Rastport of the object, Draw into</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIDrawEvent.DrawRect">
-<short></short>
+<short>Only draw inside the DrawRect, (outside will be clipped)</short>
 </element>
 
 <!-- procedure type Visibility: default -->
 <element name="TMUIMouseEvent">
-<short></short>
-<descr>
-</descr>
+<short>Event type for all kind of Mouse action</short>
 <seealso>
+  <link id="TMUIDrawPanel.OnMouseDown">DrawPanel.OnMouseDownp</link>
+  <link id="TMUIDrawPanel.OnMouseUp">DrawPanel.OnMouseUp</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseEvent.Sender">
-<short></short>
+<short>The object sending the Mouse action</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseEvent.MouseBtn">
-<short></short>
+<short>Which button triggered the Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseEvent.X">
-<short></short>
+<short>Current x position of the Mouse, relative to the objects left position</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseEvent.Y">
-<short></short>
+<short>Current y position of the Mouse, relative to the objects top position</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseEvent.EatEvent">
-<short></short>
+<short>Return False if the Event should be sent to the underlaying objects as well.</short>
 </element>
 
 <!-- procedure type Visibility: default -->
 <element name="TMUIMouseWheel">
-<short></short>
-<descr>
-</descr>
+<short>Event for Mousewheel movement</short>
 <seealso>
+  <link id="TMUIDrawPanel.OnMouseWheel">DrawPanel.OnMouseWheel</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseWheel.Sender">
-<short></short>
+<short>Which object got this wheel movement</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseWheel.ScrollUp">
-<short></short>
+<short>True if the wheel is scrolled up, false = down</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseWheel.EatEvent">
-<short></short>
+<short>Return False if the Event should be sent to the underlaying objects as well.</short>
 </element>
 
 <!-- procedure type Visibility: default -->
 <element name="TMUIMouseMove">
-<short></short>
+<short>Event for mouse movement</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIDrawPanel.OnMouseMove">DrawPanel.OnMouseMove</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseMove.Sender">
-<short></short>
+<short>Which Object triggered the movement</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseMove.X">
-<short></short>
+<short>Current x position of the Mouse, relative to the objects left position</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseMove.Y">
-<short></short>
+<short>Current y position of the Mouse, relative to the objects top position</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMouseMove.EatEvent">
-<short></short>
+<short>Return False if the Event should be sent to the underlaying objects as well.</short>
 </element>
 
 <!-- procedure type Visibility: default -->
-<element name="TMUIKeyDown">
-<short></short>
-<descr>
-</descr>
+<element name="TMUIKeyEvent">
+<short>Event if a key got pressed down or released</short>
 <seealso>
+  <link id="TMUIDrawPanel.OnKeyDown">DrawPanel.OnKeyDown</link>
+  <link id="TMUIDrawPanel.OnKeyUp">DrawPanel.OnKeyUp</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
-<element name="TMUIKeyDown.Sender">
-<short></short>
+<element name="TMUIKeyEvent.Sender">
+<short>Object who got the key event</short>
 </element>
 
 <!-- argument Visibility: default -->
-<element name="TMUIKeyDown.Shift">
-<short></short>
+<element name="TMUIKeyEvent.Shift">
+<short>Which modifiers are pressed together</short>
 </element>
 
 <!-- argument Visibility: default -->
-<element name="TMUIKeyDown.Code">
-<short></short>
+<element name="TMUIKeyEvent.Code">
+<short>KeyCode of the pressed/released key</short>
 </element>
 
 <!-- argument Visibility: default -->
-<element name="TMUIKeyDown.Key">
-<short></short>
+<element name="TMUIKeyEvent.Key">
+<short>Pressed Key as character, if applicable or #0</short>
 </element>
 
 <!-- argument Visibility: default -->
-<element name="TMUIKeyDown.EatEvent">
-<short></short>
-</element>
-
-<!-- procedure type Visibility: default -->
-<element name="TMUIKeyUp">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIKeyUp.Sender">
-<short></short>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIKeyUp.Shift">
-<short></short>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIKeyUp.Code">
-<short></short>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIKeyUp.Key">
-<short></short>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TMUIKeyUp.EatEvent">
-<short></short>
+<element name="TMUIKeyEvent.EatEvent">
+<short>Return False if the Event should be sent to the underlaying objects as well.</short>
 </element>
 
 <!-- record type Visibility: default -->
 <element name="TMouseClickTime">
-<short></short>
-<descr>
-</descr>
+<short>Internal class to keep click times for the double click timer</short>
 <seealso>
+  <link id="TMUIDrawPanel.OnDblClick">DrawPanel.OnDblClick</link>
 </seealso>
 </element>
 
 <!-- variable Visibility: default -->
 <element name="TMouseClickTime.LSecs">
-<short></short>
+<short>Time in seconds the Left Mouse button was pressed last time</short>
 <descr>
 </descr>
 <seealso>
@@ -446,7 +409,7 @@
 
 <!-- variable Visibility: default -->
 <element name="TMouseClickTime.LMicros">
-<short></short>
+<short>Additional milliseconds when the left mouse button was pressed</short>
 <descr>
 </descr>
 <seealso>
@@ -455,7 +418,7 @@
 
 <!-- variable Visibility: default -->
 <element name="TMouseClickTime.MSecs">
-<short></short>
+<short>Time in seconds the middle Mouse button was pressed last time</short>
 <descr>
 </descr>
 <seealso>
@@ -464,7 +427,7 @@
 
 <!-- variable Visibility: default -->
 <element name="TMouseClickTime.MMicros">
-<short></short>
+<short>Additional milliseconds when the middle mouse button was pressed</short>
 <descr>
 </descr>
 <seealso>
@@ -473,7 +436,7 @@
 
 <!-- variable Visibility: default -->
 <element name="TMouseClickTime.RSecs">
-<short></short>
+<short>Time in seconds the right Mouse button was pressed last time</short>
 <descr>
 </descr>
 <seealso>
@@ -482,7 +445,7 @@
 
 <!-- variable Visibility: default -->
 <element name="TMouseClickTime.RMicros">
-<short></short>
+<short>Additional milliseconds when the right mouse button was pressed</short>
 <descr>
 </descr>
 <seealso>
@@ -491,76 +454,76 @@
 
 <!-- class Visibility: default -->
 <element name="TDrawBuffer">
-<short></short>
+<short>A off screeen DrawBuffer for flicker free drawing.</short>
 <descr>
+<p>It will create a Bitmap and a Layer with the given size. and provide the RasPort to draw into.</p>
+<p><b>Example:</b></p>
+<code>
+procedure TMyWindow.DrawObjectEvent(Sender: TObject; RP: PRastPort; DrawRect: TRect); // Paint Event
+begin
+  if not Assigned(DB) then // Create a Image Buffer to paint on (create in the first Draw Event, to have the friend Bitmap)
+  begin
+    DB := TDrawBuffer.Create(256, 256, RP^.Bitmap^.Depth, RP^.Bitmap);
+    SetAPen(DB.RP, 2);  // fill it with white color
+    RectFill(DB.RP, 0, 0, 256, 256);
+  end;
+  ClipBlit(DB.Rp, 0, 0, RP, DrawRect.Left, DrawRect.Top, DB.Width, DB.Height, $00C0); // Just draw the picture
+end;
+
+// Somewhere else (for example in Mouse move or button press)
+GFXMove(DB.RP, x1, y1); // draw a line (x1, y1, x2, y2)
+Draw(DB.RP, x2, y2);
+DrawPanel.RedrawObject; // let the Panel redraw
+</code>
 </descr>
 <seealso>
+  <link id="TMUIDrawPanel.OnDrawObject">DrawPanel.OnDrawObject</link>
 </seealso>
 </element>
 
 <!-- variable Visibility: public -->
 <element name="TDrawBuffer.RP">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>The Buffer Rastport to draw</short>
 </element>
 
 <!-- variable Visibility: public -->
 <element name="TDrawBuffer.Width">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Width of the created Buffer</short>
 </element>
 
 <!-- variable Visibility: public -->
 <element name="TDrawBuffer.Height">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Height of the created Buffer</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TDrawBuffer.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a new DrawBuffer</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDrawBuffer.Create.AWidth">
-<short></short>
+<short>Define the Width of the Buffer</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDrawBuffer.Create.AHeight">
-<short></short>
+<short>Define the Height of the Buffer</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDrawBuffer.Create.ADepth">
-<short></short>
+<short>Define the Depth of the Buffer</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TDrawBuffer.Create.AFriend">
-<short></short>
+<short>Define a friend Bitmap, for faster clipping to.</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TDrawBuffer.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy the DrawBuffer and free all Bitmap, Layers and RastPorts</short>
 </element>
 
 <!-- class Visibility: default -->
