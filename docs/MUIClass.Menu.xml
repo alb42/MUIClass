@@ -9,8 +9,17 @@
 -->
 
 <module name="MUIClass.Menu">
-<short></short>
+<short>Menu related classes</short>
 <descr>
+<p>
+  The usual way to create a Menu is for the application (all windows):</p>
+<p>
+<link id="MUIClass.Base.TMUIApplication.Menustrip">MUIApp.MenuStrip</link> --- <link id="TMUIMenuStrip">MenuStrip</link> --- <link id="TMUIMenu">Menu</link> --- <link id="TMUIMenuItem">MenuItem</link>
+</p>
+<p>or for one Window only:</p>
+<p>
+MUIApp --- <link id="MUIClass.Window.TMUIWindow.Menustrip">Window.MenuStrip</link> --- <link id="TMUIMenuStrip">MenuStrip</link> --- <link id="TMUIMenu">Menu</link> --- <link id="TMUIMenuItem">MenuItem</link>
+</p>
 </descr>
 
 <!-- uses unit Visibility: default -->
@@ -141,242 +150,314 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIMenustrip">
-<short></short>
+<short>Menustrip class is the Parent class for MUI's object oriented menus.</short>
 <descr>
+<p>
+  Its children are objects of <link id="TMUIMenu">Menu</link> class, each of them describes exactly one menu.</p>
+<p>
+A Menustrip object doesn't feature many options itself, but
+as a subclass of Family class, it simply acts as father for
+multiple Menu objects.
+</p>
+<p>
+The Menustrip object is usually specified as a child of
+either Application class or window class with the
+attributes <link id="MUIClass.Base.TMUIApplication.MenuStrip">MUIApp.MenuStrip</link> or
+<link id="MUIClass.Window.TMUIWindow.Menustrip">Window.MenuStrip</link>.</p>
+<p><b>Example:</b></p>
+<code>
+MainMenu := TMUIMenuStrip.Create;
+
+// MUIApp.MenuStrip := MainMenu; // alternative on the application, activate only one!
+Window.Menustrip := MainMenu;
+
+Men := TMUIMenu.Create;
+with Men do
+begin
+  Title := 'Test Menu';   // Name of Menu (thats the one in the ScreenBar)
+  Parent := MainMenu;     // attach to the Menustrip
+end;
+
+With TMUIMenuItem.Create do
+begin
+  Title := 'Config';         // Text on the menu item
+  Parent := Men;             // attach to the Menu
+  OnTrigger := @ConfigStart; // Event to call when selected
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Quit';
+  Parent := Men;
+  OnTrigger := @QuitMe;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIMenu">Menu</link>
+  <link id="TMUIMenuItem">MenuItem</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIMenustrip.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMenustrip.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIMenustrip.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a MenuStrip object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIMenustrip.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenustrip.Enabled">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Enable or disable the complete menu strip.</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIMenu">
-<short></short>
+<short>Objects of menu class describe exactly one pulldown menu.</short>
 <descr>
+<p>They don't feature many options themselves, but as a subclass
+of Family class, they act as father for their several <link id="TMUIMenuItem">menu item</link> objects.</p>
+<p><b>Example:</b></p>
+<code>
+MainMenu := TMUIMenuStrip.Create;
+
+// MUIApp.MenuStrip := MainMenu; // alternative on the application, activate only one!
+Window.Menustrip := MainMenu;
+
+Men := TMUIMenu.Create;
+with Men do
+begin
+  Title := 'Test Menu';   // Name of Menu (thats the one in the ScreenBar)
+  Parent := MainMenu;     // attach to the Menustrip
+end;
+
+With TMUIMenuItem.Create do
+begin
+  Title := 'Config';         // Text on the menu item
+  Parent := Men;             // attach to the Menu
+  OnTrigger := @ConfigStart; // Event to call when selected
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Quit';
+  Parent := Men;
+  OnTrigger := @QuitMe;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIMenuStrip">MenuStrip</link>
+  <link id="TMUIMenuItem">MenuItem</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIMenu.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMenu.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIMenu.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Menu object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIMenu.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenu.Enabled">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Enable or disable the complete menu.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenu.Title">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Describe the title of the menu.</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIMenuItem">
-<short></short>
+<short>Menuitem class describes a single menu item.</short>
 <descr>
+<p>You can use all of the gadtools menus features expect Image menus here.
+</p>
+<p>
+Since Menuitem class is a subclass of Family class, you can
+add other menu items as children of a menu item to indicate
+sub menus. MUI does not limit the level of sub menus, but
+the operating system currently allows a maximum nesting
+level of one. Because of this, children of menu items
+should not contain other menu items for now, the results
+are unpredictable.</p>
+<p><b>Example:</b></p>
+<code>
+MainMenu := TMUIMenuStrip.Create;
+
+// MUIApp.MenuStrip := MainMenu; // alternative on the application, activate only one!
+Window.Menustrip := MainMenu;
+
+Men := TMUIMenu.Create;
+with Men do
+begin
+  Title := 'Test Menu';   // Name of Menu (thats the one in the ScreenBar)
+  Parent := MainMenu;     // attach to the Menustrip
+end;
+
+With TMUIMenuItem.Create do
+begin
+  Title := 'Config';         // Text on the menu item
+  Parent := Men;             // attach to the Menu
+  OnTrigger := @ConfigStart; // Event to call when selected
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Quit';
+  Parent := Men;
+  OnTrigger := @QuitMe;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIMenuStrip">MenuStrip</link>
+  <link id="TMUIMenuItem">MenuItem</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIMenuItem.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIMenuItem.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIMenuItem.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a MenuItem object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIMenuItem.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIMenuItem.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Evetns after MUI item creation</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.Checked">
-<short></short>
-<descr>
-</descr>
+<short>Set/Get the State of checkable Menu items.</short>
 <seealso>
+  <link id="TMUIMenuItem.CheckIt">CheckIt</link>
+  <link id="TMUIMenuItem.Exclude">Exclude</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.CheckIt">
-<short></short>
+<short>Define Entry as checkable Menu item</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIMenuItem.Checked">Checked</link>
+  <link id="TMUIMenuItem.Exclude">Exclude</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.CommandString">
-<short></short>
+<short>Set to True if <link id="TMUIMenuItem.ShortCut">ShortCut</link> is a full key sequence.</short>
 <descr>
+Set to TRUE if <link id="TMUIMenuItem.ShortCut">ShortCut</link> points to a
+command string (e.g. "shift alt q") instead of a
+simple letter. Note that MUI wont check if these
+keys are pressed (just like intuition), you'll have
+to do this yourself.
 </descr>
 <seealso>
+  <link id="TMUIMenuItem.ShortCut">ShortCut</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.Enabled">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Enabled/Disable the menu item.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.Exclude">
-<short></short>
-<descr>
-</descr>
+<short>Bitmask of menu item numbers that are to be deselected when this one is selected.</short>
 <seealso>
+  <link id="TMUIMenuItem.Checked">Checked</link>
+  <link id="TMUIMenuItem.CheckIt">CheckIt</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.ShortCut">
-<short></short>
+<short>Define the shortcut for a menu item.</short>
 <descr>
+If <link id="TMUIMenuItem.CommandString">CommandString</link> is True, it should be a full key sequence
+(e.g. "shift alt q") which is shown right next to the title as hot key. If <link id="TMUIMenuItem.CommandString">CommandString</link> is False
+only the first char is used to show it as Amiga + "Char" shortcut.
+Note that MUI wont check if these keys are pressed (just like intuition), you'll have to do this yourself.
 </descr>
 <seealso>
+  <link id="TMUIMenuItem.CommandString">CommandString</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.Title">
-<short></short>
+<short>Define the items title.</short>
 <descr>
+A single '-' will result in a horizontal bar
 </descr>
 <seealso>
+  <link id="TMUIMenuItem.ShortCut">ShortCut</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.Toggle">
-<short></short>
+<short>Automatically toggle state when item is selected</short>
 <descr>
+  Only make sense for Menu items which are checkable.
 </descr>
 <seealso>
+  <link id="TMUIMenuItem.Checked">Checked</link>
+  <link id="TMUIMenuItem.CheckIt">CheckIt</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIMenuItem.OnTrigger">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event when the Menu item is selected.</short>
 </element>
 
 </module> <!-- MUIClass.Menu -->

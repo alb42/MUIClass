@@ -1407,6 +1407,31 @@ when the application is disposed.</p>
 Menustrip objects defined for the application are used
 as menu for every window of the application, as long as
 the window doesn't define its private menu.</p>
+<p><b>Example:</b></p>
+<code>
+MUIApp.MenuStrip := TMUIMenuStrip.Create;
+
+Men := TMUIMenu.Create;
+with Men do
+begin
+  Title := 'Test Menu';        // Name of Menu (thats the one in the ScreenBar)
+  Parent := MUIApp.MenuStrip;  // attach to the Menustrip
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Config';         // Text on the menu item
+  Parent := Men;             // attach to the Menu
+  OnTrigger := @ConfigStart; // Event to call when selected
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Quit';
+  Parent := Men;
+  OnTrigger := @QuitMe;
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
