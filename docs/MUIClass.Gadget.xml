@@ -9,7 +9,7 @@
 -->
 
 <module name="MUIClass.Gadget">
-<short></short>
+<short>Classes for Intuition Gadgets in MUI</short>
 <descr>
 </descr>
 
@@ -150,153 +150,154 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIGadget">
-<short></short>
-<descr>
+<short>This is the base class for intuition gadgets in MUI windows.</short>
+<descr>This class is only a base class, use the subclasses to use it.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIGadget.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIGadget.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIGadget.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Gadget Object, no need to instance this class itself</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIGadget.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGadget.Gadget">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Subclasses may obtain a pointer to the intuition gadget here.</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIString">
-<short></short>
+<short>String Edit component</short>
 <descr>
+String class generates standard string gadgets with
+all editing facilities (clear, undo, etc.) enabled.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIString.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIString.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIString.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIString.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a String object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIString.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIString.BufferPos">
-<short></short>
+<short>Position of Cursor in the string.</short>
 <descr>
+BufferPos can be used to get and set the
+position of the cursor in the string gadget.
+This attribute is probably not very interesting.
 </descr>
 <seealso>
+  <link id="TMUIString.Contents">Contents</link>
+  <link id="TMUIString.DisplayPos">DisplayPos</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIString.DisplayPos">
-<short></short>
+<short>Position of first char in the Display (if text too long for the object)</short>
 <descr>
+DisplayPos can be used to get and set the
+number of the first character of the string to be
+displayed. This attribute is probably not very
+interesting.
 </descr>
 <seealso>
+  <link id="TMUIString.Contents">Contents</link>
+  <link id="TMUIString.BufferPos">BufferPos</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.Accept">
-<short></short>
+<short>A string containing characters allowed as input for the string gadget.</short>
 <descr>
+<p>
+Whenever the user hits a
+character not found in Accept, he
+will hear a beep and gadgets contents won't have
+changed.</p>
+<p><b>Example:</b></p>
+<code>
+  Edit1.Accept := '0123456789-'; // only accept Integer numbers and '-'
+</code>
 </descr>
 <seealso>
+  <link id="TMUIString.Reject">Reject</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.AdvanceOnCR">
-<short></short>
+<short>Press Enter in the String object to move to next Item in the CycleChain</short>
 <descr>
+Set this if you want carriages returns in string gadgets
+behave like the TAB key, i.e. pressing CR will activate
+the next/previous gadget in the cycle chain.
 </descr>
 <seealso>
+  <link id="MUIClass.Area.TMUIArea.CycleChain">CycleChain</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.Contents">
-<short></short>
+<short>Get and set a string gadgets contents.</short>
 <descr>
+Contents gets updated every time when
+the contents of the string gadget change. When you
+connect the Event <link id="TMUIString.OnContentsChange">OnContentsChange</link>, you will
+hear about every keystroke.
 </descr>
 <seealso>
+  <link id="TMUIString.OnContentsChange">OnContentsChange</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.Format">
-<short></short>
+<short>Alignment of the input string.</short>
 <descr>
+<dl>
+  <dt>MUIV_String_Format_Left</dt><dd>Left aligned Text</dd>
+  <dt>MUIV_String_Format_Center</dt><dd>Centered Text</dd>
+  <dt>MUIV_String_Format_Right</dt><dd>Right aligned Text</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -304,8 +305,17 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIString.IntegerValue">
-<short></short>
+<short>Set/Get the contents of the String object as Integer Value</short>
 <descr>
+<p>
+Useful for turning a string gadget into an integer
+gadget. Setting this attribute puts the value
+with '%ld' into the gadget, getting it returns
+a LongWord containing the string gadgets contents
+as number.</p>
+<p>
+You should set <link id="TMUIString.Accept">Accept</link> to "0123456789"
+or something like that to avoid wrong characters.</p>
 </descr>
 <seealso>
 </seealso>
@@ -313,140 +323,164 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIString.MaxLen">
-<short></short>
+<short>[i] Setup the maximum length for the string gadget.</short>
 <descr>
+  This attribute is only valid at object creation time. Default maximum length is 79.
+  (Note: In contrast to C here the #0 byte is not counted, object will internally add one more for the #0 byte before transfering to MUI)
 </descr>
 <seealso>
+  <link id="TMUIString.Contents">Contents</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.Reject">
-<short></short>
+<short> A string containing characters that should not be accepted as input for the string gadget. </short>
 <descr>
+Whenever the user hits such a char, he will hear a beep
+and gadgets contents won't have changed.
 </descr>
 <seealso>
+  <link id="TMUIString.Accept">Accept</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.Secret">
-<short></short>
+<short>Replace Text by dots, for password edits</short>
 <descr>
+This attribute causes the string gadget to display only
+dots instead of the real contents. Useful for password
+requesters.
 </descr>
 <seealso>
+  <link id="TMUIString.Contents">Contents</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIString.OnAcknowledge">
-<short></short>
+<short>Event when Edit in the String gadget was finished and the new Value was acknowledged (by pressing Enter)</short>
+<descr>
+  TAB will not trigger that Event.
+</descr>
+<seealso>
+  <link id="TMUIString.OnContentsChange">OnContentsChange</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIString.OnContentsChange">
+<short>Event triggered on every change of the Text in the Edit box.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIString.OnAcknowledge">OnAcknowledge</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIProp">
-<short></short>
+<short>The well known proportional gadgets.</short>
 <descr>
+It offers the same attributes as a usual boopsi gadget
+of propgclass. However, MUI's prop gadgets allow using
+any imagery for the knob and for the background.
 </descr>
 <seealso>
+  <link id="TMUIScrollBar">TMUIScrollBar</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIProp.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIProp.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIProp.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIProp.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Prop object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIProp.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIProp.Increase">
-<short></short>
+<short>Increase position by the given amount</short>
 <descr>
+This method increases the value of a proportional gadget by the
+specified amount. Negative values are ok. Range checking is done
+automatically.
 </descr>
 <seealso>
+  <link id="TMUIProp.Decrease">Decrease()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIProp.Increase.Amount">
-<short></short>
+<short>Amount to add to the gadgets current position.</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIProp.Decrease">
-<short></short>
+<short>Decrease position by the given amount</short>
 <descr>
+This method decreases the value of a proportional gadget by the
+specified amount. Negative values are ok. Range checking is done
+automatically.
 </descr>
 <seealso>
+  <link id="TMUIProp.Increase">Increase()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIProp.Decrease.Amount">
-<short></short>
+<short>Amount to substract from the gadgets current position.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIProp.Entries">
-<short></short>
-<descr>
-</descr>
+<short>Total number of entries.</short>
 <seealso>
+  <link id="TMUIProp.Visible">Visible</link>
+  <link id="TMUIProp.First">First</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIProp.First">
-<short></short>
+<short>Number of the first entry.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIProp.Visible">Visible</link>
+  <link id="TMUIProp.Entries">Entries</link>
+  <link id="TMUIProp.OnFirstChange">OnFirstChange</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIProp.Horiz">
-<short></short>
+<short>Vertical or horizontal Gadget.</short>
 <descr>
+Determine if you want a horizontal or a vertical
+prop gadget.
+Defaults to False, i.e. vertical.
 </descr>
 <seealso>
 </seealso>
@@ -454,35 +488,73 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIProp.UseWinBorder">
-<short></short>
+<short>Do not draw it but use the Window border Scrollbar</short>
 <descr>
+<p>Values:</p>
+<p>
+MUIV_Prop_UseWinBorder_None, MUIV_Prop_UseWinBorder_Left, MUIV_Prop_UseWinBorder_Right, MUIV_Prop_UseWinBorder_Bottom
+</p>
+<p>
+If you set this attribute to one of
+
+MUIV_Prop_UseWinBorder_Left,
+MUIV_Prop_UseWinBorder_Right,
+MUIV_Prop_UseWinBorder_Bottom,
+
+some very special magic will take place with this
+proportional gadget. In fact, it will not eat
+any display space at all or render anything, it
+stays invisible in your windows GUI. Instead, the
+gadgets control and display will be linked to one
+of the scrollbars in the window border.</p>
+<p>
+There is no difference in talking to the object,
+you can use all prop gadget attributes regardless
+whether its a real prop gadget or just a window
+border link. Of course, gadgets in window borders
+will use the intuition look regardless what the
+user has configured.
+</p>
+<p><b>Notes:</b></p>
+<p>
+You <b>must</b> enable border scrollers for the parent window
+with the corresponding attributes (see below)
+before using UseWinBorder.
+</p>
+<p>
+Obviously, you can only link exactly one prop gadget
+to one window scroller. Linking more than one gadget
+to the same window scroller will result in big
+confusion.</p>
 </descr>
 <seealso>
+  <link id="MUIClass.Window.TMUIWindow.UseBottomBorderScroller">UseBottomBorderScroller</link>
+  <link id="MUIClass.Window.TMUIWindow.UseLeftBorderScroller">UseLeftBorderScroller</link>
+  <link id="MUIClass.Window.TMUIWindow.UseRightBorderScroller">UseRightBorderScroller</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIProp.Visible">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Number of visible entries.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIProp.OnFirstChange">
-<short></short>
-<descr>
-</descr>
+<short>Event triggered if the First Value changed</short>
 <seealso>
+  <link id="TMUIProp.First">First</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIScrollbar">
-<short></short>
+<short><link id="TMUIProp">Prop</link> Gadget with two buttons to scroll</short>
 <descr>
+<p>
+The Scrollbar class has no objects and attributes itself.
+It just connects a proportional gadget and two button
+gadgets with approriate imagery to make up a scrollbar.</p>
 </descr>
 <seealso>
 </seealso>
@@ -490,67 +562,59 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScrollbar.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIScrollbar.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScrollbar.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScrollbar.DoFirstOpen">
-<short></short>
+<short>Re-Set the initial Values when the item is first time shown.</short>
 <descr>
+  Just to fix a nasty bug of MUI on Amiga68k.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIScrollbar.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Scrollbar</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIScrollbar.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Scrollbar object</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIScrollbar.Horiz">
-<short></short>
+<short>vertical or Horizontal Scrollbar</short>
 <descr>
+  Fefaults to False, i.e. vertical
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIScrollbar.SType">
-<short></short>
+<short>Specify the position of the scrollbar Buttons.</short>
 <descr>
+  <p>
+Specify a certain scrollbar type. Normally, you should respect
+        the users choice and avoid using this attribute.</p>
+<p><b>Values:</b></p>
+<dl>
+  <dt>MUIV_Scrollbar_Type_Default</dt><dd>Use the Usersetting from the Prefs, default </dd>
+  <dt>MUIV_Scrollbar_Type_Bottom</dt><dd>Both Buttons on the lower side</dd>
+  <dt>MUIV_Scrollbar_Type_Top</dt><dd>Both button on the upper side</dd>
+  <dt>MUIV_Scrollbar_Type_Sym</dt><dd>One Button on the upper and one Button on the lower side.</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>

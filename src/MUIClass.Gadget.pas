@@ -24,6 +24,7 @@ type
     FAccept: string;
     FAdvanceOnCR: Boolean;
     FOnAcknowledge: TNotifyEvent;
+    FOnContentsChange: TNotifyEvent;
     FContents: string;
     FFormat: Integer;
     FInteger: Integer;
@@ -63,11 +64,12 @@ type
     property Format: Integer read FFormat write SetFormat default MUIV_String_Format_Left; //I MUIV_StringFormat_*
     property IntegerValue: Integer read GetInteger write SetInteger default 0;             //
     // LonelyEditHook -> see EditHook
-    property MaxLen: Integer read FMaxLen write SetMaxLen default 0;                       //I maximal length of the string in the Gadget WITHOUT #0 at the end! (class add one to it ;-))
+    property MaxLen: Integer read FMaxLen write SetMaxLen default 79;                      //I maximal length of the string in the Gadget WITHOUT #0 at the end! (class add one to it ;-))
     property Reject: string read FReject write SetReject;                                  //
     property Secret: Boolean read FSecret write FSecret default False;                     //I
     // EVents
     property OnAcknowledge: TNotifyEvent read FOnAcknowledge write FOnAcknowledge;
+    property OnContentsChange: TNotifyEvent read FOnContentsChange write FOnContentsChange;
   end;
 
 
@@ -168,7 +170,7 @@ begin
   FFormat := MUIV_String_Format_Left;
   FInteger := 0;
   FIntegerSet := False;
-  MaxLen := 0;
+  MaxLen := 79;
   FReject := '';
   FSecret := False;
   //
@@ -188,7 +190,7 @@ begin
     ATagList.AddTag(MUIA_String_Format, AsTag(FFormat));
   if FIntegerSet then
     ATagList.AddTag(MUIA_String_Integer, AsTag(FInteger));
-  if FMaxLen > 0 then
+  if FMaxLen <> 79 then
     ATagList.AddTag(MUIA_String_MaxLen, AsTag(FMaxLen + 1)); // one more, mui wants that with #0... how stupid!
   if FReject <> '' then
     ATagList.AddTag(MUIA_String_Reject, AsTag(PChar(FReject)));
@@ -219,11 +221,22 @@ begin
     PasObj.FOnAcknowledge(PasObj);
 end;
 
+function ContentsFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PasObj: TMUIString;
+begin
+  Result := 0;
+  PasObj := TMUIString(Hook^.h_Data);
+  if Assigned(PasObj.FOnContentsChange) then
+    PasObj.FOnContentsChange(PasObj);
+end;
+
 procedure TMUIString.AfterCreateObject;
 begin
   inherited;
   // Connect Events
   ConnectHook(MUIA_String_Acknowledge, MUIV_EveryTime, @AckFunc);
+  ConnectHook(MUIA_String_Contents, MUIV_EveryTime, @ContentsFunc);
 end;
 
 procedure TMUIString.SetAdvanceOnCR(AValue: Boolean);
