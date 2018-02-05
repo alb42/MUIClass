@@ -57,7 +57,7 @@ type
     property OnValueChange: TNotifyEvent read FOnValueChange write FOnValueChange;
   end;
 
-  TMUIKnop = class(TMUINumeric)
+  TMUIKnob = class(TMUINumeric)
   public
     procedure CreateObject; override;
   end;
@@ -309,11 +309,9 @@ begin
 end;
 
 
-{ TMUIKnop }
+{ TMUIKnob }
 
-const  MUIC_Knop = 'Knob.mui';
-
-procedure TMUIKnop.CreateObject;
+procedure TMUIKnob.CreateObject;
 var
   TagList: TATagList;
 begin
@@ -321,7 +319,7 @@ begin
   begin
     BeforeCreateObject;
     GetCreateTags(TagList);
-    FMUIObj := MUI_NewObjectA(MUIC_Knop, TagList.GetTagPointer);
+    FMUIObj := MUI_NewObjectA(MUIC_Knob, TagList.GetTagPointer);
     AfterCreateObject
   end;
 end;
@@ -358,7 +356,7 @@ procedure TMUILevelmeter.SetLabel(AValue: string);
 begin
   if AValue <> FLabel then
   begin
-    FLabel := AValue;
+    FLabel := Copy(AValue, 1, 6); // Max 6 chars
     if Assigned(FMUIObj) then
       SetValue(MUIA_Levelmeter_Label, AsTag(PChar(FLabel)));
   end;

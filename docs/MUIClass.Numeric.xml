@@ -9,7 +9,7 @@
 -->
 
 <module name="MUIClass.Numeric">
-<short></short>
+<short>Classes dealing with the input (and display) of integer numbers.</short>
 <descr>
 </descr>
 
@@ -159,84 +159,87 @@
 
 <!-- class Visibility: default -->
 <element name="TMUINumeric">
-<short></short>
+<short>Numeric class is the base class for everything that deals with the input (and display) of integer numbers.</short>
 <descr>
+<p>
+Numeric class itself does not feature any GUI elements, it
+just offers some basic attributes and methods which are
+common to all types of sliders. Creating direct instances
+of this class usually doesn't make any sense. Instead, use
+one of the included subclasses like <link id="TMUISlider">Slider</link>,
+<link id="TMUINumericbutton">NumericButton</link> or
+<link id="TMUIKnob">Knob</link> to select the type of gadget
+you need.</p>
 </descr>
 <seealso>
+  <link id="TMUISlider">Slider</link>
+  <link id="TMUINumericbutton">NumericButton</link>
+  <link id="TMUIKnob">Knob</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUINumeric.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUINumeric.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUINumeric.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after the MUI item is created</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUINumeric.Create">
-<short></short>
+<short>Create a Numeric object</short>
 <descr>
+  It does not make sense to create the Numeric object itself. Use the
+  subclasses with GUI: <link id="TMUISlider">Slider</link>,
+<link id="TMUINumericbutton">NumericButton</link> or
+<link id="TMUIKnob">Knob</link>
 </descr>
 <seealso>
+  <link id="TMUISlider">Slider</link>,
+  <link id="TMUINumericbutton">NumericButton</link>
+  <link id="TMUIKnob">Knob</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINumeric.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINumeric.Decrease">
-<short></short>
-<descr>
-</descr>
+<short>Decrease the value of a numeric class object.</short>
 <seealso>
+  <link id="TMUINumeric.Increase">Increase()</link>
+  <link id="TMUINumeric.Value">Value</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINumeric.Increase">
-<short></short>
-<descr>
-</descr>
+<short>Increase the value of a numeric class object.</short>
 <seealso>
+  <link id="TMUINumeric.Decrease">Decrease()</link>
+  <link id="TMUINumeric.Value">Value</link>
 </seealso>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TMUINumeric.ScaleToValue">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>This method takes the given sale values and transforms them to something between the numeric objects min and max values.</short>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TMUINumeric.ScaleToValue.Result">
-<short></short>
+<short>The transformed value.</short>
 </element>
 
 <!-- argument Visibility: default -->
@@ -256,8 +259,11 @@
 
 <!-- function Visibility: public -->
 <element name="TMUINumeric.Stringify">
-<short></short>
+<short>Translate a Value to a string</short>
 <descr>
+Call this method in your subclass whenever you want to
+translate a value into a string. A pointer to a
+string buffer is returned.
 </descr>
 <seealso>
 </seealso>
@@ -275,7 +281,7 @@
 
 <!-- function Visibility: public -->
 <element name="TMUINumeric.ValueToScale">
-<short></short>
+<short>This method takes the current value of the numeric object and transforms it to another scale determined by the parameters.</short>
 <descr>
 </descr>
 <seealso>
@@ -299,184 +305,274 @@
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.CheckAllSizes">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Calculate the needed space for all possible Values.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.Default">
-<short></short>
+<short>Adjust the default value for a numeric input/display gadget.s</short>
 <descr>
+<p>
+Each type of slider can have a default value to which the
+user can always return immediately by some action depending
+on the implementation of the subclass. Knob.mui e.g. resets
+to defaults after a double click in the knob area.</p>
+<p>
+The default value can also be reached by pressing the
+toggle key (usually SPACE) on an active numeric gadget.</p>
+<p>
+It defaults to 0.</p>
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Value">Value</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.Format">
-<short></short>
+<short>printf-style string to describe the format of the slider display.</short>
 <descr>
+<p>
+Whenever a subclass of Numeric thinks its time to render
+a new value, it doesn't simply write it to a string but
+instead calls <link id="TMUINumeric.Stringify">Stringify()</link>. This method of Numeric
+class looks for the specified Format in its data
+structures and fills a string with the current value.</p>
+<p>Format defaults to '%ld'</p>
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Value">Value</link>
+  <link id="TMUINumeric.Stringify">Stringify()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.Min">
-<short></short>
+<short>Adjust the minimum value for a numeric input/display gadget.</short>
 <descr>
+<p>
+Numeric class will automatically clip its value to make
+it fit between Min and <link id="TMUINumeric.Max">Max</link>. Also,
+minimum and maximum values are used for several internal
+calculations such as the maximum space required to display
+a numeric value.</p>
+<p>
+You may change Min and <link id="TMUINumeric.Max">Max</link> with,
+but current MUI versions will <b>not</b> update
+the objects and with the windows width or height if your
+change causes the value display to change it's minimum
+and/or maximum pixel sizes. The slider position itself
+will be updated though.
+</p>
+<p>MUI treats all values in numeric class as signed Integer, so that's the limit for all field.</p>
+<p>Default to 0.</p>
 </descr>
 <seealso>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Value">Value</link>
+  <link id="TMUINumeric.Default">Default</link>
+  <link id="TMUINumeric.ValueToScale">ValueToScale()</link>
+  <link id="TMUINumeric.ScaleToValue">ScaleToValue()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.Max">
-<short></short>
+<short>Adjust the maximum value for a numeric input/display gadget.
+</short>
 <descr>
+<p>
+Numeric class will automatically clip its value to make
+it fit between <link id="TMUINumeric.Min">Min</link> and Max. Also,
+minimum and maximum values are used for several internal
+calculations such as the maximum space required to display
+a numeric value.</p>
+<p>
+You may change <link id="TMUINumeric.Min">Min</link> and Max with,
+but current MUI versions will <b>not</b> update
+the objects and with the windows width or height if your
+change causes the value display to change it's minimum
+and/or maximum pixel sizes. The slider position itself
+will be updated though.
+</p>
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Value">Value</link>
+  <link id="TMUINumeric.Default">Default</link>
+  <link id="TMUINumeric.ValueToScale">ValueToScale()</link>
+  <link id="TMUINumeric.ScaleToValue">ScaleToValue()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.Reverse">
-<short></short>
+<short>Reverse the display of a numeric gadget.</short>
 <descr>
+<p>
+When set to True, the <link id="TMUINumeric.ScaleToValue">ScaleToValue()</link>
+and <link id="TMUINumeric.ValueToScale">ValueToScale()</link> methods are effected
+in a way that makes your gadget behave "reverse".
+Its minimum numeric value will be mapped to the
+maximum scale value of the display and vice versa.</p>
+<p>
+Defaults to False.</p>
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Value">Value</link>
+  <link id="TMUINumeric.Default">Default</link>
+  <link id="TMUINumeric.ValueToScale">ValueToScale()</link>
+  <link id="TMUINumeric.ScaleToValue">ScaleToValue()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.RevLeftRight">
-<short></short>
+<short>Reverse the function of left/right keys.</short>
 <descr>
+Under some circumstances it might be desirable to
+reverse the keyboard control for a slider gadget.
+This tag might help.
+
+Defaults to False.
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Value">Value</link>
+  <link id="TMUINumeric.Default">Default</link>
+  <link id="TMUINumeric.RevUpDown">RevUpDown</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.RevUpDown">
-<short></short>
+<short>Reverse the function of up/down keys.</short>
 <descr>
+Under some circumstances it might be desirable to
+reverse the keyboard control for a slider gadget.
+This tag might help.
+
+RevUpDown defaults to False.
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Value">Value</link>
+  <link id="TMUINumeric.Default">Default</link>
+  <link id="TMUINumeric.RevLeftRight">RevLeftRight</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.Value">
-<short></short>
+<short>Adjust the current value for a numeric input/display gadget.</short>
 <descr>
+<p>
+Numeric class will automatically clip this
+value to make it fit between <link id="TMUINumeric.Min">Min</link> and
+<link id="TMUINumeric.Max">Max</link>.</p>
+<p>
+Whenever a new value is set, the object receices a
+new Draw command to get a chance to update its
+display.</p>
+<p>
+Defaults to 0.</p>
 </descr>
 <seealso>
+  <link id="TMUINumeric.Min">Min</link>
+  <link id="TMUINumeric.Max">Max</link>
+  <link id="TMUINumeric.Default">Default</link>
+  <link id="TMUINumeric.Stringify">Stringify()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUINumeric.OnValueChange">
-<short></short>
-<descr>
-</descr>
+<short>Event when <link id="TMUINumeric.Value">Value</link> is changed.</short>
 <seealso>
+  <link id="TMUINumeric.Value">Value</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
-<element name="TMUIKnop">
-<short></short>
+<element name="TMUIKnob">
+<short>This is a subclass of Numeric class which offers a knob that the user may turn.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUINumeric">Numeric</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
-<element name="TMUIKnop.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<element name="TMUIKnob.CreateObject">
+<short>Create the MUI item</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUILevelmeter">
-<short></short>
-<descr>
-</descr>
+<short>This is a subclass of numeric class that display a levelmeter.</short>
 <seealso>
+  <link id="TMUINumeric">Numeric</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUILevelmeter.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUILevelmeter.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUILevelmeter.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create LevelMeter object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUILevelmeter.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUILevelmeter.LLabel">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Labelstring to be displayed in levelmeter objects. Limited to about six characters.</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUINumericbutton">
-<short></short>
-<descr>
-</descr>
+<short>Save saving <link id="TMUISlider">Slider</link></short>
 <seealso>
+  <link id="TMUISlider">Slider</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUINumericbutton.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUISlider">
-<short></short>
+<short>The slider class generates a gui element that allows a user to adjust a numeric value.</short>
 <descr>
+<p>
+he programmer has not
+very much influence on the slider's outfit, there are
+only very few fields available. Future versions of MUI
+will probably include some preferences options to
+allow the user (<b>not</b> the programmer) to configure
+this outfit.</p>
 </descr>
 <seealso>
 </seealso>
@@ -484,52 +580,32 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUISlider.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUISlider.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUISlider.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create Slider object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUISlider.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUISlider.Horiz">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Specify if you want a horizontal or vertical slider.</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUISlider.Quiet">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Do not display the current level in a text object.</short>
 </element>
 
 </module> <!-- MUIClass.Numeric -->
