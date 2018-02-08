@@ -629,6 +629,31 @@ and attributes useful for every object.
 <short>List of Children, be careful not all object can have children</short>
 </element>
 
+<!-- property Visibility: protected -->
+<element name="TMUINotify.FExchangeMode">
+<short>True if the Group/Window is in Exchange mode, allows adding of items in runtime</short>
+<seealso>
+  <link id="TMUINotify.InitChange">InitChange()</link>
+  <link id="TMUINotify.ExitChange">ExitChange()</link>
+</seealso>
+</element>
+
+<!-- property Visibility: protected -->
+<element name="TMUINotify.InitChange">
+<short>Put Group or Window into exchange mode, allows to add/remove items in runtime</short>
+<seealso>
+  <link id="TMUINotify.ExitChange">ExitChange()</link>
+</seealso>
+</element>
+
+<!-- property Visibility: protected -->
+<element name="TMUINotify.ExitChange">
+<short>Put Group or Window back to normal mode, after adding/removing items in runtime</short>
+<seealso>
+  <link id="TMUINotify.InitChange">InitChange()</link>
+</seealso>
+</element>
+
 <!-- constructor Visibility: public -->
 <element name="TMUINotify.Create">
 <short>it make no sense to instance Notify</short>

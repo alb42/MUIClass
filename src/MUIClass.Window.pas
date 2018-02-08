@@ -114,6 +114,8 @@ type
     procedure Unsnapshot;     // Unsnapshot the window
     procedure ToBack;   // put the Window to back
     procedure ToFront;  // put the Window to Front
+    procedure InitChange; override;
+    procedure ExitChange; override;
     // MUI Fields
     property Activate: Boolean read GetActivate write SetActivate;                   //  Activate the Window (True activate the Window, False does nothing)
     property ActiveObject: TMUINotify read GetActiveObject write SetActiveObject;    //  Currently active Object (can be nil!), can be also set
@@ -852,6 +854,20 @@ procedure TMUIWindow.ToFront;
 begin
   if HasObj then
     DoMethod(MUIObj, [MUIM_Window_ToFront]);
+end;
+
+procedure TMUIWindow.InitChange;
+begin
+  inherited;
+  if HasObj then
+    DoMethod(FGroupObj, [MUIM_Group_InitChange]);
+end;
+
+procedure TMUIWindow.ExitChange;
+begin
+  inherited;
+  if HasObj then
+    DoMethod(FGroupObj, [MUIM_Group_ExitChange]);
 end;
 
 { TMUIAboutMUI }

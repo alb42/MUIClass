@@ -823,6 +823,33 @@ DrawPanel.RedrawObject; // let the Panel redraw
 </element>
 
 <!-- property Visibility: public -->
+<element name="TMUIDrawPanel.DoDrawObject">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.DoDrawObject.Rp">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIDrawPanel.DoDrawObject.DrawRect">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
 <element name="TMUIDrawPanel.OnMouseDown">
 <short></short>
 <descr>

@@ -43,8 +43,8 @@ type
     constructor Create; override;
     procedure CreateObject; override;
     // Methods
-    procedure InitChange;  // When Application is running and you need to add/remove Children
-    procedure ExitChange;  //   Lock/Unlock the Group before changing
+    procedure InitChange; override;  // When Application is running and you need to add/remove Children
+    procedure ExitChange; override;  //   Lock/Unlock the Group before changing
     //procedure Sort; // needs a concept (maybe sort the Childlist, then apply with it)
     // Fields
     property ActivePage: Integer read GetActivePage write SetActivePage default 0;     //  Active Page if PageMode is active (0 <= ActivePage < Childs.Count)
@@ -511,12 +511,14 @@ end;
 
 procedure TMUIGroup.InitChange;
 begin
+  inherited;
   if HasObj then
     DoMethod(FMUIObj, [MUIM_Group_InitChange]);
 end;
 
 procedure TMUIGroup.ExitChange;
 begin
+  inherited;
   if HasObj then
     DoMethod(FMUIObj, [MUIM_Group_ExitChange]);
 end;

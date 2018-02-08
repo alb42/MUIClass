@@ -597,6 +597,32 @@
 <element name="TMUIWindow.Menustrip">
 <short></short>
 <descr>
+
+<p><b>Example:</b></p>
+<code>
+Window.MenuStrip := TMUIMenuStrip.Create;
+
+Men := TMUIMenu.Create;
+with Men do
+begin
+  Title := 'Test Menu';        // Name of Menu (thats the one in the ScreenBar)
+  Parent := MUIApp.MenuStrip;  // attach to the Menustrip
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Config';         // Text on the menu item
+  Parent := Men;             // attach to the Menu
+  OnTrigger := @ConfigStart; // Event to call when selected
+end;
+
+with TMUIMenuItem.Create do
+begin
+  Title := 'Quit';
+  Parent := Men;
+  OnTrigger := @QuitMe;
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -689,6 +715,22 @@
 <descr>
 </descr>
 <seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: protected -->
+<element name="TMUIWindow.InitChange">
+<short>Put Window into exchange mode, allows to add/remove items in runtime</short>
+<seealso>
+  <link id="TMUIWindow.ExitChange">ExitChange()</link>
+</seealso>
+</element>
+
+<!-- property Visibility: protected -->
+<element name="TMUIWindow.ExitChange">
+<short>Put Window back to normal mode, after adding/removing items in runtime</short>
+<seealso>
+  <link id="TMUIWindow.InitChange">InitChange()</link>
 </seealso>
 </element>
 

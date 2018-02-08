@@ -75,6 +75,9 @@ type
     procedure SetHelpLine(AValue: Integer);
     procedure SetHelpNode(AValue: string);
   protected
+    FExchangeMode: Boolean;
+    procedure InitChange; virtual;
+    procedure ExitChange; virtual;
     procedure BeforeCreateObject; virtual;
     procedure GetCreateTags(var ATagList: TATagList); override;
     procedure AfterCreateObject; virtual;
@@ -533,23 +536,55 @@ begin
 end;
 
 procedure TMUINotify.AddChild(AChild: TMUINotify);
+var
+  RightMode: Boolean;
 begin
   if Assigned(AChild) and (FChilds.IndexOf(AChild) < 0) then
   begin
     FChilds.Add(AChild);
     if HasObj then
+    begin
+      RightMode := FExchangeMode;
+      if not RightMode then
+        InitChange;
+      //
       DoMethod(FMUIObj, [NativeUInt(OM_ADDMEMBER), AsTag(AChild.MUIObj)]);
+      //
+      if not RightMode then
+        ExitChange;
+    end;
   end;
 end;
 
 procedure TMUINotify.RemoveChild(AChild: TMUINotify);
+var
+  RightMode: Boolean;
 begin
   if Assigned(AChild) and (FChilds.IndexOf(AChild) >= 0) then
   begin
     FChilds.Remove(AChild);
     if HasObj then
+    begin
+      RightMode := FExchangeMode;
+      if not RightMode then
+        InitChange;
+      //
       DoMethod(FMUIObj, [NativeUInt(OM_REMMEMBER), AsTag(AChild.MUIObj)]);
+      //
+      if not RightMode then
+        ExitChange;
+    end;
   end;
+end;
+
+procedure TMUINotify.InitChange;
+begin
+  FExchangeMode := True;
+end;
+
+procedure TMUINotify.ExitChange;
+begin
+  FExchangeMode := False;
 end;
 
 procedure TMUINotify.AfterCreateObject;

@@ -72,6 +72,8 @@ type
     function DoDraw(cl: PIClass; Obj: PObject_; Msg: PMUIP_Draw): PtrUInt; virtual;
     function DoHandleEvent(cl: PIClass; Obj: PObject_; Msg: PMUIP_HandleEvent): PtrUInt; virtual;
 
+    procedure DoDrawObject(Rp: PRastPort; DrawRect: TRect); virtual;
+
     procedure ResetDblClickTime;
     procedure GetCreateTags(var ATagList: TATagList); override;
   public
@@ -243,9 +245,14 @@ begin
   DrawRect.Height := Obj_mHeight(Obj);
   // install the clip region (do not draw over the border)
   clip := MUI_AddClipping(Ri, DrawRect.Left, DrawRect.Top, DrawRect.Width, DrawRect.Height);
+  DoDrawObject(Rp, DrawRect);
+  MUI_RemoveClipRegion(Ri, Clip);
+end;
+
+procedure TMUIDrawPanel.DoDrawObject(Rp: PRastPort; DrawRect: TRect);
+begin
   if Assigned(FOnDrawObject) then
     FOnDrawObject(Self, Rp, DrawRect);
-  MUI_RemoveClipRegion(Ri, Clip);
 end;
 
 procedure TMUIDrawPanel.ResetDblClickTime;

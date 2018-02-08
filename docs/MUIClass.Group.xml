@@ -9,7 +9,7 @@
 -->
 
 <module name="MUIClass.Group">
-<short></short>
+<short>Group and related classes</short>
 <descr>
 </descr>
 
@@ -168,8 +168,29 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIGroup">
-<short></short>
+<short>Group class is responsible for the complete layout of a MUI window.</short>
 <descr>
+<p>
+A group may contain any number of
+child objects, maybe buttons, cycle gadgets or
+even other groups.</p>
+<p>
+Some attributes of group class define how the children
+of a group are layouted. You can e.g. tell your group
+to place its children horizontally (in a row) or
+vertically (in a column). Since every MUI object knows
+about its minimum and maximum dimensions, group class
+has everything it needs to do that job.</p>
+<p>
+More sophisticated layout is possible by assigning
+different weights to objects in a group or by
+making a group two-dimensional.</p>
+<p>
+Beneath the layout issues, a group object passes
+attributes and methods through to all of its
+children. Thus, you can talk and listen to any
+child of a group by talking and listening to the
+group itself.</p>
 </descr>
 <seealso>
 </seealso>
@@ -177,279 +198,471 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIGroup.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIGroup.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIGroup.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect events after MUI item creation</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.Childs">
-<short></short>
+<short>List of Childs in this Group</short>
 <descr>
+  Do not add objects here for yourself but assign this class
+  as <link id="MUIClass.Base.TMUIWithParent">Parent</link> to an element to add.
 </descr>
 <seealso>
+  <link id="MUIClass.Base.TMUIWithParent">Parent</link>
 </seealso>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIGroup.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Group object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIGroup.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIGroup.InitChange">
-<short></short>
+<short>Prepares a group for dynamic adding/removing of objects.</short>
 <descr>
+<p>
+MUI 3 offers the possibility to dynamically add/remove
+children from groups, even when the window that contains
+these objects is currently open. To be able to do this,
+you must first put the group into a special "exchange"
+state by using this method. Then, you can add/remove
+children at will. If you're done, use <link id="TMUIGroup.ExitChange">ExitChange()</link>
+to make MUI recalculate the display.</p>
+<p><b>Example:</b></p>
+<code>
+Group.InitChange;          // Prepare Group to add/remove items
+
+Text1.Parent := nil;       // remove Text1 from the group
+String1.Parent := Group;   // remove String1 from the group
+PopButton.Parent := Group; // remove PopButton from the group
+
+Group.ExitChange;          // Finished altering items
+</code>
 </descr>
 <seealso>
+  <link id="TMUIGroup.ExitChange">ExitChange()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIGroup.ExitChange">
-<short></short>
+<short>Terminates <link id="TMUIGroup.InitChange">InitChange</link> state.</short>
 <descr>
+<p><b>Example:</b></p>
+<code>
+Group.InitChange;          // Prepare Group to add/remove items
+
+Text1.Parent := nil;       // remove Text1 from the group
+String1.Parent := Group;   // remove String1 from the group
+PopButton.Parent := Group; // remove PopButton from the group
+
+Group.ExitChange;          // Finished altering items
+</code>
 </descr>
 <seealso>
+  <link id="TMUIGroup.InitChange">InitChange()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.ActivePage">
-<short></short>
+<short>Set (or get) the active page of a page group.</short>
 <descr>
+<p>
+Only this active page is displayed, all others are hidden. Only when <link id="TMUIgroup.PageMode">PageMode</link> = True</p>
+<p>
+The value may range from 0 (for the first child)
+to <link id="TMUIGroup.Childs">Childs</link>.Count - 1 (for the last child). Children are
+adressed in the order of addign to the Group:</p>
+<code>
+Page0.Parent := Group;
+Page1.Parent := Group;
+Page2.Parent := Group;
+Page3.Parent := Group;
+</code>
+<p>Special Value:</p>
+<dl>
+  <dt>MUIV_Group_ActivePage_First</dt><dd>Go to first page</dd>
+  <dt>MUIV_Group_ActivePage_Last</dt><dd>Go to last page</dd>
+  <dt>MUIV_Group_ActivePage_Prev</dt><dd>Go to the page before current page</dd>
+  <dt>MUIV_Group_ActivePage_Next</dt><dd>Go to the page after current page</dd>
+  <dt>MUIV_Group_ActivePage_Advance</dt><dd>Go to the page after current page</dd>
+</dl>
+<p>When changed the Event <link id="TMUIGroup.OnPageChange">OnPageChange</link> is triggered</p>
 </descr>
 <seealso>
+  <link id="TMUIGroup.Childs">Childs</link>
+  <link id="TMUIgroup.PageMode">PageMode</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.Columns">
-<short></short>
+<short>Indicate number of columns in a two dimensional group.</short>
 <descr>
+<p>
+If you use this tag, the total number of children must
+be dividable by the number of columns.</p>
+<p>
+The children will be positioned in a two dimensional
+array, e.g. allowing easy creation of button fields
+(maybe for calculator).</p>
+<p>
+When MUI layouts two-dimensional groups, it does
+actually two layout calculations, one for the rows
+and one the columns. Parameters like weights and
+dimensions are handled this way:
+</p>
+<ul>
+<li>the minimum width of a column/row is the maximum minimum width of all objects in this column/row.</li>
+<li>the maximum width of a column/row is the minimum maximum width of all objects in this column/row.</li>
+<li>the weight of a column/row is the sum of all objects in this column/row.</li>
+</ul>
+<p>Actually, there is no difference if you use
+Columns or <link id="TMUIGroup.Rows">Rows</link>.</p>
+<p><b>Examples:</b></p>
+<code>
+Group.Columns := 2;
+Label1.Parent := Group;
+String1.Parent := Group;
+Label2.Parent := Group;
+String2.Parent := Group;
+Label3.Parent := Group;
+String3.Parent := Group;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIGroup.Rows">Rows</link>
+  <link id="TMUIGroup.Horiz">Horiz</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.Horiz">
-<short></short>
+<short>Indicate whether the objects in this group shall be layouted horizontally or vertically.</short>
 <descr>
+<p>This is the easy way of telling your group how
+it has to look like. If you want two-dimensional
+groups, you have to use <link id="TMUIGroup.Columns">Columns</link>
+or <link id="TMUIGroup.Rows">Rows</link>.</p>
+<p>Defaults to False.</p>
+<p><b>Examples:</b></p>
+<code>
+Group.Horiz := True;
+Obj1.Parent := Group;
+Obj2.Parent := Group;
+Obj2.Parent := Group;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIGroup.Rows">Rows</link>
+  <link id="TMUIGroup.Columns">Columns</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.HorizSpacing">
-<short></short>
+<short>Number of pixels to be inserted between horizontal elements of a group.</short>
 <descr>
+  Please use this tag wisely, you will override the user's prefered default setting!
 </descr>
 <seealso>
+  <link id="TMUIGroup.Spacing">Spacing</link>
+  <link id="TMUIGroup.VertSpacing">VertSpacing</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.PageMode">
-<short></short>
+<short>Make the current group a page group.</short>
 <descr>
+<p>
+Page groups always display only one of their children.
+Which one can be adjusted with the <link id="TMUIGroup.ActivePage">ActivePage</link>
+attribute.</p>
+<p>
+Imagine you have a preferences window with several different
+pages, e.g. the MUI preferences with object, frame, image,
+font, screen, keyboard and system prefs. Instead of one
+separate window for each group, you could put all pages into
+a page group and have a cycle gadget for page switching.
+This will make your program easier to use since the user
+won't have to handle a lot of windows. However, he will not
+be able to work with more than one page at the same time.</p>
+<p>
+Sizes are calculated as follows:</p>
+<ul>
+<li>The minimum width/height of a page group is the maximum minimum width/height of all its children.</li>
+<li>The maximum width/height of a page group is the minimum maximum width/height of all its children.</li>
+<li>When the maximum width/height of a child in a page group is
+smaller than the minimum width/height of the page group
+(since it contains another child with big minimum width/height),
+the child be centered.</li>
+</ul>
+<p>
+Page groups are not limited in depth, children of a page
+group may of course be other page groups.</p>
+<p>
+If you want to have a gadget only visible under certain
+conditions, you could make a page group containing this
+gadget and an empty rectangle object.</p>
+<p>
+If you want TAB cycling for the objects in a page group,
+simply include all objects in the cycle chain (as if
+they all were visible at the same time).</p>
 </descr>
 <seealso>
+  <link id="TMUIGroup.ActivePage">ActivePage</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.Rows">
-<short></short>
+<short>Number of rows in a two dimensional group.</short>
 <descr>
+<p>
+If you use this tag, the total number of children must
+be dividable by the number of rows.</p>
+<p>
+The children will be positioned in a two dimensional
+array, e.g. allowing easy creation of button fields
+(maybe for calculator).</p>
+<p>
+When MUI layouts two-dimensional groups, it does
+actually two layout calculations, one for the rows
+and one the columns. Parameters like weights and
+dimensions are handled this way:
+</p>
+<ul>
+<li>the minimum width of a column/row is the maximum minimum width of all objects in this column/row.</li>
+<li>the maximum width of a column/row is the minimum maximum width of all objects in this column/row.</li>
+<li>the weight of a column/row is the sum of all objects in this column/row.</li>
+</ul>
+<p>Actually, there is no difference if you use
+<link id="TMUIGroup.Columns">Columns</link> or Rows.</p>
 </descr>
 <seealso>
+  <link id="TMUIGroup.Columns">Columns</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.SameHeight">
-<short></short>
+<short>Indicate that all children of this group shall have the same height.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIGroup.SameSize">SameSize</link>
+  <link id="TMUIGroup.SameWidth">SameWidth</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.SameSize">
-<short></short>
+<short>This is a shorthand for <link id="TMUIGroup.SameWidth">SameWidth</link> and
+        <link id="TMUIGroup.SameHeight">SameHeight</link>, it sets both of these
+        attributes at once.</short>
 <descr>
+<p>
+Using SameSize, you won't need to think
+if your group is horizontal or vertical, both
+cases are handled automatically.</p>
+<p>
+Forcing all objects of a group to be the same size
+is e.g. useful for a row of buttons. It's visually
+more attractive when these buttons have equal sizes
+instead of being just as big as the text within.
+</p>
+<p><b>Example:</b></p>
+<code>
+// three Buttons, same size
+Group.Horiz := True;
+Group.SameSize := True;
+But1.Parent := Group;
+But2.Parent := Group;
+But3.Parent := Group;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIGroup.SameWidth">SameWidth</link>
+  <link id="TMUIGroup.SameHeight">SameHeight</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.SameWidth">
-<short></short>
+<short>Indicate that all children of this group shall have the same width.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIGroup.SameSize">SameSize</link>
+  <link id="TMUIGroup.SameHeight">SameHeight</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.Spacing">
-<short></short>
+<short>This is a shorthand for <link id="TMUIGroup.HorizSpacing">HorizSpacing</link> and
+<link id="TMUIGroup.VertSpacing">VertSpacing</link>, it sets both of these
+attributes at once.</short>
 <descr>
+<p>
+Using Spacing, you won't need to think
+if your group is horizontal or vertical, both
+cases are handled automatically.</p>
+<p>
+Note that setting a spacing value for a group
+overrides the user's default settings. Please
+use it only if you have a good reason.</p>
+<p><b>Example:</b></p>
+<code>
+// no space between Obj1 and Obj2
+Group.Horiz := True;
+Group.Spacing := 0;
+Obj1.Parent := Group;
+Obj2.Parent := Group;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIGroup.HorizSpacing">HorizSpacing</link>
+  <link id="TMUIGroup.VertSpacing">VertSpacing</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.VertSpacing">
-<short></short>
+<short>Number of pixels to be inserted between vertical elements of a group.</short>
 <descr>
+Please use this field wisely, you will override the user's prefered default setting!
 </descr>
 <seealso>
+  <link id="TMUIGroup.HorizSpacing">HorizSpacing</link>
+  <link id="TMUIGroup.Spacing">Spacing</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIGroup.OnPageChange">
-<short></short>
+<short>Event when <link id="TMUIGroup.ActivePage">ActivePage</link> was changed.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIGroup.ActivePage">ActivePage</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIListView">
-<short></short>
+<short>ListView attaches a scrollbar and input handling to a <link id="MUIClass.List.TMUIList">List</link>.</short>
 <descr>
+<p>
+It's important to know that MUI makes a difference
+between a <link id="MUIClass.List.TMUIList">List</link> and a listview. A <link id="MUIClass.List.TMUIList">List</link> is just a
+collection of some entries and is part of a listview,
+which attaches a scrollbar and input handling to
+the <link id="MUIClass.List.TMUIList">List</link>.
+</p>
 </descr>
 <seealso>
+  <link id="MUIClass.List.TMUIList">List</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIListView.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIListView.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIListView.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a ListView object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIListView.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroys Listview Object, usually not needed</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIListView.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIListView.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect events after MUI item creation</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIListView.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroys the MUI item, usually no need to call directly</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIListView.ClearObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Clear MUI item, when destroyed by it's parent, usually no need to call directly</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIListView.ClickColumn">
-<short></short>
+<short>Number of the column where the user clicked.</short>
 <descr>
+When using a multi column list, this attribute contains the number of
+the column where the user clicked.
 </descr>
 <seealso>
+  <link id="TMUIListView.DefClickColumn">DefClickColumn</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.DefClickColumn">
-<short></short>
+<short>Define <link id="TMUIListView.ClickColumn">ClickColumn</link> when Enter is pressed</short>
 <descr>
+When the listview is controlled with the keyboard and the user
+presses Return, the value given here will be used as default
+for <link id="TMUIListView.ClickColumn">ClickColumn</link>.
 </descr>
 <seealso>
+  <link id="TMUIListView.ClickColumn">ClickColumn</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.DragType">
-<short></short>
+<short>Define/Enable Drag'n'Drop style</short>
 <descr>
+<p>
+If you want the user to be able to drag items out of
+your list, you must set this for the listview class.
+Currently, only one drag type is defined.</p>
+<p>Inputs:</p>
+<dl>
+  <dt>MUIV_Listview_DragType_None</dt><dd>Drag'n' Drop disabled</dd>
+  <dt>MUIV_Listview_DragType_Immediate</dt><dd>Drag'n' Drop enabled</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -457,17 +670,33 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.Input">
-<short></short>
+<short>[i] List accepts Input or is ReadOnly</short>
 <descr>
+<p>Setting this to False will result in a read only
+list view. Defaults to True.</p>
 </descr>
 <seealso>
+  <link id="TMUIListView.MultiSelect">MultiSelect</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.List">
-<short></short>
+<short>Every listview needs a list object defined here as child.</short>
 <descr>
+<p>As every other child, it will get disposes when its parent object is disposed.</p>
+<p><b>Example:</b></p>
+<code>
+ListView := TMUIListView.Create;
+with ListView do
+begin
+  Background.Spec := MUIV_Frame_ReadList;
+  List := TMUIList.Create;
+  List.Input := False;
+  List.Format := ',,';
+  Parent := Win;
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -475,17 +704,45 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.MultiSelect">
-<short></short>
+<short>[i] Configure Multi Select Feature</short>
 <descr>
+<p>Four possibilities exist for a listviews multi select capabilities:</p>
+<dl>
+  <dt>MUIV_Listview_MultiSelect_None</dt><dd>The listview cannot multiselect at all.</dd>
+  <dt>MUIV_Listview_MultiSelect_Default</dt><dd>The multi select type (with or without shift) depends on the users preferences setting.</dd>
+  <dt>MUIV_Listview_MultiSelect_Shifted</dt><dd>Overrides the users prefs, multi selecting only together with shift key.</dd>
+  <dt>MUIV_Listview_MultiSelect_Always</dt><dd>Overrides the users prefs, multi selecting without shift key.</dd>
+</dl>
+<p>Please do <b>not</b> override the users prefs unless you have a good reason!</p>
 </descr>
 <seealso>
+  <link id="MUIClass.List.TMUIList.OnMultiTest">List.OnMultiTest</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.ScrollerPos">
-<short></short>
+<short>[i] Specifies the position of a listviews scrollbar.</short>
 <descr>
+<p>If you specify MUIV_Listview_ScrollerPos_None, your listview
+wont get a scroller at all and look much like a list object
+alone. However, listviews without scroller are still more
+powerful than list objects as they feature e.g. drag'n'drop
+possibilities.
+</p>
+<p>
+Creating listviews without a scrollbar makes sense if you
+want to have the scrollbar somewhere else, e.g. outside
+of a horizontal virtual group where the listview resides.
+This technique allows the creation of horizontally
+scrollable listviews.</p>
+<p>Values:</p>
+<dl>
+  <dt>MUIV_Listview_ScrollerPos_Default</dt><dd>Scroller as defined in Prefs</dd>
+  <dt>MUIV_Listview_ScrollerPos_Left</dt><dd>Scroller on Left Side</dd>
+  <dt>MUIV_Listview_ScrollerPos_Right</dt><dd>Scroller on Right side</dd>
+  <dt>MUIV_Listview_ScrollerPos_None</dt><dd>Disable Scroller</dd>
+</dl>
 </descr>
 <seealso>
 </seealso>
@@ -493,35 +750,27 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.OnSelectChange">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event when selected Entry is changed</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.OnClick">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event when an Entry is clicked</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIListView.OnDoubleClick">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event when an Entry is double clicked</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIRegister">
-<short></short>
+<short>Register class is a special class for handling multi page groups.</short>
 <descr>
+Using this class, you only have to supply an array
+of strings, describing the children's titles. How these
+titles are visualized, either with a cycle gadget of with
+a register-like group, is the choice of the user.
 </descr>
 <seealso>
 </seealso>
@@ -529,49 +778,61 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRegister.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRegister.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIRegister.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Register object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIRegister.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRegister.Frame">
-<short></short>
+<short>Frame the Register Group</short>
 <descr>
+<p>
+Specify True if your want your group to be framed. If the
+user specified cycle gadget looking, you will get a group
+frame, otherwise you won't get any frame at all since
+register groups are framed anyway.</p>
 </descr>
 <seealso>
+  <link id="TMUIRegister.Titles">Titles</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRegister.Titles">
-<short></short>
+<short>Array of Strings defining the Names for the Register.</short>
 <descr>
+<p>
+Array of strings describing the titles of
+your groups children. This array must contain exactly as
+many as entries as your group has children.
+</p>
+<p><b>Example:</b></p>
+<code>
+Reg := TMUIRegister.create;
+with Reg do
+begin
+  Titles := ['Eyes', 'Ears', 'Noses', 'Feet'];
+  Parent := Win;
+end;
+EyeGroup.Parent := Reg;
+EarsGroup.Parent := Reg;
+NosesGroup.Parent := Reg;
+FeetGroup.Parent := Reg;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -579,8 +840,19 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIVirtGroup">
-<short></short>
+<short>Virtgroup class generates special kinds of group objects whose children can be a lot larger than the actual group.</short>
 <descr>
+<p>
+The group acts as a (small) window through which a rectangle area of its contents is visible.</p>
+<p>
+During layout, MUI tries to place the children of a virtual
+group in the visible part. If this is impossible, space is
+extended as long as all children fit.</p>
+<p>
+Virtual groups themselves don't offer any scrollbars to allow
+user interaction. These things are handled by scrollgroup class.
+Usually, you don't want to use a virtual group without a
+scrollgroup.</p>
 </descr>
 <seealso>
 </seealso>
@@ -588,76 +860,93 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIVirtGroup.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIVirtGroup.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIVirtGroup.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Virtgroup object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIVirtGroup.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIVirtGroup.VirtHeight">
-<short></short>
+<short>Read the virtual height of a virtual group.</short>
 <descr>
+This attribute is quite senseless, better use
+a scrollgroup object to control the virtual group.
 </descr>
 <seealso>
+  <link id="TMUIVirtGroup.VirtWidth">VirtWidth</link>
+  <link id="TMUIVirtGroup.VirtLeft">VirtLeft</link>
+  <link id="TMUIVirtGroup.VirtTop">VirtTop</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIVirtGroup.VirtWidth">
-<short></short>
+<short>Read the virtual width of a virtual group.</short>
 <descr>
+This attribute is quite senseless, better use
+a scrollgroup object to control the virtual group.
 </descr>
 <seealso>
+  <link id="TMUIVirtGroup.VirtHeight">VirtHeight</link>
+  <link id="TMUIVirtGroup.VirtLeft">VirtLeft</link>
+  <link id="TMUIVirtGroup.VirtTop">VirtTop</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIVirtGroup.VirtLeft">
-<short></short>
+<short>Get/set the virtual left edge of a virtual group.</short>
 <descr>
+<p>
+The left edge will automatically be clipped to
+be between 0 and (VirtualWidth-DisplayWidth).</p>
+<p>
+This attribute is quite senseless, better use
+a scrollgroup object to control the virtual group.</p>
 </descr>
 <seealso>
+  <link id="TMUIVirtGroup.VirtHeight">VirtHeight</link>
+  <link id="TMUIVirtGroup.VirtWidth">VirtWidth</link>
+  <link id="TMUIVirtGroup.VirtTop">VirtTop</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIVirtGroup.VirtTop">
-<short></short>
+<short>Get/set the virtual top edge of a virtual group.</short>
 <descr>
+<p>
+The top edge will automatically be clipped to
+be between 0 and (VirtualTop-DisplayTop).</p>
+<p>
+This attribute is quite senseless, better use
+a scrollgroup object to control the virtual group.</p>
 </descr>
 <seealso>
+  <link id="TMUIVirtGroup.VirtHeight">VirtHeight</link>
+  <link id="TMUIVirtGroup.VirtWidth">VirtWidth</link>
+  <link id="TMUIVirtGroup.VirtLeft">VirtLeft</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIVirtGroup.Input">
-<short></short>
+<short>Specify if a virtual group should be moveable by clicking into it and dragging the mouse.</short>
 <descr>
+  Defaults to True.
 </descr>
 <seealso>
 </seealso>
@@ -665,8 +954,14 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIScrollGroup">
-<short></short>
+<short>Scrollgroup objects can be used to supply virtual groups with scrollbars.</short>
 <descr>
+These scrollbars automatically adjust according
+to the virtual and display sizes of the underlying virtual
+group. When scrolling is unnecessary (i.e. the virtual group
+is completely visible), the scrollers might get disabled
+or even disappear completely, depending on the users
+preferences settings.
 </descr>
 <seealso>
 </seealso>
@@ -674,139 +969,118 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScrollGroup.BeforeCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Started before the MUI item is created to create it's Children</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScrollGroup.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIScrollGroup.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIScrollGroup.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIScrollGroup.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a ScrollGroup object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIScrollGroup.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy ScrollGroup item, usually not needed to destroy, when Parent is assigned</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIScrollGroup.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIScrollGroup.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIScrollGroup.ClearObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Clear the MUI item, if destroyed by Parent</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIScrollGroup.HorizBar">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Link to the horizontal Scrollbar</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIScrollGroup.VertBar">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Link to the vertical Scrollbar</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIScrollGroup.Contents">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Contents of the ScrollGroup use it as Parent target</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIScrollGroup.FreeHoriz">
-<short></short>
+<short>[i] Specify if a scroll group should be horizontally moveable.</short>
 <descr>
+  Defaults to True;
 </descr>
 <seealso>
+  <link id="TMUIScrollGroup.FreeVert">FreeVert</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIScrollGroup.FreeVert">
-<short></short>
+<short>[i] Specify if a scroll group should be vertically moveable.</short>
 <descr>
+  Defaults to True;
 </descr>
 <seealso>
+  <link id="TMUIScrollGroup.FreeHoriz">FreeHoriz</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIScrollGroup.UseWinBorder">
-<short></short>
+<short>Control ScrollGroup by the Window Scrollbars</short>
 <descr>
+<p>
+If you set this to True, MUI will automatically make this
+scrollgroup controllable from gadgets in the window border.
+MUI will use the right border scroller if the virtual
+groups is allowed to move vertically and the bottom
+border scroller if the virtual group is allowed to move
+horizontally.</p>
+<p>
+You must set the corresponding window attributes
+(see below) for your parent window to use this feature.</p>
 </descr>
 <seealso>
+  <link id="MUIClass.Window.TMUIWindow.UseBottomBorderScroller">Window.UseBottomBorderScroller</link>
+  <link id="MUIClass.Window.TMUIWindow.UseLeftBorderScroller">Window.UseLeftBorderScroller</link>
+  <link id="MUIClass.Window.TMUIWindow.UseRightBorderScroller">Window.UseRightBorderScroller</link>
+  <link id="TMUIScrollGroup.FreeHoriz">FreeHoriz</link>
+  <link id="TMUIScrollGroup.FreeVert">FreeVert</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIRadio">
-<short></short>
+<short>Radio class generates radio button gadgets.</short>
 <descr>
+They do the same job as cycle gadgets and
+eat up more window space, maybe that's the reason
+why so few of them can be found in existing
+applications.
 </descr>
 <seealso>
 </seealso>
@@ -814,49 +1088,45 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRadio.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIRadio.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIRadio.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIRadio.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Radio group object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIRadio.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRadio.Active">
-<short></short>
+<short>Define the number of the active entry in the radio gadgets.</short>
 <descr>
+<p>
+Valid range is from 0 for the first entry to NumEntries-1 for the last.</p>
+<p>
+Setting Active causes the gadget to
+be updated. On the other hand, when the user
+plays around with the gadget, Active
+will always reflects the current state.</p>
+<p>When the user select a radio item the Event <link id="TMUIRadio.OnActiveChange">OnActiveChange</link> is triggered.</p>
+<p><b>Example:</b></p>
+<code>
+  Radio.Active := 3;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -864,85 +1134,129 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIRadio.Entries">
-<short></short>
+<short>[i] Define what entries shall be displayed in your radio gadget.</short>
 <descr>
+<p>
+Supply a string list of Names shown next to the Radio items.</p>
+<p>
+Remember that radio gadget entries may contain any
+text formatting code such as bold, italic or
+underlined characters.</p>
+<p>
+By default, MUI will place the entries vertically
+below each other. But since Radio is a subclass
+of group class, you can use group layout attributes
+to adjust the layout to your needs, e.g.</p>
+<code>Horiz := True;</code>
+<p>
+for a horizontal radio button row or even Rows/Columns
+for a more fancy layout.
+If you use these layout features, keep in mind that
+Radio creates exactly one child object for each
+entry.</p>
+<p><b>Example:</b></p>
+<code>
+Radio := TMUIRadio.Create;
+with Radio do
+begin
+  Entries := ['normal', 'highlight', '3-dimensional'];
+  OnActiveChange := @RadioEvent;
+  Parent := Win;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="TMUIRadio.Active">Active</link>
+  <link id="MUIClass.Area.TMUIText.Contents">Text.Contents</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIRadio.OnActiveChange">
-<short></short>
+<short>Event triggered when <link id="TMUIRadio.Active">Active</link> is changed</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIRadio.Active">Active</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUICycle">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Cycle class generates the well known combobox gadget.</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUICycle.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUICycle.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUICycle.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Event after MUI item Creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUICycle.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a Cycle object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUICycle.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUICycle.Active">
-<short></short>
+<short>This attributes defines the number of the active entry in the cycle gadgets.</short>
 <descr>
+<p>
+Valid range is from 0 for the first entry to NumEntries-1 for the last.</p>
+<p>
+Setting Active causes the gadget to
+be updated. On the other hand, when the user
+plays around with the gadget, Active
+will always reflects the current state.</p>
+<p>
+Using MUIV_Cycle_Active_Next and MUIV_Cycle_Active_Prev
+as attribute value during set causes the gadget to
+cycle through its entries in the given direction.</p>
+<p>If the user changes the active Entry the Event <link id="TMUICycle.OnActiveChange">OnActiveChange</link> will be triggered</p>
 </descr>
 <seealso>
+  <link id="TMUICycle.Entries">Entries</link>
+  <link id="TMUICycle.OnActiveChange">OnActiveChange</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUICycle.Entries">
-<short></short>
+<short>[i] Entries shall be displayed in your cycle gadget. </short>
 <descr>
+<p>
+Remember that cycle gadget entries may contain any
+text formatting code such as bold, italic or
+underlined characters.</p>
+<p>
+Cycle gadgets set the preparse string for all entries
+to #27'c', this means that they will automatically
+appear centered. Of course you can override this by
+simply preceding your entries with own formatting code.</p>
+<p><b>Example:</b></p>
+<code>
+CYTitle := TMUICycle.Create;
+with CYTitle do
+begin
+  Entries := ['normal', 'highlight', '3-dimensional'];
+  OnActiveChange := @CycleEvent;
+  Parent := Win;
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -950,17 +1264,23 @@
 
 <!-- property Visibility: public -->
 <element name="TMUICycle.OnActiveChange">
-<short></short>
+<short>Event triggered when <link id="TMUICycle.Active">Active</link> is changed</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUICycle.Active">Active</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIColorAdjust">
-<short></short>
+<short>Allows to adjust a single color.</short>
 <descr>
+<p>Depending on the operating system, different
+kinds of gadgets are be used. Kickstart 2.x users might only
+receive an RGB slider triple, Kickstart 3.x users could get
+an additional colorwheel if available. However, the outfit
+of this class is not important for you as a programmer.</p>
 </descr>
 <seealso>
 </seealso>
@@ -968,103 +1288,144 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIColorAdjust.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIColorAdjust.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIColorAdjust.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIColorAdjust.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create ColorAdjust object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIColorAdjust.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIColorAdjust.RGB">
-<short></short>
+<short>Set or get the red/green/blue values all at once.</short>
 <descr>
+  You pass in / receive a pointer to three longwords containing the 32-bit red, green and blue values.
 </descr>
 <seealso>
+  <link id="TMUIColorAdjust.Red">Red</link>
+  <link id="TMUIColorAdjust.Green">Green</link>
+  <link id="TMUIColorAdjust.Blue">Blue</link>
+  <link id="TMUIColorAdjust.ModeID">ModeID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorAdjust.Red">
-<short></short>
+<short>Set or get the 32-bit red component of the adjusted color.</short>
 <descr>
+  Values range from 0 (no red) to $ffffffff (full red).
 </descr>
 <seealso>
+  <link id="TMUIColorAdjust.RGB">RFB</link>
+  <link id="TMUIColorAdjust.Green">Green</link>
+  <link id="TMUIColorAdjust.Blue">Blue</link>
+  <link id="TMUIColorAdjust.ModeID">ModeID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorAdjust.Green">
-<short></short>
+<short>Set or get the 32-bit green component of the adjusted color.</short>
 <descr>
+  Values range from 0 (no green) to $ffffffff (full green).
 </descr>
 <seealso>
+  <link id="TMUIColorAdjust.Red">Red</link>
+  <link id="TMUIColorAdjust.RGB">RGB</link>
+  <link id="TMUIColorAdjust.Blue">Blue</link>
+  <link id="TMUIColorAdjust.ModeID">ModeID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorAdjust.Blue">
-<short></short>
+<short>Set or get the 32-bit blue component of the adjusted color.</short>
 <descr>
+  Values range from 0 (no blue) to $ffffffff (full blue).
 </descr>
 <seealso>
+  <link id="TMUIColorAdjust.Red">Red</link>
+  <link id="TMUIColorAdjust.Green">Green</link>
+  <link id="TMUIColorAdjust.RGB">RGB</link>
+  <link id="TMUIColorAdjust.ModeID">ModeID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorAdjust.ModeID">
-<short></short>
+<short>Which screen mode the color shall be adjusted.</short>
 <descr>
+<p>
+The object
+queries the display data base for some mode attributes
+(such as supported number of red/green/blue bits) and
+adjusts its display accordingly, giving the user an
+idea of what colors are supported.</p>
+<p>
+Omitting this attribute does not affect the functionality
+of a coloradjust object. The user will still be able to
+adjust a color. However, if you know the ModeID, you
+should supply it.</p>
+<p><b>Example:</b></p>
+<code>
+  ColorAdjust.ModeID := GetVPModeID(ViewPort);
+</code>
 </descr>
 <seealso>
+  <link id="TMUIColorAdjust.RGB">RGB</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIColorAdjust.OnColorChange">
-<short></short>
-<descr>
-</descr>
+<short>Even triggered when the Color is changed</short>
 <seealso>
+  <link id="TMUIColorAdjust.RGB">RGB</link>
+  <link id="TMUIColorAdjust.Red">Red</link>
+  <link id="TMUIColorAdjust.Green">Green</link>
+  <link id="TMUIColorAdjust.Blue">Blue</link>
+  <link id="TMUIColorAdjust.ModeID">ModeID</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIPalette">
-<short></short>
+<short>Set colors for a complete palette</short>
 <descr>
+<p>
+Palette class generates a (big) group of objects, alltogether
+making up a powerful palette requester. Due to the new color
+selection schemes of Kickstart 3.x, you won't get a "traditional"
+palette requester with 2^n fields to fill in. These things
+really stop making sense on nice 256 or true color screens.</p>
+<p>
+Instead, MUI's palette class allows defining a list of colors
+that the user should be able to adjust. Within a public screen
+manager, this would e.g. be the DrawInfo pens for a specific
+screen, within a terminal program maybe the eight ANSI colors.</p>
+<p>
+Palette class uses a listview to let the user choose the
+desired color, a coloradjust object to adjust this color
+and a colorfield object that always shows the current color.</p>
+<p>
+The user will also be able to concatenate several colors
+in the list, defining a single color for several entries.</p>
 </descr>
 <seealso>
 </seealso>
@@ -1072,60 +1433,92 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPalette.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPalette.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPalette.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create Palette object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPalette.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIPalette.Entries">
-<short></short>
+<short>[i] Specify the colors that the user should be able to adjust with this palette object.</short>
 <descr>
+<p>You supply an array of MUI_Palette_Structures here, each entry defining one color:</p>
+<code>
+TMUI_Palette_Entry = record
+  mpe_ID: LongInt;
+  mpe_Red: LongWord;
+  mpe_Green: LongWord;
+  mpe_Blue: LongWord;
+  mpe_Group: LongWord;
+end;
+</code>
+<dl>
+  <dt>mpe_ID</dt><dd>This entry is not used by palette class, you can
+                    put in whatever you want, except the value
+                    MUIV_Palette_Entry_End (-1),
+                    which terminates the array.</dd>
+  <dt>mpe_Red</dt><dd>32-bit red component of the current color. This
+                      field will be changed by palette class whenever
+                      the user edits the color.</dd>
+  <dt>mpe_Green</dt><dd>32-bit green component of the current color. This
+                      field will be changed by palette class whenever
+                      the user edits the color.</dd>
+  <dt>mpe_Blue</dt><dd>32-bit blue component of the current color. This
+                      field will be changed by palette class whenever
+                      the user edits the color.</dd>
+  <dt>mpe_Group</dt><dd>Entries with the same mpe_Group value are
+                    concatenated. Whenever a new color in the
+                    listview is selected, all other colors with
+                    the same mpe_Group get selected as well and
+                    get adjusted all at once.
+                    Entry concatenation can be changed by the user,
+                    as long as you don't disable this feature with
+                    the <link id="TMUIPalette.Groupable">Groupable</link> attribute.</dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIPalette.Names">Names</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPalette.Groupable">
-<short></short>
+<short>Enables/disables palette color grouping.</short>
 <descr>
+  Defaults to True.
 </descr>
 <seealso>
+  <link id="TMUIPalette.Entries">Entries</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPalette.Names">
-<short></short>
+<short>Specify the names of a palette objects color entries.</short>
 <descr>
+<p>
+Without names, the color listview just displays
+"Color n" for each entry. If you supply an array
+of names here, they are displayed instead. The
+names array must have as many entries as the
+array of TMUI_Palette_Entry structures (without
+its terminator).</p>
 </descr>
 <seealso>
+  <link id="TMUIPalette.Entries">Entries</link>
 </seealso>
 </element>
 
