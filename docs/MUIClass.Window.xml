@@ -9,7 +9,7 @@
 -->
 
 <module name="MUIClass.Window">
-<short></short>
+<short>Window class</short>
 <descr>
 </descr>
 
@@ -141,7 +141,7 @@
 
 <!-- enumeration type Visibility: default -->
 <element name="TCloseAction">
-<short></short>
+<short>What should happen with a window when a close event is triggered</short>
 <descr>
 </descr>
 <seealso>
@@ -150,42 +150,63 @@
 
 <!-- enumeration value Visibility: default -->
 <element name="TCloseAction.caNone">
-<short></short>
+<short>Do nothing, keep window open.</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TCloseAction.caClose">
-<short></short>
+<short>Close/Hide the Window, if this is the MainWindow of the Application, the Application will terminate</short>
 </element>
 
 <!-- enumeration value Visibility: default -->
 <element name="TCloseAction.caFree">
-<short></short>
+<short>Close and Destroy the Window object, <b>never</b> use this for the MainWindow</short>
 </element>
 
 <!-- procedure type Visibility: default -->
 <element name="TCloseReqEvent">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Event type for Close Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TCloseReqEvent.Sender">
-<short></short>
+<short>Window which sends the Close Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TCloseReqEvent.CloseAction">
-<short></short>
+<short>Return what should happen when someone try to close the window: Close/Free or keep the window open</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIWindow">
-<short></short>
+<short>All kind of windows for the MUI Objects</short>
 <descr>
+<p>
+Objects of window class are used to generate windows and
+supply a place where MUI gadgets feel well. It handles
+the complicated task of window resizing fully automatic,
+you don't need to worry about that.</p>
+<p>
+Windows are children of an application, you cannot use
+a window object without having a parent application
+object. On the other side, the gadgets in a window
+are children of the window, you cannot use MUI gadgets
+without having a parent MUI window.</p>
+<p>
+Creating a window object does not mean to open it
+instantly. This is done later by setting the window's
+<link id="TMUIWindow.Open">Open</link> attribute. If your application has
+several windows, the usual way is to create them all
+at once at startup time and open/close it later
+just by setting <link id="TMUIWindow.Open">Open</link>.</p>
+<p>
+There is no difference in talking to gadgets whether
+their parent window is open or not. If you e.g. set
+the contents of a string gadget in an open window,
+the gadget will refresh immediately. If the window is
+closed, the gadget just remembers its new setting
+and displays it later.</p>
 </descr>
 <seealso>
 </seealso>
@@ -193,221 +214,284 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIWindow.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIWindow.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Childs">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>List of Children</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIWindow.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create Window object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIWindow.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy Window object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI Item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.AddChild">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Add a Child to the Window, do not use directly but assign the Window as Parent to an Object</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIWindow.AddChild.AChild">
-<short></short>
+<short>Child to Add</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.RemoveChild">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Remove the Child from the Window, do not use directly but assign nil as Parent to the Object to remove</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIWindow.RemoveChild.AChild">
-<short></short>
+<short>Child To Remove</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.Show">
-<short></short>
+<short>Open the Window (shortcut to <link id="TMUIWindow.Open">Open</link> := True)</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Open">Open</link>
+  <link id="TMUIWindow.Close">Close()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.Close">
-<short></short>
+<short>Close the Window (shortcut to <link id="TMUIWindow.Open">Open</link> := False)</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Open">Open</link>
+  <link id="TMUIWindow.Show">Show()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.GroupObj">
-<short></short>
+<short>The MUI object of the First group object in the Window</short>
 <descr>
+  MUIClass will automatically add a Groupobject into the window. If you assign
+  the window as Parent to an object it will be added as child to this Group Object.
+  The only Property you have influence is <link id="TMUIWindow.Horizontal">Horizontal</link>
+  which turns the Group object layout to vertical or horizontal
 </descr>
 <seealso>
+  <link id="TMUIWindow.Horizontal">Horizontal</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Horizontal">
-<short></short>
+<short>The objects in this first group shall be layouted horizontally or vertically. </short>
 <descr>
+  Defaults to False.
+  It has the same function like <link id="MUIClass.Group.TMUIGroup">Group</link>.<link id="MUIClass.Group.TMUIGroup.Horiz">Horiz</link>
 </descr>
 <seealso>
+  <link id="MUIClass.Group.TMUIGroup.Horiz">Group.Horiz</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.ScreenToBack">
-<short></short>
+<short>Put the window's screen to back.</short>
 <descr>
+  This command is only valid when the window is opened.
 </descr>
 <seealso>
+  <link id="TMUIWindow.ScreenToFront">ScreenToFront()</link>
+  <link id="TMUIWindow.ToFront">ToFront()</link>
+  <link id="TMUIWindow.ToBack">ToBack()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.ScreenToFront">
-<short></short>
+<short>Put the window's screen to front.</short>
 <descr>
+  This command is only valid when the window is opened.
 </descr>
 <seealso>
+  <link id="TMUIWindow.ScreenToBack">ScreenToBack()</link>
+  <link id="TMUIWindow.ToFront">ToFront()</link>
+  <link id="TMUIWindow.ToBack">ToBack()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.Snapshot">
-<short></short>
+<short>Snapshot (Remember) the window position</short>
 <descr>
+This is equal to the user clicking
+on the window's snapshot gadget.
+Snapshotting a window is only possible if it has a
+ <link id="TMUIWindow.ID">ID</link> different from zero.
 </descr>
 <seealso>
+  <link id="TMUIWindow.Unsnapshot">Unsnapshot()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.Unsnapshot">
-<short></short>
+<short>Unsnapshot (forget) the window.</short>
 <descr>
+This is equal to the user doubleclicking
+on the window's snapshot gadget.
 </descr>
 <seealso>
+  <link id="TMUIWindow.Unsnapshot">Snapshot()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.ToBack">
-<short></short>
+<short>Put the window to back.</short>
 <descr>
+  When the window is not currently open, this command does simply nothing.
 </descr>
 <seealso>
+  <link id="TMUIWindow.ScreenToFront">ScreenToFront()</link>
+  <link id="TMUIWindow.ScreenToBack">ScreenToBack()</link>
+  <link id="TMUIWindow.ToFront">ToFront()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIWindow.ToFront">
-<short></short>
+<short>Put the window to front.</short>
 <descr>
+  When the window is not currently open, this command does simply nothing.
 </descr>
 <seealso>
+  <link id="TMUIWindow.ScreenToFront">ScreenToFront()</link>
+  <link id="TMUIWindow.ScreenToBack">ScreenToBack()</link>
+  <link id="TMUIWindow.ToBack">ToBack()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Activate">
-<short></short>
+<short>Activate the Window</short>
 <descr>
+<p>
+Setting this to True will activate the window.
+Setting this to False has no effect.
+The attribute will change whenever the user
+activates/deactivates the window.</p>
+<p>
+Specifying False at object creation time will make
+the window open in an inactive state.</p>
+<p>If the window get activated the event <link id="TMUIWindow.OnActivate">OnActivate</link> gets triggered.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.OnActivate">OnActivate</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.ActiveObject">
-<short></short>
+<short>Set the active object in a window.</short>
 <descr>
+<p>Set the active object in a window as if the user
+would have activated it with the tab key. The
+object has to be in the cycle chain for this
+command to work.</p>
+<!--p>Sepcial Imputs:</p>
+<dl>
+  <dt>MUIV_Window_ActiveObject_None</dt><dd>Deactivate object</dd>
+  <dt>MUIV_Window_ActiveObject_Next</dt><dd>Activate next object in cycle chain</dd>
+  <dt>MUIV_Window_ActiveObject_Prev</dt><dd>Activate previous object in cycle chain</dd>
+</dl-->
+<p><b>Example:</b></p>
+<code>
+Window.ActiveObject := OkayButton; // Set focus to OK Button
+</code>
 </descr>
 <seealso>
+  <link id="TMUIWindow.DefaultObject">DefaultObject</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.DefaultObject">
-<short></short>
+<short>The default object in a window receives keyboard input as long as no other object is active.</short>
 <descr>
+Good candidates
+for default objects are e.g. lonely listviews. Making
+such a listview the default object will allow the user
+to control it immediately without the need of several
+tab strokes for activation.
 </descr>
 <seealso>
+  <link id="TMUIWindow.ActiveObject">ActiveObject</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Open">
-<short></short>
+<short>This little attribute can be used to open and close a window.</short>
 <descr>
+<p>
+When opening a window, MUI does lots of
+stuff to calculate sizes and positions of all
+gadgets. Minimum and maximum window sizes will be
+adjusted automatically.</p>
+<p>
+When the minimum size of a window is too big to fit
+on the screen, MUI tries to reduce font sizes and
+does a new calculation. You should always design
+your windows to fit on a 640*200 screen with
+all fonts set to topaz/8.</p>
+<p>
+When a window is closed (and you specified a
+<link id="TMUIWindow.ID">ID</link>), MUI remembers its position
+and size and uses these values during the next
+opening.</p>
+<p>After setting Open to True, you should
+test if MUI was able to open the window by getting
+the attribute again. If you don't and if this was
+the only window of your application, the user won't
+be able to do any input and your application will
+seem to hang.</p>
+<p><b>Example:</b></p>
+<code>
+Window.Open := True;
+if not Window.Open then
+begin
+  MUI_Request(MUIApp, 0, 0, 0, 'OK', 'Failed to open window.');
+  Halt(20);
+end;
+</code>
+<p>The main Window will be automatically opened on <link id="TMUIApplication.Run">MUIApp.Run()</link></p>
 </descr>
 <seealso>
 </seealso>
@@ -415,71 +499,146 @@
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Screen">
-<short></short>
+<short>You can get a pointer to the parent screen of a window by getting this attribute.</short>
 <descr>
+<p>
+The result will be nil when the window is currently closed.</p>
+<p>
+Specifying Screen at object creation time or
+at runtime allows you to explicitly tell MUI
+on which screen the window should be opened. You normally
+won't need this feature and leave the decision about
+screens to the users preferences setting.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.PublicScreen">PublicScreen</link>
+  <link id="TMUIWindow.Window">Window</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Window">
-<short></short>
+<short>Obtain a pointer to the intuition Window structure</short>
 <descr>
+<p>
+Only possible when window is open. The Pointer could be used for asl.library
+requester calls</p>
+<p>
+Since the user can close your window any time
+(e.g. iconification), you must be prepared to
+receive a nil pointer as result.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Screen">Screen</link>
 </seealso>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIWindow.Sleep">
-<short></short>
+<short>Put a window to sleep.</short>
 <descr>
+<p>
+The window gets disabled and a busy pointer appears.
+The attribute contains a nesting count, if you tell
+your window to sleep twice, you will have to tell
+it to wake up twice too.</p>
+<p>
+A sleeping window cannot be resized.</p>
 </descr>
 <seealso>
+  <link id="TMUIApplication.Sleep">MUIApp.Sleep</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.AltLeftEdge">
-<short></short>
+<short>[i] Specify the alternate (zoomed) left position of a window.</short>
 <descr>
+<p>
+This defaults to the standard left position.</p>
+<p><b>Special Inputs:</b></p>
+<dl>
+  <dt>MUIV_Window_AltLeftEdge_Centered</dt><dd> </dd>
+  <dt>MUIV_Window_AltLeftEdge_Moused</dt><dd> </dd>
+  <dt>MUIV_Window_AltLeftEdge_NoChange</dt><dd> </dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIWindow.LeftEdge">LeftEdge</link>
+  <link id="TMUIWindow.AltTopEdge">AltTopEdge</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.AltTopEdge">
-<short></short>
+<short>[i] Specify the alternate (zoomed) top position of a window.</short>
 <descr>
+<p>
+This defaults to the standard top position.</p>
+<p><b>Special Inputs:</b></p>
+<dl>
+  <dt>MUIV_Window_AltTopEdge_Centered</dt><dd> </dd>
+  <dt>MUIV_Window_AltTopEdge_Moused</dt><dd> </dd>
+  <dt>MUIV_Window_AltTopEdge_Delta(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltTopEdge_NoChange</dt><dd> </dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIWindow.TopEdge">TopEdge</link>
+  <link id="TMUIWindow.AltLeftEdge">AltLeftEdge</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.AltHeight">
-<short></short>
+<short>[i] Specify the alternate (zoomed) height of a window.</short>
 <descr>
+<p>
+If not present, the alternate height will be the
+minimum height.</p>
+<p><b>Special Inputs:</b></p>
+<dl>
+  <dt>MUIV_Window_AltHeight_MinMax(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltHeight_Visible(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltHeight_Screen(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltHeight_Scaled</dt><dd> </dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Height">Height</link>
+  <link id="TMUIWindow.AltWidth">AltWidth</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.AltWidth">
-<short></short>
+<short>[i] Specify the alternate (zoomed) width of a window.</short>
 <descr>
+<p>
+If not present, the alternate width will be the minimum width.</p>
+<p><b>Special Inputs:</b></p>
+<dl>
+  <dt>MUIV_Window_AltWidth_MinMax(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltWidth_Visible(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltWidth_Screen(p)</dt><dd> </dd>
+  <dt>MUIV_Window_AltWidth_Scaled</dt><dd> </dd>
+</dl>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Width">Width</link>
+  <link id="TMUIWindow.AltHeight">AltHeight</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.AppWindow">
-<short></short>
+<short>[i] Make this window an AppWindow</short>
 <descr>
+  Setting this attribute to True will make this window an
+  AppWindow, the user will be able to drop icons on it.
+  The Event for it is still not implemented.
+  <!--You can hear about these events by listening to the
+  <link id="TMUIWindow.OnAppMessage">OnAppMessage</link> MUIA_AppMessage attribute.-->
 </descr>
 <seealso>
 </seealso>
@@ -487,26 +646,26 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.Backdrop">
-<short></short>
+<short>[i] Make the window a backdrop window.</short>
 <descr>
+Default is False.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.Borderless">
-<short></short>
+<short>[i] Make the window borderless.</short>
 <descr>
+Default is False.
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.CloseGadget">
-<short></short>
+<short>[i] Show/Hide Close gadge of window</short>
 <descr>
+Set this to False and your window will not
+have a close gadget. Default is True
 </descr>
 <seealso>
 </seealso>
@@ -514,8 +673,9 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.DepthGadget">
-<short></short>
+<short>[i] Enable or disable the depth gadget.</short>
 <descr>
+Defaults to True.
 </descr>
 <seealso>
 </seealso>
@@ -523,8 +683,12 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.SizeGadget">
-<short></short>
+<short>[i] Tell MUI if you want a sizing gadget for this window.</short>
 <descr>
+Usually you won't need this attribute since MUI
+will automatically disable the sizing gadget when
+your window is not sizeable because of your gadget
+layout.
 </descr>
 <seealso>
 </seealso>
@@ -532,7 +696,7 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.SizeRight">
-<short></short>
+<short>[i] When set to True, the size gadget will reside in the right window border.</short>
 <descr>
 </descr>
 <seealso>
@@ -541,8 +705,9 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.DragBar">
-<short></short>
+<short>[i] Tell MUI to give your window a dragbar.</short>
 <descr>
+  Defaults to True.
 </descr>
 <seealso>
 </seealso>
@@ -550,54 +715,162 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.LeftEdge">
-<short></short>
+<short>[i] Specify the left edge of a window.</short>
 <descr>
+<p>
+Usually, you shouldn't
+define a pixel value here but instead use one of the
+following macros:</p>
+<dl>
+  <dt>MUIV_Window_LeftEdge_Centered</dt><dd>Window appears centered on the visible area of screen.</dd>
+  <dt>MUIV_Window_LeftEdge_Moused</dt><dd>Window appears centered under the mouse pointer.</dd>
+</dl>
+<p>
+Default is MUIV_Window_LeftEdge_Centered.</p>
+<p>
+As long as your window has a window <link id="TMUIWindow.ID">ID</link>,
+choosing a position is not that important. MUI will always
+remember a windows last position and size and these
+values will simply override your settings. Positioning
+and sizing should be completely under user control,
+a programmer doesn't need to worry about it.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.TopEdge">TopEdge</link>
+  <link id="TMUIWindow.ID">ID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.TopEdge">
-<short></short>
+<short>[i] Specify the top edge of a window.</short>
 <descr>
+<p>
+Usually, you shouldn't
+define a pixel value here but instead use one of the
+following macros:</p>
+<dl>
+  <dt>MUIV_Window_TopEdge_Centered</dt><dd>window appears centered on the visible area of screen.</dd>
+  <dt>MUIV_Window_TopEdge_Moused</dt><dd>window appears centered under the mouse pointer.</dd>
+  <dt>MUIV_Window_TopEdge_Delta(p)</dt><dd>window appears p pixels below the screens title bar.</dd>
+</dl>
+<p>Default is MUIV_Window_TopEdge_Centered.</p>
+<p>
+As long as your window has a window <link id="TMUIWindow.ID">ID</link>,
+choosing a position is not that important. MUI will always
+remember a windows last position and size and these
+values will simply override your settings. Positioning
+and sizing should be completely under user control,
+a programmer doesn't need to worry about it.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.LeftEdge">LeftEdge</link>
+  <link id="TMUIWindow.ID">ID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.Height">
-<short></short>
+<short>[i] Specify the height of a window.</short>
 <descr>
+<p>
+Usually, you won't give
+a pixel value here but instead use one of the following
+magic macros:</p>
+<dl>
+  <dt>MUIV_Window_Height_Default</dt><dd>calculated from objects default sizes.</dd>
+  <dt>MUIV_Window_Height_MinMax(0..100)</dt><dd>somewhere between the minimum height (0) and the maximum height (100) of your window.</dd>
+  <dt>MUIV_Window_Height_Visible(1..100)</dt><dd>percentage of the screens visible height.</dd>
+  <dt>MUIV_Window_Height_Screen(1..100)</dt><dd> percentage of the screens total height.</dd>
+  <dt>MUIV_Window_Height_Scaled</dt><dd>height will be adjusted so that width : height = minimum width : minimum height.
+           Note that a windows width and height may not both be scaled.</dd>
+</dl>
+<p>
+Default is MUIV_Window_Height_Default.</p>
+<p>
+As long as your window has a window <link id="TMUIWindow.ID">ID</link>,
+choosing a size is not that important. MUI will always
+remember a windows last position and size and these
+values will simply override your settings. Positioning
+and sizing should be completely under user control,
+a programmer doesn't need to worry about it.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Width">Width</link>
+  <link id="TMUIWindow.ID">ID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.Width">
-<short></short>
+<short>[i] Specify the width of a window.</short>
 <descr>
+<p>
+Usually, you won't give
+a pixel value here but instead use one of the following
+magic macros:</p>
+<dl>
+  <dt>MUIV_Window_Width_Default</dt><dd>calculated from objects default sizes.</dd>
+  <dt>MUIV_Window_Width_MinMax(0..100)</dt><dd>somewhere between the minimum width (0) and the maximum width (100) of your window.</dd>
+  <dt>MUIV_Window_Width_Visible(1..100)</dt><dd>percentage of the screens visible width.</dd>
+  <dt>MUIV_Window_Width_Screen(1..100)</dt><dd> percentage of the screens total width.</dd>
+  <dt>MUIV_Window_Width_Scaled</dt><dd>height will be adjusted so that width : height = minimum width : minimum height.
+           Note that a windows width and height may not both be scaled.</dd>
+</dl>
+<p>
+Default is MUIV_Window_Width_Default.</p>
+<p>
+As long as your window has a window <link id="TMUIWindow.ID">ID</link>,
+choosing a size is not that important. MUI will always
+remember a windows last position and size and these
+values will simply override your settings. Positioning
+and sizing should be completely under user control,
+a programmer doesn't need to worry about it.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Height">Height</link>
+  <link id="TMUIWindow.ID">ID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.ID">
-<short></short>
+<short>Snapshot ID for the Window</short>
 <descr>
+<p>
+For most of your windows, you should define a longword
+as id value. Only a window with an id is able to
+remember its size and position.</p>
+<p>
+Additionally, when you use an ascii id (e.g. 'MAIN'),
+your window can be controlled from ARexx. You can use
+the MAKE_ID() function in the muihelper unit to create such IDs</p>
+<p>
+Of course all windows of your application must have
+unique ids.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.LeftEdge">LeftEdge</link>
+  <link id="TMUIWindow.TopEdge">TopEdge</link>
+  <link id="TMUIWindow.Snapshot">Snapshot()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.Menustrip">
-<short></short>
+<short>[i] Specify a menu strip object for this window.</short>
 <descr>
-
+<p>
+The object
+is treated as a child of the window and will be disposed
+when the window is disposed.</p>
+<p>
+Menustrip objects defined for a window will override an
+<link id="TMUIApplication.Menustrip">MUIApp.MenuStrip</link> object.</p>
+<p>
+If you have a global menu for all your applications windows
+but you want some windows to have no menu, use the
+<link id="TMUIWindow.NoMenus">NoMenus</link> field.</p>
 <p><b>Example:</b></p>
 <code>
 Window.MenuStrip := TMUIMenuStrip.Create;
@@ -625,67 +898,131 @@ end;
 </code>
 </descr>
 <seealso>
+  <link id="TMUIWindow.NoMenus">NoMenus</link>
+  <link id="TMUIApplication.Menustrip">MUIApp.MenuStrip</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.NoMenus">
-<short></short>
+<short>Temporarily disable the menu strip of a window.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Menustrip">MenuStrip</link>
+  <link id="TMUIApplication.Menustrip">MUIApp.MenuStrip</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.PublicScreen">
-<short></short>
+<short>Force the window to appear on the public screen defined by it's name</short>
 <descr>
+<p>
+It overrides the user preferences setting and is overridden by <link id="TMUIWindow.Screen">Screen</link></p>
+<p>
+Please use this tag sparely, overriding user prefs is not a good idea!</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Screen">Screen</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.ScreenTitle">
-<short></short>
+<short>This text will appear in the screens title bar when the window is active.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIWindow.Title">Title</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.Title">
-<short></short>
+<short>Specify the title of a window.</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIWindow.ScreenTitle">ScreenTitle</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIWindow.RefWindow">
+<short>Make the left and top position relative to a reference window.</short>
+<descr>
+<p>
+Using <link id="TMUIWindow.LeftEdge">LeftEdge</link> := MUIV_Window_LeftEdge_Centered or
+<link id="TMUIWindow.TopEdge">TopEdge</link> := MUIV_Window_TopEdge_Centered tag,
+you can easily open one window within another.</p>
+<p>
+Note that if your window has an id, the window will
+remember its last position and reopen there. Thus,
+this tag is only useful if you omit <link id="TMUIWindow.ID">ID</link>,
+maybe for some small requester windows.</p>
+</descr>
+<seealso>
+  <link id="TMUIWindow.LeftEdge">LeftEdge</link>
+  <link id="TMUIWindow.TopEdge">TopEdge</link>
+  <link id="TMUIWindow.ID">ID</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.UseBottomBorderScroller">
-<short></short>
+<short>Scroll bar at the Bottom Border of the Window</short>
 <descr>
+<p>
+If set to True, the window will feature a scrollbar in its
+bottom border. You must set this for the window object if
+any children are going to use this window border scroller,
+e.g. prop gadgets with the <link id="MUIClass.Gadget.TMUIProp.UseWinBorder">Prop.UseWinBorder</link> attribute.</p>
+<p>
+Obviously, scroll gadgets in window borders wont look good
+with borderless or non-resizable windows.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.UseLeftBorderScroller">UseLeftBorderScroller</link>
+  <link id="TMUIWindow.UseRightBorderScroller">UseRightBorderScroller</link>
+  <link id="MUIClass.Gadget.TMUIProp.UseWinBorder">Prop.UseWinBorder</link>
+  <link id="MUIClass.Group.TMUIScrollGroup.UseWinBorder">ScrollGroup.UseWinBorder</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.UseLeftBorderScroller">
-<short></short>
+<short>Scroll bar at the Left Border of the Window</short>
 <descr>
+<p>
+If set to True, the window will feature a scrollbar in its
+left border. You must set this for the window object if
+any children are going to use this window border scroller,
+e.g. prop gadgets with the <link id="MUIClass.Gadget.TMUIProp.UseWinBorder">Prop.UseWinBorder</link> attribute.</p>
+<p>
+Obviously, scroll gadgets in window borders wont look good
+with borderless or non-resizable windows.</p>
 </descr>
 <seealso>
+  <link id="TMUIWindow.UseBottomBorderScroller">UseBottomBorderScroller</link>
+  <link id="TMUIWindow.UseRightBorderScroller">UseRightBorderScroller</link>
+  <link id="MUIClass.Gadget.TMUIProp.UseWinBorder">Prop.UseWinBorder</link>
+  <link id="MUIClass.Group.TMUIScrollGroup.UseWinBorder">ScrollGroup.UseWinBorder</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.UseRightBorderScroller">
-<short></short>
+<short>Scroll bar at the Right Border of the Window</short>
 <descr>
+<p>
+If set to True, the window will feature a scrollbar in its
+right border. You must set this for the window object if
+any children are going to use this window border scroller,
+e.g. prop gadgets with the <link id="MUIClass.Gadget.TMUIProp.UseWinBorder">Prop.UseWinBorder</link> attribute.</p>
+<p>
+Obviously, scroll gadgets in window borders wont look good
+with borderless or non-resizable windows.</p>
 </descr>
 <seealso>
 </seealso>
@@ -693,26 +1030,33 @@ end;
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.OnShow">
-<short></short>
+<short>Event triggered when the Window is open</short>
 <descr>
+  Triggered when <link id="TMUIWindow.Open">Open</link> is set to True.
 </descr>
 <seealso>
+  <link id="TMUIWindow.Open">Open</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.OnActivate">
-<short></short>
+<short>Event triggered when Window is activated.</short>
 <descr>
+  Triggered when <link id="TMUIWindow.Activate">Activate</link> is set to True.
 </descr>
 <seealso>
+  <link id="TMUIWindow.Activate">Activate</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIWindow.OnCloseRequest">
-<short></short>
+<short>User tries to close the Window</short>
 <descr>
+  User (or program) tried to close the window. Decide what should happen
+  with the objects after the Event. You can prevent the closing or let the Window close
+  or let the window close and the free all objects (MUI and Pascal)
 </descr>
 <seealso>
 </seealso>
@@ -736,8 +1080,26 @@ end;
 
 <!-- class Visibility: default -->
 <element name="TMUIAboutMUI">
-<short></short>
+<short>This class can be used to display a MUI about window in MUI applications.</short>
 <descr>
+<p>
+Add a 'Project/About MUI...' menu
+item and make it do something like this:
+</p>
+<code>
+if not Assigned(AboutWin) then
+begin
+  AboutWin := TMUIAboutWin.Create;
+  AboutWin.RefWindow := Win;
+  AboutWin.Show;
+  if not AboutWin.Open then
+    DisplayBeep;
+end;
+</code>
+<p>
+You don't have to care about the window any longer, it
+will take care about closing itself and will get disposed
+when the application is removed.</p>
 </descr>
 <seealso>
 </seealso>

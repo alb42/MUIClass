@@ -47,6 +47,7 @@ type
     FUBBS, FULBS, FURBS: Boolean;
     FSizeRight: Boolean;
     FOnShow: TNotifyEvent;
+    FRefWindow: TMUIWindow;
     function GetActivate: Boolean;
     procedure SetActivate(AValue: Boolean);
     function GetActiveObject: TMUINotify;
@@ -88,6 +89,7 @@ type
     procedure SetULBS(AValue: Boolean);
     procedure SetURBS(AValue: Boolean);
     function GetWindow: PWindow;
+    procedure SetRefWindow(AValue: TMUIWindow);
   protected
     procedure GetCreateTags(var ATagList: TATagList); override;
   public
@@ -147,7 +149,7 @@ type
     // NeedMouseObject/MouseObject -> not in AROS
     property NoMenus: Boolean read FNoMenus write SetNoMenus default False;        //  Disable the global or window menu
     property PublicScreen: string read FPublicScreen write SetPublicScreen;        //I  Force to a Public Screen
-    // RefWindow ?
+    property RefWindow: TMUIWindow read FRefWindow write SetRefWindow;             //  Set the Window relative to an other Window
     // RootObject handled internally
     property ScreenTitle: string read FScreenTitle write SetScreenTitle;              //  Title in the Screen bar shown, when the Window is active
     property Title: string read FTitle write SetTitle;                                //  Set Window Title
@@ -177,7 +179,6 @@ begin
     Parent := nil
   else
     Parent := MUIApp;
-
   //
   FGroupObj := nil;
   FHoriz := False;
@@ -211,6 +212,7 @@ begin
   FULBS := False;
   FURBS := False;
   FSizeRight := False;
+  FRefWindow := nil;
 end;
 
 destructor TMUIWindow.Destroy;
@@ -282,6 +284,11 @@ begin
     ATagList.AddTag(MUIA_Window_UseLeftBorderScroller, AsTag(FULBS));
   if FURBS then
     ATagList.AddTag(MUIA_Window_UseRightBorderScroller, AsTag(FURBS));
+  if Assigned(FRefWindow) then
+  begin
+    FRefWindow.CreateObject;
+    ATagList.AddTag(MUIA_Window_RefWindow, AsTag(FRefWindow.MUIObj));
+  end;
 end;
 
 procedure TMUIWindow.CreateObject;
@@ -811,6 +818,13 @@ begin
     if HasObj then
       SetValue(MUIA_Window_UseRightBorderScroller, AsTag(FURBS));
   end;
+end;
+
+procedure TMUIWindow.SetRefWindow(AValue: TMUIWindow);
+begin
+  FRefWindow := AValue;
+  if HasObj and Assigned(AValue) and AValue.HasObj then
+    SetValue(MUIA_Window_RefWindow, AsTag(FRefWindow.MUIObj));
 end;
 
 function TMUIWindow.GetWindow: PWindow;
