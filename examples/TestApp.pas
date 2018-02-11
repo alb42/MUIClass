@@ -6,7 +6,8 @@ uses
   Exec, Amigados, mui, muihelper, utility, intuition, AGraphics,
   MUIClass.Group, MUIClass.Area, MUIClass.Base,
   MUIClass.Menu, MUIClass.Window, MUIClass.Gadget, MUIClass.List,
-  MUIClass.Numeric, MUIClass.PopString, MUIClass.DrawPanel, MUIClass.Image;
+  MUIClass.Numeric, MUIClass.PopString, MUIClass.DrawPanel, MUIClass.Image,
+  MUIClass.Dialog;
 
 
 type
@@ -34,6 +35,7 @@ type
     procedure ShowEvent(Sender: TObject);
     procedure Btn1Click(Sender: TObject);
     procedure Btn2Click(Sender: TObject);
+    procedure Btn3Click(Sender: TObject);
     procedure NewBtnClick(Sender: TObject);
     procedure AboutBtnClick(Sender: TObject);
     procedure MenuSelected(Sender: TObject);
@@ -117,6 +119,13 @@ begin
   begin
     OnClick := @Btn2Click;
     ShortHelp := 'And another Button. :-O';
+    Parent := Pnl;
+  end;
+
+  with TMUIButton.Create('Test 3') do
+  begin
+    OnClick := @Btn3Click;
+    ShortHelp := 'A button... what else';
     Parent := Pnl;
   end;
 
@@ -387,6 +396,25 @@ begin
   MyList.Sort;
   Pop.Close(True);
   Timer.Enabled := False;
+end;
+
+procedure TMyWindow.Btn3Click(Sender: TObject);
+var
+  FD: TFileDialog;
+  FO: TFontDialog;
+begin
+
+  FD := TFileDialog.Create;
+  FD.MultiSelect := True;
+  if FD.Execute then
+    ShowMessage('File(s) Selected: '#10 + FD.Filenames.Text);
+  FD.Free;
+  {FO := TFontDialog.Create;
+  FO.Options := [foFrontPen, foBackPen, foStyle, foDrawMode, foFixedOnly];
+  if FO.Execute then
+    ShowMessage('Font Selected: '#10 + FO.Name + IntToStr(FO.Size));
+  FO.Free;}
+  //Writeln('Clicked: ', MessageBox('Test MessageBox', 'This is a Text MessageBox', ['Button 1', 'Button 2', 'Cancel']));
 end;
 
 procedure TMyWindow.NewBtnClick(Sender: TObject);
