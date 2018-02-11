@@ -4,7 +4,7 @@ Wrapper to use Amiga MUI Objects with standard Pascal objects
 ## Units
 Dokumentation created from the docu folder: <a href="http://www.alb42.de/muiclass-docu/">MUIClass Docu</a>
 <table border=1>
-<tr><td>Unit Name</td><td>MUI Objects</td></tr>
+<tr><td>Unit Name</td><td>Objects</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.base/index.html">MUIClass.Base</a></td><td>RootClass, Notify, Application, Family, Semaphore, Dataspace, HSpace, VSpace, HBar, VBar, BarTitle, Timer</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.area/index.html">MUIClass.Area</a></td><td>Area, Rectangle, Balance, Gauge, Scale, Colorfield, Text, PenDisplay, PopPen, Button</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.group/index.html">MUIClass.Group</a></td><td>Group, ListView, Register, Virtgroup, Scrollgroup, Radio, Cycle, Coloradjust, Palette</td></tr>
@@ -15,7 +15,8 @@ Dokumentation created from the docu folder: <a href="http://www.alb42.de/muiclas
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.popstring/index.html">MUIClass.Popstring</a></td><td>Popstring, PopObject, PopList, PopASL</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.menu/index.html">MUIClass.Menu</a></td><td>Menustrip, Menu, Menuitem</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.numeric/index.html">MUIClass.Numeric</a></td><td>Numeric, Knop, Levelmeter, NumericButton, Slider</td></tr>
-<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.drawpanel/index.html">MUIClass.DrawPanel</a></td><td>DrawPanel (not an actual MUI Object, just an Area with more Events like Paint, Mouse,  Key)</td></tr>
+<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.drawpanel/index.html">MUIClass.DrawPanel</a></td><td>DrawPanel</td></tr>
+<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.dialog/index.html">MUIClass.Dialog</a></td><td>FileDialog, FontDialog, ScreenModeDialog</td></tr>
 </table>
 
 ## Basic usage
