@@ -385,7 +385,7 @@ begin
   Bubble := nil;
   Prop.Increase(2);
   MyList.Sort;
-  Pop.Close(0);
+  Pop.Close(True);
   Timer.Enabled := False;
 end;
 

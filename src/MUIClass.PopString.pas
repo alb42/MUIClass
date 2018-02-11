@@ -8,6 +8,7 @@ uses
   tagsparamshelper, MUIClass.Base, MUIClass.Group, MUIClass.Area, MUIClass.Gadget;
 
 type
+  TOpenPopEvent = function(Sender: TObject): Boolean of object;
   TClosePopEvent = procedure(Sender: TObject; Success: Boolean) of object;
   TMUIPopString = class(TMUIGroup)
   private
@@ -16,13 +17,13 @@ type
     FString: TMUIString;
     OpenHook: PHook;
     CloseHook: PHook;
-    FOnOpen: TNotifyEvent;
+    FOnOpen: TOpenPopEvent;
     FOnClose: TClosePopEvent;
 
     procedure SetToggle(AValue: Boolean);
     procedure SetButton(AValue: TMUIArea);
     procedure SetString(AValue: TMUIString);
-    procedure SetOnOpen(AOnOpen: TNotifyEvent);
+    procedure SetOnOpen(AOnOpen: TOpenPopEvent);
     procedure SetOnClose(AOnClose: TClosePopEvent);
   protected
     procedure BeforeCreateObject; override;
@@ -38,14 +39,14 @@ type
 
     // Methods
     procedure Open;
-    procedure Close(Result: Integer);
+    procedure Close(Result: Boolean);
     // Fields
   published
     property Toggle: Boolean read FToggle write SetToggle;           //
     property Button: TMUIArea read FButton write SetButton;          //I
     property StringObj: TMUIString read FString write SetString;     //I
     //Events
-    property OnOpen: TNotifyEvent read FOnOpen write SetOnOpen;
+    property OnOpen: TOpenPopEvent read FOnOpen write SetOnOpen;
     property OnClose: TClosePopEvent read FOnClose write SetOnClose;
   end;
 
@@ -55,12 +56,15 @@ type
     FLight: Boolean;
     FObject: TMUIArea;
     StrObjHook: PHook;
-    FOnStrObj: TNotifyEvent;
+    ObjStrHook: PHook;
+    FOnStrObj: TOpenPopEvent;
+    FOnObjStr: TNotifyEvent;
     FVolatile: Boolean;
     procedure SetFollow(AValue: Boolean);
     procedure SetLight(AValue: Boolean);
     procedure SetObject(AValue: TMUIArea);
-    procedure SetOnStrObj(AOnStrObj: TNotifyEvent);
+    procedure SetOnStrObj(AOnStrObj: TOpenPopEvent);
+    procedure SetOnObjStr(AValue: TNotifyEvent);
     procedure SetVolatile(AValue: Boolean);
   protected
     procedure BeforeCreateObject; override;
@@ -79,7 +83,8 @@ type
     property PopObject: TMUIArea read FObject write SetObject;                //I
     property Volatile: Boolean read FVolatile write SetVolatile default True; //
     // Events
-    property OnStrObj: TNotifyEvent read FOnStrObj write SetOnStrObj;
+    property OnStrObj: TOpenPopEvent read FOnStrObj write SetOnStrObj;
+    property OnObjStr: TNotifyEvent read FOnObjStr write SetOnObjStr;
     // WindowHook
   end;
 
@@ -255,23 +260,23 @@ begin
     DoMethod(MUIObj, [MUIM_PopString_Open]);
 end;
 
-procedure TMUIPopString.Close(Result: Integer);
+procedure TMUIPopString.Close(Result: Boolean);
 begin
   if HasObj then
-    DoMethod(MUIObj, [MUIM_PopString_Close, Result]);
+    DoMethod(MUIObj, [MUIM_PopString_Close, AsTag(Result)]);
 end;
 
 function OpenFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopString;
 begin
-  Result := 0;
+  Result := AsTag(False);
   PasObj := TMUIPopString(Hook^.h_Data);
   if Assigned(PasObj.FOnOpen) then
-    PasObj.FOnOpen(PasObj);
+    Result := AsTag(PasObj.FOnOpen(PasObj));
 end;
 
-procedure TMUIPopString.SetOnOpen(AOnOpen: TNotifyEvent);
+procedure TMUIPopString.SetOnOpen(AOnOpen: TOpenPopEvent);
 begin
   if AOnOpen <> FOnOpen then
   begin
@@ -377,6 +382,7 @@ begin
   FLight := True;
   FObject := nil;
   StrObjHook := nil;
+  ObjStrHook := nil;
   FVolatile := True;
 end;
 
@@ -406,6 +412,8 @@ begin
     ATagList.AddTag(MUIA_PopObject_Object, AsTag(FObject.MUIObj));
   if Assigned(StrObjHook) then
     ATagList.AddTag(MUIA_PopObject_StrObjHook, AsTag(StrObjHook));
+  if Assigned(ObjStrHook) then
+    ATagList.AddTag(MUIA_PopObject_ObjStrHook, AsTag(ObjStrHook));
   if not FVolatile then
     ATagList.AddTag(MUIA_PopObject_Volatile, AsTag(FVolatile));
 end;
@@ -488,13 +496,23 @@ function StrObjFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopObject;
 begin
-  Result := 0;
+  Result := AsTag(False);
   PasObj := TMUIPopObject(Hook^.h_Data);
   if Assigned(PasObj.FOnStrObj) then
-    PasObj.FOnStrObj(PasObj);
+    Result := AsTag(PasObj.FOnStrObj(PasObj));
 end;
 
-procedure TMUIPopObject.SetOnStrObj(AOnStrObj: TNotifyEvent);
+function ObjStrFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PasObj: TMUIPopObject;
+begin
+  Result := 0;
+  PasObj := TMUIPopObject(Hook^.h_Data);
+  if Assigned(PasObj.FOnObjStr) then
+    PasObj.FOnObjStr(PasObj);
+end;
+
+procedure TMUIPopObject.SetOnStrObj(AOnStrObj: TOpenPopEvent);
 begin
   if AOnStrObj <> FOnStrObj then
   begin
@@ -506,6 +524,22 @@ begin
       MH_SetHook(StrObjHook^, @StrObjFunc, Self);
       if HasObj then
         SetValue(MUIA_PopObject_StrObjHook, AsTag(StrObjHook));
+    end;
+  end;
+end;
+
+procedure TMUIPopObject.SetOnObjStr(AValue: TNotifyEvent);
+begin
+  if AValue <> FOnObjStr then
+  begin
+    FOnObjStr := AValue;
+    if Assigned(FOnObjStr) then
+    begin
+      if not Assigned(ObjStrHook) then
+        ObjStrHook := HookList.GetNewHook;
+      MH_SetHook(ObjStrHook^, @ObjStrFunc, Self);
+      if HasObj then
+        SetValue(MUIA_PopObject_ObjStrHook, AsTag(ObjStrHook));
     end;
   end;
 end;

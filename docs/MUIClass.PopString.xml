@@ -9,8 +9,11 @@
 -->
 
 <module name="MUIClass.PopString">
-<short></short>
+<short>PopString and related classes</short>
 <descr>
+  A PopString is a Edit/String object with a Button next to it.
+  usually this Button opens a List of thing to select to put into the
+  Edit component.
 </descr>
 
 <!-- uses unit Visibility: default -->
@@ -177,27 +180,74 @@
 
 <!-- procedure type Visibility: default -->
 <element name="TClosePopEvent">
-<short></short>
+<short>Event type for the close event of the List</short>
 <descr>
 </descr>
 <seealso>
+  <link id="TMUIPopString.OnClose">PopString.OnClose</link>
+  <link id="TMUIPopString.Close">PopString.Close()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TClosePopEvent.Sender">
-<short></short>
+<short>PopString send the Event</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TClosePopEvent.Success">
-<short></short>
+<short>Result send with the <link id="TMUIPopString.Close">PopString.Close()</link> call.</short>
 </element>
+
+<!-- procedure type Visibility: default -->
+<element name="TOpenPopEvent">
+<short>Event type for the Open event of the List</short>
+<descr>
+</descr>
+<seealso>
+  <link id="TMUIPopString.OnOpen">PopString.OnOpen</link>
+  <link id="TMUIPopString.Open">PopString.Open()</link>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TOpenPopEvent.Sender">
+<short>PopString send the Event</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TOpenPopEvent.Result">
+<short>When this hook returns TRUE, MUI assumes the popup was opened succesfully.</short>
+</element>
+
 
 <!-- class Visibility: default -->
 <element name="TMUIPopString">
-<short></short>
+<short>Popstring class is the base class for creating so called popup objects.</short>
 <descr>
+<p>
+Usually, a popup consists of a string or
+text gadget, followed by a little button. Pressing this
+button brings up a little window with a listview and lets
+the user choose an entry with the mouse.</p>
+<p>
+Popstring class features the basic functions for creating
+such objects. Given a string object and a button object,
+it places them horizontally and sets up some notification.
+Whenever the popup button is pressed, a hook will be called
+which itself should open and prepare the popup window.</p>
+<p>
+The string and the button object are not created by popstring
+class, they have to be supplied as attributes during object
+creation time. This makes popstring class very flexible,
+one could e.g. use a text object instead of a string or
+a popup button with some text in it.</p>
+<p>
+However, creating simple popups with popstring class would
+be too much overhead. Instead of using it directly, you
+should have a look at one of its subclasses. They offer
+a more specialized set of popups and are a lot easier
+to use.</p>
 </descr>
 <seealso>
 </seealso>
@@ -205,153 +255,212 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopString.BeforeCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create child MUI items before this MUI item is created</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopString.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPopString.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopString.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPopString.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a PopString object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIPopString.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy the PopString object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopString.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopString.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy the MUI item (and all it's children)</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopString.ClearObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>MUI item was destroyed by the Parent, just clear the MUIObj Pointer</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopString.Open">
-<short></short>
+<short>This method opens the popup.</short>
 <descr>
+<p>
+In fact, it only calls the
+<link id="TMUIPopString.OnOpen">OnOpen</link> Event and checks its return
+value. In case of True, the popup button object is disabled
+as long as <link id="TMUIPopString.Toggle">Toggle</link> is unset.</p>
 </descr>
 <seealso>
+  <link id="TMUIPopString.OnOpen">OnOpen</link>
+  <link id="TMUIPopString.Toggle">Toggle</link>
+  <link id="TMUIPopString.Close">Close()</link>
 </seealso>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopString.Close">
-<short></short>
+<short>This method closes the popup.</short>
 <descr>
+In fact, it only calls the
+predefined <link id="TMUIPopString.OnClose">OnClose</link> Event with the supplied
+success parameter.
 </descr>
 <seealso>
+  <link id="TMUIPopString.OnClose">OnOpen</link>
+  <link id="TMUIPopString.Toggle">Toggle</link>
+  <link id="TMUIPopString.Open">Open()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPopString.Close.Result">
-<short></short>
+<short>Determine if the Popup is closed with as 'OK' or as 'Cancel'</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopString.Toggle">
-<short></short>
+<short>Set/Clear the toggle mode for a popstring object.</short>
 <descr>
+With toggling disabled, the popup button will get
+disabled whenever the user hits it and the popup
+opens. With toggling enabled, the popup button
+always stays enabled and can be used to cancel
+(= Close with a False return value) the popup.
 </descr>
 <seealso>
+  <link id="TMUIPopString.OnOpen">OnOpen</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopString.Button">
-<short></short>
+<short>Specify the button object to be used in the popup.</short>
 <descr>
+<p>
+Depending
+on the type of your popup, you should use an image button
+with MUII_PopUp, MUII_PopFile or MUII_PopDrawer here.
+However, its also possible to have a button with some
+text or other things in it.</p>
+<p>
+When the popstring object is disposed, the string
+and the button objects are disposed as well.</p>
+<p><b>Example:</b></p>
+<code>
+with TMUIPopList.Create do
+begin
+  StringObj := TMUIString.Create; // the string/edit component
+  Button := TMUIPopButton.Create; // the Button to open the popup
+  OnOpen := @PopOpen;             // Event for open the Popup
+  OnClose := @PopClose;           // Event for closing the popup
+  Parent := Self;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="MUIClass.Gadget.TMUIString">TMUIString</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopString.StringObj">
-<short></short>
+<short>Specify the string object to be used in the popup.</short>
 <descr>
+<p>
+This does not necessarily need to be a real string
+object, using text objects or even complete groups
+of other objects is perfectly ok.</p>
+<p>
+When the popstring object is disposed, the string
+and the button objects are disposed as well.</p>
+<p><b>Example:</b></p>
+<code>
+with TMUIPopList.Create do
+begin
+  StringObj := TMUIString.Create; // the string/edit component
+  Button := TMUIPopButton.Create; // the Button to open the popup
+  OnOpen := @PopOpen;             // Event for open the Popup
+  OnClose := @PopClose;           // Event for closing the popup
+  Parent := Self;
+end;
+</code>
 </descr>
 <seealso>
+  <link id="MUIClass.Area.TMUIButton">TMUIButton</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopString.OnOpen">
-<short></short>
+<short>Whenever the popup receives a <link id="TMUIPopString.Open">Open()</link> method, this event will be called</short>
 <descr>
+<p>
+When this Event returns True, MUI assumes the popup was opened
+succesfully and will disabled the popup button (as long as
+<link id="TMUIPopString.Toggle">Toggle</link> is not set). Return False to indicate
+that something went wrong and the popup could not be opened.
+</p>
 </descr>
 <seealso>
+  <link id="TMUIPopString.OnClose">OnClose</link>
+  <link id="TMUIPopString.Toggle">Toggle</link>
+  <link id="TMUIPopString.Close">Close()</link>
+  <link id="TMUIPopString.Open">Open()</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopString.OnClose">
-<short></short>
+<short>Whenever the popup receives a <link id="TMUIPopString.Open">Close()</link> method and the popup is currently opened, this Event is triggered.</short>
 <descr>
+<p>
+The success parameter is a copy of the methods success
+parameter and indicates whether the popup was closed successfully
+(e.g. with a double click in a listview) or was just cancelled
+(e.g. by pressing the popup button again for toggle popups).</p>
+<p>
+Due to internal message handling issues, calling the close hook is
+delayed until the next Eventloop cycle. This
+allows you to remove and dispose windows without danger.</p>
 </descr>
 <seealso>
+  <link id="TMUIPopString.OnOpen">OnOpen</link>
+  <link id="TMUIPopString.Toggle">Toggle</link>
+  <link id="TMUIPopString.Close">Close()</link>
+  <link id="TMUIPopString.Open">Open()</link>
 </seealso>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIPopObject">
-<short></short>
+<short>Popobject class takes a MUI object as parameter uses this one as popup.</short>
 <descr>
+<p>
+You can e.g. simply create a listview object with
+some entries and the popobject class will create a window
+around it and display it when the user hits the popup button.</p>
+<p>
+Using this class instead of creating the popup windows yourself
+prevents you from having lots of problems. Think twice before
+deciding to make you own popups!</p>
 </descr>
 <seealso>
 </seealso>
@@ -359,121 +468,136 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopObject.BeforeCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Init Child MUI items before this MUI item is created.</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopObject.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPopObject.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopObject.AfterCreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Connect Events after MUI item creation</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPopObject.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create a PopObject object</short>
 </element>
 
 <!-- destructor Visibility: public -->
 <element name="TMUIPopObject.Destroy">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy the PopObject object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopObject.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopObject.DestroyObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Destroy the MUI object and all it's childs</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopObject.ClearObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Parent destroyed the MUI item, just clear the MUIObj</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopObject.Follow">
-<short></short>
+<short>Let the Popup follow it's parent (this object)</short>
 <descr>
+  Defaults to True.
 </descr>
 <seealso>
+  <link id="TMUIPopObject.Light">Light</link>
+  <link id="TMUIPopObject.Volatile">Volatile</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopObject.Light">
-<short></short>
+<short>Set the Popup Window border and titleless.</short>
 <descr>
+  Defaults to True
 </descr>
 <seealso>
+  <link id="TMUIPopObject.Follow">Follow</link>
+  <link id="TMUIPopObject.Volatile">Volatile</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopObject.PopObject">
-<short></short>
+<short>[i] Specify the object to pop up.</short>
 <descr>
+Usually this is a relatively simple
+thing like a single listview, but you can of course use group
+class here and make rather complex popups. As with all other
+MUI classes, the object here gets disposed when the popobject
+is disposed.
 </descr>
 <seealso>
+  <link id="TMUIPopObject.OnStrObj">OnStrObj</link>
+  <link id="TMUIPopObject.OnObjStr">OnObjStr</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopObject.Volatile">
-<short></short>
+<short>Close the Popup when the PopObject goes invisible</short>
 <descr>
+Setting this attribute causes the popup window to disappear when the
+corresponding popobject disappears, e.g. because its in a page group
+and the user toggled the page. When the popobject appears again,
+the popup window appears also. Defaults to True.
 </descr>
 <seealso>
+  <link id="TMUIPopObject.Light">Light</link>
+  <link id="TMUIPopObject.Follow">Follow</link>
 </seealso>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPopObject.OnStrObj">
-<short></short>
+<short>Before the popup opens, this event is called.</short>
 <descr>
+<p>
+You can use it
+to prepare your <link id="TMUIPopObject.PopObject">PopObject</link> according to the
+contents of the string gadget.</p>
+</descr>
+<seealso>
+  <link id="TMUIPopObject.PopObject">PopObject</link>
+  <link id="TMUIPopObject.OnObjStr">OnObjStr</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
+<element name="TMUIPopObject.OnObjStr">
+<short>When a popup is closed, this hook is called.</short>
+<descr>
+<p>
+You can examine
+the state of your <link id="TMUIPopObject.PopObject">PopObject</link> and set the contents
+of the string gadget respectively. </p>
+<p>
+The event will only be called when your popup is closed with
+a success value of True. Otherwise, MUI closes the popup
+without taking further actions, just as if had never opened.</p>
+<p>
+Since MUI doesn't know anything about your <link id="TMUIPopObject.PopObject">PopObject</link>,
+it's your task to tell when your popup is finished. You can
+terminate popups at anytime by sending a MUIM_Popstring_Close
+method.</p>
 </descr>
 <seealso>
 </seealso>
@@ -481,7 +605,7 @@
 
 <!-- class Visibility: default -->
 <element name="TMUIPoplist">
-<short></short>
+<short>A Popup that contain just a simple list of predefined gadget contents.</short>
 <descr>
 </descr>
 <seealso>
@@ -490,49 +614,44 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPoplist.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPoplist.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPoplist.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create PopList object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPoplist.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create the MUI item</short>
 </element>
 
 <!-- property Visibility: published -->
 <element name="TMUIPoplist.LArray">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>[i] Array of strings defining the contents of the PopList object.</short>
 </element>
 
 <!-- class Visibility: default -->
 <element name="TMUIPopASL">
-<short></short>
+<short>Pop up any kinds of standard system asl requesters.</short>
 <descr>
+<p>
+A seperate task is
+spawned to handle these requesters, the application continues to
+run.</p>
+<p>
+Using an asl popup class, you don't need to worry about handling
+asl requesters. MUI will automatically open one when the popup
+button is pressed and update the corresponding string gadget
+when the user terminates the requester. From the programmers
+point of view, all you have to do is to handle the string
+gadgets contents.</p>
 </descr>
 <seealso>
 </seealso>
@@ -540,40 +659,40 @@
 
 <!-- procedure Visibility: protected -->
 <element name="TMUIPopASL.GetCreateTags">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Fill TagList for MUI item creation</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TMUIPopASL.GetCreateTags.ATagList">
-<short></short>
+<short>TagList to Fill</short>
 </element>
 
 <!-- constructor Visibility: public -->
 <element name="TMUIPopASL.Create">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create PopASL object</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TMUIPopASL.CreateObject">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Create MUI item</short>
 </element>
 
 <!-- property Visibility: public -->
 <element name="TMUIPopASL.Active">
-<short></short>
+<short>Is the ASL request currently active.</short>
 <descr>
+<p>
+Popasl creates asynchronous popups. Requesters are opened in a
+seperately spawned task and don't disturb the rest of the
+application. You can ask for the state of a requester by
+querying the Active attribute. It will return
+True when the requester is currently open, False otherwise.</p>
+<p>
+Common use for this attribute is to prevent an application
+from being terminated while a requester is open. If you
+try to dispose the popasl object with a currently open
+requester, MUI will freeze your task as long as the requester
+stays there.</p>
 </descr>
 <seealso>
 </seealso>
@@ -581,8 +700,23 @@
 
 <!-- property Visibility: published -->
 <element name="TMUIPopASL.ASLType">
-<short></short>
+<short>Type of asl requester</short>
 <descr>
+<p>
+Pass the same value you would use for AllocAslRequest(), e.g.
+ASL_FileRequest, ASL_FontRequest or ASL_ScreenModeRequest.</p>
+<p>
+For ASL_FileRequest and ASL_FontRequest, popasl class offers a
+a standard start/stop handling. When a file requester is opened,
+MUI splits the string gadgets contents into a path and a file
+name and uses these as initial paremeters for the requester.
+Font popups translate a font into a name/size pair, e.g.
+"topaz/8". You can override these translations by specifying
+a OnStart and a OnStop.</p>
+<p>
+For ASL_ScreenModeRequest, no standard handling is available.
+Using such a popup without Start and Stop Events won't make
+much sense.</p>
 </descr>
 <seealso>
 </seealso>
