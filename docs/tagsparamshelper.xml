@@ -104,7 +104,7 @@ you need as parameter.</p>
 to the list, it will be added automatically as last Tag.</p>
 <p><b>Example:</b></p>
 <code>
-procedure OpenWindow(ATitle: string = ''): PWindow;
+procedure OpenMyWindow(ATitle: string = ''): PWindow;
 var
   Tags: TATagList;
 begin
@@ -125,7 +125,7 @@ begin
     Tags.AddTag(WA_Title, AsTag(PChar(FTitle)));
   end;
   // ready top open the Window
-  Result := OpenWindow(nil, Tags);
+  Result := OpenWindowTagList(nil, Tags);
 end;
 </code>
 </descr>
@@ -228,8 +228,8 @@ var
 begin
   // Add Some Tags
   //
-  // use the Tag List diretly as Argument to OpenWindow call
-  Win := OpenWindow(nil, Tags);
+  // use the Tag List diretly as Argument to OpenWindowTagList call
+  Win := OpenWindowTagList(nil, Tags);
   //
 end;
 </code>
