@@ -9,12 +9,31 @@
 -->
 
 <module name="TagsParamsHelper">
-<short></short>
+<short>Types, objects and other stuff to create Amiga style taglists</short>
 <descr>
+  Use the <link id="TATagList">TATagList</link> to create a TagList in a easy way.
 </descr>
 
 <!-- uses unit Visibility: default -->
 <element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
 <short></short>
 <descr>
 </descr>
@@ -49,73 +68,66 @@
 </seealso>
 </element>
 
-<!-- record type Visibility: default -->
-<element name="TTagItem">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: default -->
-<element name="TTagItem.ti_Tag">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- variable Visibility: default -->
-<element name="TTagItem.ti_Data">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- pointer type Visibility: default -->
-<element name="PTagItem">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- constant Visibility: default -->
-<element name="TAG_DONE">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
 <!-- constant Visibility: default -->
 <element name="TagTrue">
-<short></short>
+<short>Tag Value for a boolean True</short>
 <descr>
+  To make sure it's the same Value (1) as C would send.
 </descr>
 <seealso>
+  <link id="TagFalse">TagFalse</link>
 </seealso>
 </element>
 
 <!-- constant Visibility: default -->
 <element name="TagFalse">
-<short></short>
+<short>Tag Value for a boolean False</short>
 <descr>
+  To make sure it's the same Value (0) as C would send.
 </descr>
 <seealso>
+  <link id="TagTrue">TagTrue</link>
 </seealso>
 </element>
 
 <!-- object Visibility: default -->
 <element name="TATagList">
-<short></short>
+<short>A Tagelist for easier Taglist handling</short>
 <descr>
+<p>Use the TagList as normal variable, in the usual cases you do not need
+to keep it, so a local variable in most cases enough.</p>
+<p>To call the function needing the TagList supply this variable directly at the position
+of the taglist, it will automatically transfer the needed Pointer. Alternatively you can also
+use the <link id="TATagList.GetTagPointer">GetTagPointer()</link> function to get the Pointer
+you need as parameter.</p>
+<p>Note: if you add Tags you have to get the TagPointer again. You do not need to add TAG_DONE/TAG_END
+to the list, it will be added automatically as last Tag.</p>
+<p><b>Example:</b></p>
+<code>
+procedure OpenWindow(ATitle: string = ''): PWindow;
+var
+  Tags: TATagList;
+begin
+  // Add a bunch of Tags
+  Tags.AddTags([
+    WA_Left,   10,
+    WA_Top,    20,
+    WA_Width,  500,
+    WA_Height, 300,
+    WA_Flags,  WFLG_DEPTHGADGET or WFLG_DRAGBAR or WFLG_CLOSEGADGET or
+      WFLG_ACTIVATE or WFLG_OTHER_REFRESH or WFLG_GIMMEZEROZERO,
+    WA_IDCMP,  IDCMP_CLOSEWINDOW or IDCMP_REFRESHWINDOW or IDCMP_IDCMPUPDATE,
+  ]);
+  // Add a single Tag
+  if ATitle &lt;&gt; '' then
+  begin
+    FTitle := ATitle;
+    Tags.AddTag(WA_Title, AsTag(PChar(FTitle)));
+  end;
+  // ready top open the Window
+  Result := OpenWindow(nil, Tags);
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -123,110 +135,104 @@
 
 <!-- procedure Visibility: public -->
 <element name="TATagList.Clear">
-<short></short>
+<short>Clear the TagList</short>
 <descr>
+  <p>Useful if you want to reuse the TagList for multiple calls
+  </p>
+  <p>Note: The Pointer stays valid as long this Object exists and the contents is not changes. That
+  means after adding Tags you have to get the Pointer again.</p>
 </descr>
-<seealso>
-</seealso>
 </element>
 
 <!-- function Visibility: public -->
 <element name="TATagList.GetTagPointer">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
+<short>Get the Pointer to the TagList as it should be supplied to Amiga Calls</short>
 </element>
 
 <!-- function result Visibility: public -->
 <element name="TATagList.GetTagPointer.Result">
-<short></short>
+<short>TagList for the function calls</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TATagList.AddTag">
-<short></short>
+<short>Add a Single Tag to the TagList</short>
 <descr>
+<p>You do not need to add TAG_END or TAG_DONE to the List</p>
+<p><b>Example:</b></p>
+<code>
+Tags.AddTag(WA_Left,10);
+Tags.AddTag(WA_Title, AsTag(PChar(FTitle))); // note: FTitle have to be a string which stays available (global variable or field of the class)
+</code>
 </descr>
 <seealso>
+  <link id="TATagList.AddTags">AddTags()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TATagList.AddTag.Tag">
-<short></short>
+<short>Tag name to add</short>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TATagList.AddTag.Data">
-<short></short>
+<short>Data for the Tag as NativeUInt you can use AsTag() Macros</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TATagList.AddTags">
-<short></short>
+<short>Add a bunch of Tags</short>
 <descr>
+<p>
+The List should contain always a Tag and a Data for the Tag (do it should be an even number of entries in the Array)
+You do not need to add TAG_END or TAG_DONE to the List</p>
+<p><b>Example:</b></p>
+<code>
+Tags.AddTags([
+    WA_Left,   10,
+    WA_Top,    20,
+    WA_Width,  500,
+    WA_Height, 300,
+    WA_Flags,  WFLG_DEPTHGADGET or WFLG_DRAGBAR or WFLG_CLOSEGADGET or
+      WFLG_ACTIVATE or WFLG_OTHER_REFRESH or WFLG_GIMMEZEROZERO,
+    WA_IDCMP,  IDCMP_CLOSEWINDOW or IDCMP_REFRESHWINDOW or IDCMP_IDCMPUPDATE,
+  ]);
+</code>
 </descr>
 <seealso>
+  <link id="TATagList.AddTag">AddTag()</link>
 </seealso>
 </element>
 
 <!-- argument Visibility: default -->
 <element name="TATagList.AddTags.AList">
-<short></short>
+<short>List of Tags/Data to add</short>
 </element>
 
 <!-- procedure Visibility: public -->
 <element name="TATagList.DebugPrint">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- object Visibility: default -->
-<element name="TAParamList">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- procedure Visibility: public -->
-<element name="TAParamList.SetParams">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="TAParamList.SetParams.AList">
-<short></short>
-</element>
-
-<!-- function Visibility: public -->
-<element name="TAParamList.GetParamPointer">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: public -->
-<element name="TAParamList.GetParamPointer.Result">
-<short></short>
+<short>Prints the whole list to the Debug Output</short>
 </element>
 
 <!-- operator Visibility: default -->
 <element name="assign(TATagList):PTagItem">
-<short></short>
+<short>Object automatically returns the TagList Pointer as expected from Amiga functions</short>
 <descr>
+<p>
+  With this operator override you can use the <link id="TATagList">TATagList</link> directly in the function call as parameter.</p>
+<p><b>Example:</b></p>
+<code>
+var
+  Tags: TATagList;
+begin
+  // Add Some Tags
+  //
+  // use the Tag List diretly as Argument to OpenWindow call
+  Win := OpenWindow(nil, Tags);
+  //
+end;
+</code>
 </descr>
 <seealso>
 </seealso>
@@ -242,43 +248,6 @@
 <short></short>
 </element>
 
-<!-- operator Visibility: default -->
-<element name="assign(TAParamList):Pointer">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: default -->
-<element name="assign(TAParamList):Pointer.Result">
-<short></short>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="assign(TAParamList):Pointer.APList">
-<short></short>
-</element>
-
-<!-- operator Visibility: default -->
-<element name="assign(TAParamList):PNativeInt">
-<short></short>
-<descr>
-</descr>
-<seealso>
-</seealso>
-</element>
-
-<!-- function result Visibility: default -->
-<element name="assign(TAParamList):PNativeInt.Result">
-<short></short>
-</element>
-
-<!-- argument Visibility: default -->
-<element name="assign(TAParamList):PNativeInt.APList">
-<short></short>
-</element>
 
 </module> <!-- TagsParamsHelper -->
 

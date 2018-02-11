@@ -2,15 +2,8 @@
  *****************************************************************************
  *                             TagsParamsHelper.pas                          *
  *                              --------------                               *
- *            Taglist and parameter handling for Amiga-sytle systems         *
+ *            Taglist handling for Amiga-style systems                       *
  *                                                                           *
- *****************************************************************************
-
- *****************************************************************************
-  This file is part of the Lazarus Component Library (LCL)
-
-  See the file COPYING.modifiedLGPL.txt, included in this distribution,
-  for details about the license.
  *****************************************************************************
 }
 unit TagsParamsHelper;
@@ -20,22 +13,8 @@ unit TagsParamsHelper;
 interface
 
 uses
-  {$ifdef HASAMIGA}
   Exec, Utility,
-  {$endif}
   Classes, SysUtils, Math;
-
-{$ifndef HASAMIGA}
-type
-  TTagItem = record
-    ti_Tag: LongWord;
-    ti_Data: NativeUInt;
-  end;
-  PTagItem = ^TTagItem;
-
-const
-  TAG_DONE = 0;
-{$endif}
 
 const
   TagTrue = 1;
@@ -57,47 +36,9 @@ type
     procedure DebugPrint;
   end;
 
-  { TAParamList }
-
-  TAParamList = object
-  private
-    List: array of NativeUInt;
-  public
-    procedure SetParams(AList: array of NativeUInt);
-    function GetParamPointer: Pointer;
-  end;
-
   operator := (AList: TATagList): PTagItem;
-  operator := (APList: TAParamList): Pointer;
-  operator := (APList: TAParamList): PNativeInt;
 
 implementation
-
-{ TAParamList }
-
-procedure TAParamList.SetParams(AList: array of NativeUInt);
-var
-  i: Integer;
-begin
-  SetLength(List, Length(AList));
-  for i := 0 to High(List) do
-    List[i] := AList[i];
-end;
-
-function TAParamList.GetParamPointer: Pointer;
-begin
-  Result := @(List[0]);
-end;
-
-operator := (APList: TAParamList): Pointer;
-begin
-  Result := APList.GetParamPointer;
-end;
-
-operator := (APList: TAParamList): PNativeInt;
-begin
-  Result := APList.GetParamPointer;
-end;
 
 { TATagList }
 
@@ -171,9 +112,9 @@ begin
   TagDbgOut('List with ' + IntToStr(Length(List)) + ' Entries.');
   for i := 0 to High(List) do
   begin
-    TagDbgOut('+ ' + IntToStr(i) + '. ' + HexStr(@List[i]));
+    //TagDbgOut('+ ' + IntToStr(i) + '. ' + HexStr(@List[i]));
     TagDbgOut('  ' + IntToStr(i) + '. Tag: ' + HexStr(Pointer(List[i].ti_Tag)) + ' Data: ' + HexStr(Pointer(List[i].ti_Data)));
-    TagDbgOut('- ' + IntToStr(i) + '. ' + HexStr(@List[i]));
+    //TagDbgOut('- ' + IntToStr(i) + '. ' + HexStr(@List[i]));
   end;
   TagDbgOut('End Of List');
 end;
