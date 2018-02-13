@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<fpdoc-descriptions>
+<package name="MUIClass">
+
+<!--
+  ====================================================================
+    MUIClass.Dialog
+  ====================================================================
+-->
+
+<module name="MUIClass.Dialog">
+<short>Dialogs an Requester</short>
+<descr>
+</descr>
+
+<!-- uses unit Visibility: default -->
+<element name="System">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Classes">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="SysUtils">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="fgl">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Math">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Exec">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Utility">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="AmigaDOS">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="Intuition">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="asl">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="icon">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="mui">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="muihelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="tagsparamshelper">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Base">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- uses unit Visibility: default -->
+<element name="MUIClass.Window">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TBaseDialog">
+<short>BaseClass for ASL Requester, no need to instance this class use the subclasses</short>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TBaseDialog.Execute">
+<short></short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TBaseDialog.Execute.Result">
+<short></short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TBaseDialog.TitleText">
+<short>Text for the Titlebar of the Requester</short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TFileDialog">
+<short>Standard Load/Save File requester</short>
+<descr>
+<p><b>Example:</b></p>
+<code>
+FileDialog := TFileDialog.Create;
+try
+  FileDialog.TitleText := 'Select file to open';
+  FileDialog.Pattern := '#?.dat';
+  FileDialog.Directory := 'DH1:Data';
+  if FileDialog.Execute then
+    LoadFile(FileDialog.Filename);
+finally
+  FileDialog.Free;
+end;
+</code>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TFileDialog.Create">
+<short>Create a File Dialog </short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TFileDialog.Execute">
+<short>Open the File dialog and wait for the user input.</short>
+<descr>
+  The MUI windows will be blocked but still refreshed.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TFileDialog.Execute.Result">
+<short>Returns True if the user closed the Requester with ok, False if the user closed with cancel.</short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFileDialog.SaveMode">
+<short>Turn the Requester into a Save Requester</short>
+<descr>
+  Basically it changes the background of the requester.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFileDialog.MultiSelect">
+<short>Allow selecting multiple files in open requesters</short>
+<descr>
+  The selected files can be found in <link id="TFileDialog.Filenames">Filenames</link>
+</descr>
+<seealso>
+  <link id="TFileDialog.Filenames">Filenames</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFileDialog.Pattern">
+<short>Set a pattern to filter the files in the requester</short>
+<descr>
+<p>
+  If the pattern is set, the input gadget for it will be shown as well. Default is, no Pattern and therefore the Pattern Gadget is hidden.
+  To show the Pattern settings but not filter anything set the Pattern to '#?'
+</p>
+<p><b>Some Pattern examples:</b></p>
+<code>
+FileDialog.Pattern := '#?.iff';     // only show IFF
+FileDialog.Pattern := '~(#?.info)'; // do not show info files
+FileDialog.Pattern := '(#?.bmp|#?.gif|#?.iff|#?.jpg)'; // show only some usual image formats
+</code>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFileDialog.Directory">
+<short>Define the initial Directory or get the selected Directory</short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFileDialog.FileName">
+<short>Filename of the selected file.</short>
+<descr>
+<p>
+If <link id="TFileDialog.MultiSelect">MultiSelect</link> is enabled use <link id="TFileDialog.Filenames">Filenames</link>
+to get the list of selected files.</p>
+</descr>
+<seealso>
+  <link id="TFileDialog.MultiSelect">MultiSelect</link>
+  <link id="TFileDialog.Filenames">Filenames</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFileDialog.FileNames">
+<short>List of filenames selected</short>
+<descr>
+  Use this list when <link id="TFileDialog.MultiSelect">MultiSelect</link>. If <link id="TFileDialog.MultiSelect">MultiSelect</link> is disabled it is easier to use <link id="TFileDialog.Filename">Filename</link> directly.
+</descr>
+<seealso>
+  <link id="TFileDialog.Filename">Filename</link>
+  <link id="TFileDialog.MultiSelect">MultiSelect</link>
+</seealso>
+</element>
+
+<!-- set type Visibility: default -->
+<element name="TFontDialogOptions">
+<short>Options for <link id="TFontDialog.Options">TFontDialog.Options</link></short>
+<descr>
+</descr>
+<seealso>
+  <link id="TFontDialog.Options">TFontDialog.Options</link>
+</seealso>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TFontDialogOptions.foFrontPen">
+<short>Enable Front Pen selection</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TFontDialogOptions.foBackPen">
+<short>Enable Back Pen selection</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TFontDialogOptions.foStyle">
+<short>Enable Style selection (e.g. bold, italic, underline)</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TFontDialogOptions.foDrawMode">
+<short>Enable Draw Mode selection (e.g. JAM1, JAM2)</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TFontDialogOptions.foFixedOnly">
+<short>Show only fixed width fonts</short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TFontDialog">
+<short>Requester to select a Font</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TFontDialog.Create">
+<short>Create the Font requester</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TFontDialog.Execute">
+<short>Open the Font requester and wait for User input</short>
+<descr>
+  The MUI windows will be blocked as long the requester is open but with redraw.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TFontDialog.Execute.Result">
+<short>returns True if the User clicked Ok, returns False if User selected Cancel</short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.Name">
+<short>Set initial name and read the selected font name</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.Size">
+<short>Set initial font size and read selected font size.</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.Style">
+<short>Set initial Style and read selected Font Style as Bitfield</short>
+<descr>
+<p><b>Possible Bits</b></p>
+<dl>
+  <dt>FSF_UNDERLINED</dt><dd>Text is underlined</dd>
+  <dt>FSF_BOLD</dt><dd>Text is bold</dd>
+  <dt>FSF_ITALIC</dt><dd>Text is italic</dd>
+</dl>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.Flags">
+<short>Flags for the Font</short>
+<descr>
+  FPF_* Values.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.FrontPen">
+<short>Initial Setting for the FrontPen and read the FrontPen</short>
+<descr>
+  Only useful if <link id="TFontDialogOptions">foFrontPen</link> is activated in <link id="TFontDialog.Options">Options</link>.
+</descr>
+<seealso>
+  <link id="TFontDialog.Options">Options</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.BackPen">
+<short>Initial Setting for the BackPen and read the BackPen</short>
+<descr>
+  Only useful if <link id="TFontDialogOptions">foBackPen</link> is activated in <link id="TFontDialog.Options">Options</link>.
+</descr>
+<seealso>
+  <link id="TFontDialog.Options">Options</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.DrawMode">
+<short>Initial Setting for DrawMode</short>
+<descr>
+<p>
+Only useful if <link id="TFontDialogOptions">foDrawMode</link> is activated in <link id="TFontDialog.Options">Options</link>.</p>
+<p><b>Values:</b></p>
+<code>
+</code>
+</descr>
+<seealso>
+  <link id="TFontDialog.Options">Options</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TFontDialog.Options">
+<short>Sets the elements to edit in the Font dialog</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- set type Visibility: default -->
+<element name="TScreenDialogOptions">
+<short><link id="TScreenDialog">TScreenDialog</link>.<link id="TScreenDialog.Options">Options</link> type to configure the Requester</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TScreenDialogOptions.soWidth">
+<short>Provide an numeric input for the Screen width</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TScreenDialogOptions.soHeight">
+<short>Provide an numeric input for the Screen height</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TScreenDialogOptions.soDepth">
+<short>Provide an input for the Screen depth</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TScreenDialogOptions.soOverscanType">
+<short>Provide a input element to choose the overscan type</short>
+</element>
+
+<!-- enumeration value Visibility: default -->
+<element name="TScreenDialogOptions.soAutoScroll">
+<short>Provide a input element to enable/disable autoscroll</short>
+</element>
+
+<!-- class Visibility: default -->
+<element name="TScreenDialog">
+<short>Requester to select a Screen Mode</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- constructor Visibility: public -->
+<element name="TScreenDialog.Create">
+<short>Create a ScreenMode Requester</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function Visibility: public -->
+<element name="TScreenDialog.Execute">
+<short>Open the ScreenMode Requester and wait for Input of the User</short>
+<descr>
+    The MUI windows will be blocked as long the requester is open but with redraw.
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: public -->
+<element name="TScreenDialog.Execute.Result">
+<short>returns True if the User clicked Ok, returns False if User selected Cancel</short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.DisplayID">
+<short>Set Initial DisplayID and read selected DisplayID</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.DisplayWidth">
+<short>Set Initial Screen Width and read selected Screen Width</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.DisplayHeight">
+<short>Set Initial Screen Height and read selected Screen Height</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.DisplayDepth">
+<short>Set Initial Screen Depth and read selected Screen Depth</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.OverScanType">
+<short>Set Initial Screen Overscan type and read selected Screen Overscan type</short>
+<descr>
+  <p>Only useful if <link id="TScreenDialogOptions">soOverscanType</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.Options">
+<short>Sets the elements to edit in the Font dialog</short>
+<descr>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.MinWidth">
+<short>Sets the Minimum Width the user can type to the input for Screen Width</short>
+<descr>
+   <p>Only useful if <link id="TScreenDialogOptions">soWidth</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.MaxWidth">
+<short>Sets the Maximum Width the user can type to the input for Screen Width</short>
+<descr>
+  <p>Only useful if <link id="TScreenDialogOptions">soWidth</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.MinHeight">
+<short>Sets the Minimum Height the user can type to the input for Screen Height</short>
+<descr>
+  <p>Only useful if <link id="TScreenDialogOptions">soWHeight</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.MaxHeight">
+<short>Sets the Maximum Height the user can type to the input for Screen Height</short>
+<descr>
+  <p>Only useful if <link id="TScreenDialogOptions">soHeight</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.MinDepth">
+<short>Sets the Minimum Color Depth the user can type to the input for Color Depth</short>
+<descr>
+  <p>Only useful if <link id="TScreenDialogOptions">soDepth</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.MaxDepth">
+<short>Sets the Maximum Color Depth the user can type to the input for Color Depth</short>
+<descr>
+  <p>Only useful if <link id="TScreenDialogOptions">soDepth</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TScreenDialog.AutoScroll">
+<short>Set Initial Status for Autoscroll and read the Autoscroll setting</short>
+<descr>
+   <p>Only useful if <link id="TScreenDialogOptions">soAutoScroll</link> is activated in <link id="TScreenDialog.Options">Options</link>.</p>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- procedure Visibility: default -->
+<element name="ShowMessage">
+<short>A Messagebox with configurable Text and a Ok Button</short>
+<descr>
+<p><b>Example:</b></p>
+<code>
+ShowMessage('Everything ok');
+ShowMessage('Something went wrong', 'Warning');
+</code>
+</descr>
+<seealso>
+  <link id="MessageBox">MessageBox()</link>
+</seealso>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="ShowMessage.Text">
+<short>Text to show in the Messagebox</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="ShowMessage.HeadText">
+<short>Text in the Window title of the Messagebox, when this parameter is not supplied 'Message' is used.</short>
+</element>
+
+<!-- function Visibility: default -->
+<element name="MessageBox">
+<short>Open a MessageBox with Text and configurable Buttons</short>
+<descr>
+<p><b>Example:</b></p>
+<code>
+Ret = MessageBox('Overwrite', 'File already exists, will be overwritten, ok?', ['Yes', 'Yes for all', 'No', 'No for all', 'Cancel']);
+case Ret of
+  1: DoYes;
+  2: DoYesAll;
+  3: DoNo;
+  4: DoNoForAll;
+  0: DoCancel;
+end;
+</code>
+</descr>
+<seealso>
+</seealso>
+</element>
+
+<!-- function result Visibility: default -->
+<element name="MessageBox.Result">
+<short>Index of the Button pressed, take care the last Button is 0, First Button is 1, Second is two (if not last) and so on</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="MessageBox.HeadText">
+<short>Text in the Window title of the MessageBox</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="MessageBox.Text">
+<short>Text in the MessageBox</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="MessageBox.Buttons">
+<short>Buttons as String Array</short>
+</element>
+
+</module> <!-- MUIClass.Dialog -->
+
+</package>
+</fpdoc-descriptions>

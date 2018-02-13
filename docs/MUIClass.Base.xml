@@ -2145,6 +2145,31 @@ end.
 </seealso>
 </element>
 
+<!-- argument Visibility: default -->
+<element name="TIOnlyEvent">
+<short>Event type for <link id="OnIOnlyWarning">OnIOnlyWarning</link> fired when a field is set on runtime which is Init only </short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TIOnlyEvent.AClass">
+<short>Class which field was set.</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TIOnlyEvent.Field">
+<short>Fieldname which was tried to set.</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="TIOnlyEvent.Value">
+<short>The Value which was tried to set.</short>
+</element>
+
+<!-- argument Visibility: default -->
+<element name="OnIOnlyWarning">
+<short>Event fired when a field is set on runtime which is Init only </short>
+</element>
+
 </module> <!-- MUIClass.Base -->
 
 </package>

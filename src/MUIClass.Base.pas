@@ -16,6 +16,8 @@ type
   PCxObj = Pointer;
   {$endif}
 
+  TIOnlyEvent = procedure(AClass: TObject; Field, Value: string) of object;
+
   TMUITimer = class;
 
   THookList = class
@@ -289,7 +291,7 @@ procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 
 var
   MUIApp: TMUIApplication = nil;
-
+  OnIOnlyWarning: TIOnlyEvent = nil;
 
 implementation
 
@@ -300,6 +302,8 @@ uses
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 begin
   SysDebugLn('Warning: ' + AClass.Classname + ' tries to set ' + Field + ' to Value ' + Value + ', but Object is already created and field is not writeable.');
+  if Assigned(OnIOnlyWarning) then
+    OnIOnlyWarning(AClass, Field, Value);
 end;
 
 { THookList }
