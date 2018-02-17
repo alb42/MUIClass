@@ -345,7 +345,7 @@ end;
 
 procedure TMUIList.SetActive(AValue: Integer);
 begin
-  if AValue <> FActive then
+  if AValue <> Active then
   begin
     FActive := AValue;
     if HasObj then

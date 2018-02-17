@@ -1119,7 +1119,7 @@ top position moves.</p>
 Usually, the title is just a string. However, if you have
 a multi column list with a custom display hook and you
 want to have seperate titles for each of your columns,
-you can set this attribute to True. In this case, whenever
+you can set this attribute to #1. In this case, whenever
 MUI feels that the list title has to be drawn, it will
 call your display hook with a nil entry pointer. Your
 hook has to check for this nil entry and fill the

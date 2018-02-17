@@ -223,7 +223,7 @@ type
   public
     constructor Create; override;
     procedure CreateObject; override;
-  public
+  published
     property Active: Integer read GetActive write SetActive default 0; //
     property Entries: TStringArray read FEntries write SetEntries;     //I
     property OnActiveChange: TNotifyEvent read FOnActiveChange write FOnActiveChange;
