@@ -8,7 +8,7 @@ uses
   keymap, layers,
   mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Area;
-
+{$M+}
 type
   TMUIMouseBtn = (mmbLeft, mmbMiddle, mmbRight);
   TMUIShiftState = set of (mssShift, mssCtrl, mssLShift, mssRShift, mssLAlt, mssRAlt);

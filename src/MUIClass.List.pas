@@ -6,7 +6,7 @@ uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Area, MUIClass.Image;
-
+{$M+}
 type
   TDisplayEvent = procedure(Sender: TObject; ToPrint: PPChar; Entry: PChar) of object;
   TCompareEvent = function(Sender: TObject; Entry1, Entry2: PChar): Integer of object;

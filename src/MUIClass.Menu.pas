@@ -6,7 +6,7 @@ uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base;
-
+{$M+}
 type
 
   // Usually it should look like this:

@@ -2,11 +2,12 @@ unit MUIClass.Dialog;
 
 {$mode objfpc}{$H+}
 interface
+
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, asl, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Window;
-
+{$M+}
 type
   TBaseDialog = class
   private

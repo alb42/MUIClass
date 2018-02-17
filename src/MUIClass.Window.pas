@@ -6,7 +6,7 @@ uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base;
-
+{$M+}
 type
   TCloseAction = (caNone, caClose, caFree); // return values for OnCloseRequest, default is caClose
 
@@ -107,7 +107,6 @@ type
     procedure Show; //  open the Window
     procedure Close; // Close the Window
     property GroupObj: PObject_ read FGroupObj;
-    property Horizontal: Boolean read FHoriz write FHoriz;    // Alignment of the included Group
   public
     // MUI Methods
     procedure ScreenToBack;   // put the screen (with this Window) to back
@@ -144,6 +143,7 @@ type
     property Height: Integer read GetHeight write SetHeight default MUIV_Window_Height_Default;          //I Set inital Height of Window, read current Height (Default MUIV_Window_Height_Default;
     property Width: Integer read GetWidth write SetWidth default MUIV_Window_Width_Default;              //I Set inital Width of Window, read current Width (Default MUIV_Window_Width_Default);
     property ID: LongWord read FID write SetID default 0;                              //  unique ID in the App to identify the Window for snapshots and so on use number or MAKEID()
+    property Horizontal: Boolean read FHoriz write FHoriz;    // Alignment of the included Group
     // inputevent
     property Menustrip: TMUINotify read FMenuStrip write SetMenuStrip; // TMUIMenuStrip
     // NeedMouseObject/MouseObject -> not in AROS

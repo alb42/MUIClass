@@ -6,7 +6,7 @@ uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Window;
-
+{$M+}
 type
   TSpecDesc = class;
   // Bubble Handle
@@ -1426,8 +1426,8 @@ end;
 procedure TMUIText.GetCreateTags(var ATagList: TATagList);
 begin
   inherited;
-
-  ATagList.AddTag(MUIA_Text_Contents, AsTag(PChar(FContents)));
+  if FContents <> '' then
+    ATagList.AddTag(MUIA_Text_Contents, AsTag(PChar(FContents)));
   if FHiChar <> #0 then
     ATagList.AddTag(MUIA_Text_HiChar, AsTag(PtrUInt(FHiChar)));
   if FPreParse <>  '' then

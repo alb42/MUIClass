@@ -6,7 +6,7 @@ uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Area;
-
+{$M+}
 type
   TMUINumeric = class(TMUIArea)
   private

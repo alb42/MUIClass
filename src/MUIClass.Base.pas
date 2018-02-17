@@ -2,6 +2,7 @@ unit MUIClass.Base;
 
 {$mode objfpc}{$H+}
 interface
+
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, icon,
@@ -11,6 +12,7 @@ uses
   mui, muihelper,
   tagsparamshelper;
 
+{$M+}
 type
   {$ifdef AmigaOS4}
   PCxObj = Pointer;

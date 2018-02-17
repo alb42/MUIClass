@@ -1,13 +1,12 @@
 unit MUIClass.Group;
-
 {$mode objfpc}{$H+}
 interface
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Area, MUIClass.List, MUIClass.Gadget;
-
 type
+  {$M+}
   TMUIGroup = class(TMUIArea)
   private
     FActivePage: Integer;   //   0
@@ -47,6 +46,7 @@ type
     procedure ExitChange; override;  //   Lock/Unlock the Group before changing
     //procedure Sort; // needs a concept (maybe sort the Childlist, then apply with it)
     // Fields
+  published
     property ActivePage: Integer read GetActivePage write SetActivePage default 0;     //  Active Page if PageMode is active (0 <= ActivePage < Childs.Count)
     property Columns: Integer read FColumns write SetColumns default 0;                //  Show Childs in Columns
     property Horiz: Boolean read FHoriz write SetHoriz default False;                  // True = order the Children horizontally, False = order the Children vertically (default)
