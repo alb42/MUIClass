@@ -914,6 +914,20 @@ to False.
 </seealso>
 </element>
 
+
+<!-- property Visibility: published -->
+<element name="TMUIArea.ShowMe">
+<short>Objects with this attribute set are not displayed.</short>
+<descr>
+Objects with this attribute set are not displayed. You can
+set ShowMe at any time, causing objects to appear and
+to disappear immediately. A new layout is calculated whenever
+some objects are shown or hidden. When necessary, MUI will
+resize the parent window to make place for the new objects.
+Defaults to True.
+</descr>
+</element>
+
 <!-- property Visibility: published -->
 <element name="TMUIArea.Weight">
 <short>The weight of an object determines how much room it will get during the layout process.</short>
