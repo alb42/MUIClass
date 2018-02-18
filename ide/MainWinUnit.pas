@@ -3,15 +3,16 @@ unit MainWinUnit;
 interface
 
 uses
-  SysUtils, fgl, Classes, Typinfo,
+  SysUtils, StrUtils, fgl, Classes, Typinfo,
   MUI, muihelper,
   MUIClass.Base, MUIClass.Window, MUIClass.Area, MUIClass.List, MUIClass.Group,
-  NodeTreeUnit, MUICompUnit, MUIClass.Gadget;
+  NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog;
 
 type
   TItemProp = class
     Name: string;
     Value: string;
+    IsSpecial: Boolean;
   end;
 
   TItemProps = specialize TFPGObjectList<TItemProp>;
@@ -26,9 +27,10 @@ type
     TestWin: TMUIWindow;
     ChooseComp: TMUICycle;
     EditPages: TMUIGroup;
-    BoolLabel, IntLabel, StringLabel, StrArrayLabel: TMUIText;
+    BoolLabel, IntLabel, StringLabel, StrArrayLabel, ItemName: TMUIText;
     IntSet, StrSet: TMUIString;
     BoolSet: TMUICycle;
+    RemBtn: TMUIButton;
     // event handler
     procedure AddClick(Sender: TObject);
     procedure RemoveClick(Sender: TObject);
@@ -37,9 +39,11 @@ type
     procedure PropListDblClick(Sender: TObject);
     procedure PropDisplay(Sender: TObject; ToPrint: PPChar; Entry: PChar);
     procedure OpenStrArrayWin(Sender: TObject);
+    procedure SaveClick(Sender: TObject);
     // Update Properties of CurItem
     procedure UpdateProperties;
     procedure UpdateItemList;
+    procedure CreateSource;
   public
     // TestWin stuff
     procedure CreateTestWin;
@@ -72,7 +76,7 @@ begin
   // Window props
   LeftEdge := 0;
   Height := MUIV_Window_Height_Visible(80);
-  Width := MUIV_Window_Width_Visible(20);
+  Width := MUIV_Window_Width_Visible(30);
   OnShow := @ShowEvent;
 
   // Top Bar ()
@@ -100,7 +104,8 @@ begin
     Parent := Grp;
   end;
 
-  with TMUIButton.Create('Remove') do
+  RemBtn := TMUIButton.Create('Remove');
+  with RemBtn do
   begin
     OnClick := @RemoveClick;
     Parent := Grp;
@@ -117,7 +122,12 @@ begin
     Parent := Self;
   end;
 
+  // *******************************
   // List of Properties of the selected item
+
+  ItemName := TMUIText.Create;
+  ItemName.Parent := Self;
+
   PropList := TMUIListView.Create;
   with PropList do
   begin
@@ -214,6 +224,12 @@ begin
   end;
   //############ End Property Pages
 
+  with TMUIButton.Create('Save') do
+  begin
+    OnClick := @SaveClick;
+    Parent := Self;
+  end;
+
   Tree := TItemTree.Create;
   Tree.Name := 'Window';
   TestWin := TMUIWindow.Create;
@@ -230,15 +246,127 @@ begin
   inherited;
 end;
 
+const
+  Template =
+    'unit %filename%;'#13#10 +
+    '{$mode objfpc}{$H+}'#13#10 +
+    'initialization'#13#10 +
+    'uses'#13#10 +
+    '  %uses%'#13#10 +
+    'interface'#13#10 +
+    '%interface%'#13#10 +
+    'implementation'#13#10 +
+    '%implementation'#13#10 +
+    'end.';
+// #
+procedure TMainWindow.CreateSource;
+var
+  SL, UL: TStringList;
+  Cl: TObject;
+  i, j: Integer;
+  FileName, Ident, str: string;
+  Item: TItemNode;
+begin
+  FileName := 'TestSource.pas';
+  Ident := ChangeFileExt(ExtractFileName(Filename), '');
+  SL := TStringList.Create;
+  UL := TStringList.Create;
+  writeln(1);
+  try
+    SL.Add('unit ' + Ident + ';');
+    SL.Add('{$mode objfpc}{$H+}');
+    SL.Add('interface');
+    SL.Add('uses');
+    //
+    writeln(2);
+    UL.Add('MUIClass.Base');
+    UL.Add('MUIClass.Window');
+    for i := 0 to Tree.AllCount - 1 do
+    begin
+      Cl := Tree.AllChild[i].Data;
+      for j := 0 to High(MUIComponents) do
+      begin
+        if Cl.ClassName = MUIComponents[j].MUIClass.ClassName then
+        begin
+          if UL.IndexOf(MUIComponents[j].AUnit) < 0 then
+            UL.Add(MUIComponents[j].AUnit);
+          Break;
+        end;
+      end;
+    end;
+    writeln(3);
+    for i := 0 to UL.Count - 1 do
+    begin
+      if i = 0 then
+        str := '  ' + UL[0]
+      else
+        str := str + ', ' + UL[i];
+    end;
+    writeln(4);
+    SL.Add(str + ';');
+    SL.Add('type');
+    SL.Add('  T' + Tree.Name + ' = class(TMUIWindow)');
+    writeln(5);
+    for i := 1 to Tree.AllCount - 1 do
+    begin
+      SL.Add('    ' + Tree.AllChild[i].Name + ': ' + Tree.AllChild[i].Data.ClassName + ';');
+    end;
+    writeln(5);
+    SL.Add('    constructor Create; override;');
+    SL.Add('  end;');
+    SL.Add('var');
+    SL.Add('  ' + Tree.Name + ': T' + Tree.Name + ';');
+    SL.Add('implementation');
+    SL.Add('  constructor T' + Tree.Name + '.Create;');
+    SL.Add('  begin');
+    SL.Add('    inherited');
+    writeln(6);
+    for i := 1 to Tree.AllCount - 1 do
+    begin
+      Item := Tree.AllChild[i];
+      Cl := Item.Data;
+      SL.Add('    ' + Item.Name + ' := ' + Cl.Classname + '.Create;');
+      SL.Add('    ' + Item.Name + '.Parent := ' + Item.Parent.Name + ';');
+    end;
+    writeln(7);
+    SL.Add('end;');
+    //
+    SL.Add('end.');
+    writeln(8);
+    SL.SaveToFile(FileName);
+    writeln(9);
+    SL.Clear;
+    SL.Add('program ' + Ident + 'Main;');
+    SL.Add('{$mode objfpc}{$H+}');
+    SL.Add('uses');
+    SL.Add('  MUIClass.Base, ' + Ident + ';');
+    SL.Add('');
+    SL.Add('begin');
+    SL.Add('  ' + Tree.Name + ' := T' + Tree.Name + '.Create;');
+    SL.Add('end.');
+    writeln(10);
+    SL.SaveToFile(ExtractFilePath(Filename) + Ident + 'Main.pas');
+    writeln(11);
+  finally
+    UL.Free;
+    SL.Free;
+  end;
+end;
+
+procedure TMainWindow.SaveClick(Sender: TObject);
+begin
+  CreateSource;
+end;
+
 procedure TMainWindow.UpdateItemList;
 var
   i, OldActive: Integer;
 begin
   OldActive := ItemList.List.Active;
+  ItemList.List.Quiet := True;
   while ItemList.List.Entries > 0 do
     ItemList.List.Remove(MUIV_List_Remove_Last);
   Tree.UpdateNodesText;
-  ItemList.List.Quiet := True;
   for i := 0 to Tree.NodesText.Count - 1 do
   begin
     ItemList.List.InsertSingle(PChar(Tree.NodesText[i]), MUIV_List_Insert_Bottom);
@@ -249,6 +377,7 @@ begin
 end;
 
 procedure TMainWindow.UpdateProperties;
+
 var
   PT : PTypeData;
   PI : PTypeInfo;
@@ -258,11 +387,19 @@ var
   ItemProp: TItemProp;
   a: array of PChar;
 begin
+  PropList.List.Quiet := True;
   while PropList.List.Entries > 0 do
     PropList.List.Remove(MUIV_List_Remove_Last);
   ItemProps.Clear;
   if Assigned(CurItem) and Assigned(CurItem.Data) then
   begin
+    //Special Items
+    ItemProp := TItemProp.Create;
+    ItemProp.Name := 'Name';
+    ItemProp.IsSpecial := True;
+    ItemProp.Value := CurItem.Name;
+    ItemProps.Add(ItemProp);
+    // normal items
     Obj := CurItem.Data;
     PI := Obj.ClassInfo;
     PT := GetTypeData(PI);
@@ -276,18 +413,21 @@ begin
           tkInteger: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
+            ItemProp.IsSpecial := False;
             ItemProp.Value := IntToStr(GetOrdProp(Obj, PP^[i]));
             ItemProps.Add(ItemProp);
           end;
           tkBool: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
+            ItemProp.IsSpecial := False;
             ItemProp.Value := BoolToStr(Boolean(GetOrdProp(Obj, PP^[i])), True);
             ItemProps.Add(ItemProp);
           end;
           tkString, tkAString: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
+            ItemProp.IsSpecial := False;
             ItemProp.Value := '''' + GetStrProp(Obj, PP^[i])+'''';
             ItemProps.Add(ItemProp);
           end;
@@ -296,7 +436,16 @@ begin
               begin
                 ItemProp := TItemProp.Create;
                 ItemProp.Name := Name;
+                ItemProp.IsSpecial := False;
                 ItemProp.Value := '<Array ' + IntToStr(Length(TMUICycle(Obj).Entries)) + ' Entries>';
+                ItemProps.Add(ItemProp);
+              end;
+              if (Obj is TMUIRegister) and (Name = 'Titles') then
+              begin
+                ItemProp := TItemProp.Create;
+                ItemProp.Name := Name;
+                ItemProp.IsSpecial := False;
+                ItemProp.Value := '<Array ' + IntToStr(Length(TMUIRegister(Obj).Titles)) + ' Entries>';
                 ItemProps.Add(ItemProp);
               end;
             end;
@@ -307,7 +456,7 @@ begin
     end;
     FreeMem(PP);
   end;
-  PropList.List.Quiet := True;
+
   SetLength(A, ItemProps.Count + 1);
   for i := 0 to ItemProps.Count - 1 do
     A[i] := PChar(ItemProps[i].Name);
@@ -349,7 +498,11 @@ var
 begin
   Idx := ItemList.List.Active;
   if (Idx >= 0) and (Idx < Tree.AllCount) then
+  begin
     CurItem := Tree.AllChild[Idx];
+    ItemName.Contents := 'Properties of ' + CurItem.Name;
+  end;
+  RemBtn.Disabled := not (Idx > 0);
   UpdateProperties;
 end;
 
@@ -371,6 +524,15 @@ begin
     if StrArrayWin.Open then
       StrArrayWin.Close;
     //
+    if CurProp.IsSpecial then
+    begin
+      PropName := CurItem.Name + '.' + CurProp.Name;
+      StringLabel.Contents := PropName;
+      StrSet.Reject := ' ,.-+*!"§$%&/()=?''~^°^<>|@';
+      StrSet.Contents := CurProp.Value;
+      EditPages.ActivePage := 3;
+      Exit;
+    end;
     Obj := CurItem.Data;
     PI := Obj.ClassInfo;
     PT := GetTypeData(PI);
@@ -396,17 +558,25 @@ begin
             end;
             tkString, tkAString: begin
               StringLabel.Contents := PropName;
+              StrSet.Reject := '';
               StrSet.Contents := GetStrProp(Obj, PP^[i]);
               EditPages.ActivePage := 3;
             end;
             tkDynArray: begin
               StrArrayLabel.Contents := PropName;
+              StrArrayWin.Title := PropName;
               StrArrayWin.Obj := Obj;
               StrArrayWin.PropName := CurProp.Name;
               StrArrayWin.CurProp := CurProp;
               if (Obj is TMUICycle) and (CurProp.Name = 'Entries') then
               begin
                 StrArrayWin.StrArray := TMUICycle(Obj).Entries;
+                EditPages.ActivePage := 4;
+              end
+              else
+              if (Obj is TMUIRegister) and (CurProp.Name = 'Titles') then
+              begin
+                StrArrayWin.StrArray := TMUIRegister(Obj).Titles;
                 EditPages.ActivePage := 4;
               end
               else
@@ -465,6 +635,7 @@ end;
 procedure TMainWindow.SetStringProp(Sender: TObject);
 var
   Idx: Integer;
+  Str: string;
 begin
   Idx := PropList.List.Active;
   if (Idx >= 0) and (Idx < ItemProps.Count) and Assigned(CurItem) and Assigned(CurItem.Data) then
@@ -472,9 +643,21 @@ begin
     CurProp := ItemProps[Idx];
     //
     DestroyTestWin;
-    SetStrProp(CurItem.Data, CurProp.Name, StrSet.Contents);
-    CurProp.Value := '''' + StrSet.Contents + '''';
-    PropList.List.Redraw(MUIV_List_Redraw_Active);
+    if CurProp.IsSpecial then
+    begin
+      Str := StrSet.Contents;
+      if IsValidIdent(Str) then
+        CurItem.Name := Str
+      else
+        ShowMessage('''' + Str + ''' is not a valid identifier');
+      UpdateItemList;
+    end
+    else
+    begin
+      SetStrProp(CurItem.Data, CurProp.Name, StrSet.Contents);
+      CurProp.Value := '''' + StrSet.Contents + '''';
+      PropList.List.Redraw(MUIV_List_Redraw_Active);
+    end;
     CreateTestWin;
     //
   end;
@@ -526,6 +709,7 @@ end;
 procedure TMainWindow.ShowEvent(Sender: TObject);
 begin
   UpdateItemList;
+  ItemList.List.Active := 0;
   CreateTestWin;
 end;
 
@@ -601,7 +785,7 @@ var
 begin
   // get the element to delete
   Idx := ItemList.List.Active;
-  if (Idx >= 0) and (Idx < Tree.AllCount) then
+  if (Idx >= 1) and (Idx < Tree.AllCount) then
   begin
     CurItem := Tree.AllChild[Idx];
     // remove the MUIClass object and all its childs

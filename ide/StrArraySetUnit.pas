@@ -12,7 +12,8 @@ type
   TStrArrayWin = class(TMUIWindow)
   private
     Edit: TMUIString;
-    Text: TMUIFloatText;
+    Text: TMUIList;
+    TextView: TMUIListView;
     SL: TStringList;
     procedure SetStringArray(AValue: TStringArray);
     function GetStringArray: TStringArray;
@@ -43,10 +44,13 @@ var
 begin
   inherited;
   SL := TStringList.Create;
+  
+  Text := TMUIList.Create;
 
-  Text := TMUIFloatText.Create;
-  Text.Parent := Self;
-
+  TextView := TMUIListView.Create;
+  TextView.List := Text;
+  TextView.Parent := Self;
+  
   Grp := TMUIGroup.Create;
   with Grp do
   begin
@@ -133,8 +137,17 @@ begin
 end;
 
 procedure TStrArrayWin.UpdateText;
+var
+  i: Integer;
 begin
-  Text.Text := SL.Text;
+  Text.Quiet := True;
+  while Text.Entries > 0 do
+    Text.Remove(MUIV_List_Remove_Last);
+  for i := 0 to SL.Count - 1 do
+  begin
+    Text.InsertSingle(PChar(SL[i]), MUIV_List_Insert_Bottom);
+  end;  
+  Text.Quiet := False;
 end;
 
 procedure TStrArrayWin.AddText(Sender: TObject);
@@ -164,6 +177,8 @@ begin
     MainWindow.DestroyTestWin;
     if (Obj is TMUICycle) and (PropName = 'Entries') then
       TMUICycle(Obj).Entries := StrArray;
+    if (Obj is TMUIRegister) and (PropName = 'Titles') then
+      TMUIRegister(Obj).Titles := StrArray;  
     CurProp.Value := '<Array ' + IntToStr(Length(StrArray)) + ' Entries>';
     MainWindow.PropList.List.Redraw(MUIV_List_Redraw_Active);
     MainWindow.CreateTestWin;

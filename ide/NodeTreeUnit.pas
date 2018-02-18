@@ -136,7 +136,7 @@ begin
   else
     SL.Add(Indent + FName + ' ');
   if LastEntry then
-    Indent := stringreplace(Indent, '  +-', '  ', [rfReplaceAll])
+    Indent := stringreplace(Indent, '  +-', '    ', [rfReplaceAll])
   else
     Indent := stringreplace(Indent, '  +-', '  | ', [rfReplaceAll]);
   for i := 0 to Childs.Count - 1 do
