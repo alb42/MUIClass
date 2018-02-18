@@ -12,6 +12,7 @@ uses
 
 type
   TMyWindow = class(TMUIWindow)
+  public
     Count: Integer;
     Txt: TMUIText;
     MITest: TMUIMenuItem;

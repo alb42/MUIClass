@@ -27,6 +27,7 @@ type
     FBubbleList: TBubbleList;
     FBackground: TSpecDesc;
     FOnClick: TNotifyEvent;
+    FOnSelected: TNotifyEvent;
 
     FControlChar: Char;
     FCycleChain: Integer;
@@ -166,6 +167,7 @@ type
     property ObjectID: LongWord read FObjectID write SetObjectID default 0;
     // Events
     property OnClick: TNotifyEvent read FOnClick write FOnClick;
+    property OnSelected: TNotifyEvent read FOnSelected write FOnSelected;
   end;
 
   TMUIRectangle = class(TMUIArea)
@@ -551,11 +553,22 @@ begin
     PasObj.FOnClick(PasObj);
 end;
 
+function SelectedFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PasObj: TMUIArea;
+begin
+  Result := 0;
+  PasObj := TMUIArea(Hook^.h_Data);
+  if Assigned(PasObj.FOnSelected) then
+    PasObj.FOnSelected(PasObj);
+end;
+
 procedure TMUIArea.AfterCreateObject;
 begin
   inherited;
   // Connect Events
   ConnectHook(MUIA_Pressed, MUI_FALSE, @PressFunc);
+  ConnectHook(MUIA_Selected, MUIV_EveryTime, @SelectedFunc);
 end;
 
 procedure TMUIArea.BeforeCloseWindow;

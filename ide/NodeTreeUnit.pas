@@ -19,6 +19,7 @@ type
     TopNode: TItemTree;
     FParent: TItemNode;
     FData: TObject;
+    FProps: TStringList;
     FGlobalIdx: Integer;
     function GetCount: Integer;
     function GetChild(Idx: Integer): TItemNode;
@@ -33,6 +34,7 @@ type
     property Name: string read FName write FName;
     property Parent: TItemNode read FParent;
     property Data: TObject read FData write FData;
+    property Properties: TStringList read FProps;
     property Count: Integer read GetCount;
     property Child[Idx: Integer]: TItemNode read GetChild; default;
     property GlobalIdx: Integer read FGlobalIdx;
@@ -61,6 +63,7 @@ constructor TItemNode.Create(ATopNode: TItemTree);
 begin
   TopNode := ATopNode;
   Childs := TItemNodes.Create(False);
+  FProps := TStringList.Create;
 end;
 
 destructor TItemNode.Destroy;
@@ -77,6 +80,7 @@ begin
   end;
   Childs.Clear;
   Childs.Free;
+  FProps.Free;
   if Assigned(TopNode) and Assigned(TopNode.AllChilds) then
   begin
     TopNode.AllChilds.Remove(Self);

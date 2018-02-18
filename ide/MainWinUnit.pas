@@ -10,9 +10,16 @@ uses
 
 type
   TItemProp = class
+  private
+    FActive: Boolean;
+    procedure SetActive(AValue: Boolean);
+  public
     Name: string;
     Value: string;
+    DisplayName: string;
+    DisplayValue: string;
     IsSpecial: Boolean;
+    property Active: boolean read FActive write SetActive;
   end;
 
   TItemProps = specialize TFPGObjectList<TItemProp>;
@@ -41,6 +48,7 @@ type
     procedure PropDisplay(Sender: TObject; ToPrint: PPChar; Entry: PChar);
     procedure OpenStrArrayWin(Sender: TObject);
     procedure SaveClick(Sender: TObject);
+    procedure IncludeChange(Sender: TObject);
     // Update Properties of CurItem
     procedure UpdateProperties;
     procedure UpdateItemList;
@@ -69,7 +77,7 @@ uses
 // Create Main Window
 constructor TMainWindow.Create;
 var
-  Grp, Grp2, Grp3: TMUIGroup;
+  Grp, Grp2: TMUIGroup;
   StrCycle: TStringArray;
   i: Integer;
 begin
@@ -249,7 +257,12 @@ begin
   end;
 
   IncludeProp := TMUICheckmark.Create;
-  IncludeProp.Parent := Grp;
+  with IncludeProp do
+  begin
+    Disabled := True;
+    OnSelected := @IncludeChange;
+    Parent := Grp;
+  end;
 
   with TMUIText.Create('Include in Source') do
   begin
@@ -268,6 +281,7 @@ begin
   Tree.Name := 'Window1';
   TestWin := TMUIWindow.Create;
   Tree.Data := TestWin;
+  Tree.Properties.Add('Title');
   TestWin.Title := 'Window1';
 
   CurItem := Tree;
@@ -280,7 +294,7 @@ begin
   inherited;
 end;
 
-procedure AddProperties(Obj: TObject; Ind: string; SL: TStringList);
+procedure AddProperties(Node: TItemNode; Ind: string; SL: TStringList);
 var
   PT : PTypeData;
   PI : PTypeInfo;
@@ -288,8 +302,10 @@ var
   PP : PPropList;
   Value: Integer;
   ValueS: string;
+  Obj: TObject;
 begin
   // normal items
+  Obj := Node.Data;
   PI := Obj.ClassInfo;
   PT := GetTypeData(PI);
   GetMem (PP, PT^.PropCount * SizeOf(Pointer));
@@ -298,6 +314,8 @@ begin
   begin
     with PP^[i]^ do
     begin
+      if Node.Properties.IndexOf(Name) < 0 then
+        Continue;
       case PropType^.Kind of
         tkInteger: begin
           Value := GetOrdProp(Obj, PP^[i]);
@@ -422,7 +440,7 @@ begin
       SL.Add('    with ' + Item.Name + ' do');
       SL.Add('    begin');
       writeln('  ', i,' ', Item.Name);
-      AddProperties(cl, '      ', SL);
+      AddProperties(Item, '      ', SL);
       writeln('  ', i,' addproperties done');
       if Item.Parent.Data is TMUIWindow then
         SL.Add('      Parent := Self;')
@@ -517,6 +535,7 @@ begin
             ItemProp.Name := Name;
             ItemProp.IsSpecial := False;
             ItemProp.Value := IntToStr(GetOrdProp(Obj, PP^[i]));
+            ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             ItemProps.Add(ItemProp);
           end;
           tkBool: begin
@@ -524,6 +543,7 @@ begin
             ItemProp.Name := Name;
             ItemProp.IsSpecial := False;
             ItemProp.Value := BoolToStr(Boolean(GetOrdProp(Obj, PP^[i])), True);
+            ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             ItemProps.Add(ItemProp);
           end;
           tkString, tkAString: begin
@@ -531,6 +551,7 @@ begin
             ItemProp.Name := Name;
             ItemProp.IsSpecial := False;
             ItemProp.Value := '''' + GetStrProp(Obj, PP^[i])+'''';
+            ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             ItemProps.Add(ItemProp);
           end;
           tkDynArray: begin
@@ -540,6 +561,7 @@ begin
                 ItemProp.Name := Name;
                 ItemProp.IsSpecial := False;
                 ItemProp.Value := '<Array ' + IntToStr(Length(TMUICycle(Obj).Entries)) + ' Entries>';
+                ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
                 ItemProps.Add(ItemProp);
               end;
               if (Obj is TMUIRegister) and (Name = 'Titles') then
@@ -548,6 +570,7 @@ begin
                 ItemProp.Name := Name;
                 ItemProp.IsSpecial := False;
                 ItemProp.Value := '<Array ' + IntToStr(Length(TMUIRegister(Obj).Titles)) + ' Entries>';
+                ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
                 ItemProps.Add(ItemProp);
               end;
             end;
@@ -584,8 +607,8 @@ begin
   if (Idx >= 0) and (Idx < ItemProps.Count) and Assigned(Entry) then
   begin
     ItemProp := ItemProps[Idx];
-    ToPrint[0] := PChar(ItemProp.Name);
-    ToPrint[1] := PChar(ItemProp.Value);
+    ToPrint[0] := PChar(ItemProp.DisplayName);
+    ToPrint[1] := PChar(ItemProp.DisplayValue);
   end
   else
   begin
@@ -633,6 +656,7 @@ begin
       StrSet.Reject := ' ,.-+*!"§$%&/()=?''~^°^<>|@';
       StrSet.Contents := CurProp.Value;
       EditPages.ActivePage := 3;
+      IncludeProp.Disabled := True;
       Exit;
     end;
     Obj := CurItem.Data;
@@ -652,17 +676,23 @@ begin
               IntLabel.Contents := PropName;
               IntSet.Contents := IntToStr(GetOrdProp(Obj, PP^[i]));
               EditPages.ActivePage := 2;
+              IncludeProp.Disabled := False;
+              IncludeProp.Selected := CurProp.Active;
             end;
             tkBool: begin
               BoolLabel.Contents := PropName;
               BoolSet.Active := GetOrdProp(Obj, PP^[i]);
               EditPages.ActivePage := 1;
+              IncludeProp.Disabled := False;
+              IncludeProp.Selected := CurProp.Active;
             end;
             tkString, tkAString: begin
               StringLabel.Contents := PropName;
               StrSet.Reject := '';
               StrSet.Contents := GetStrProp(Obj, PP^[i]);
               EditPages.ActivePage := 3;
+              IncludeProp.Disabled := False;
+              IncludeProp.Selected := CurProp.Active;
             end;
             tkDynArray: begin
               StrArrayLabel.Contents := PropName;
@@ -674,19 +704,27 @@ begin
               begin
                 StrArrayWin.StrArray := TMUICycle(Obj).Entries;
                 EditPages.ActivePage := 4;
+                IncludeProp.Disabled := False;
+                IncludeProp.Selected := CurProp.Active;
               end
               else
               if (Obj is TMUIRegister) and (CurProp.Name = 'Titles') then
               begin
                 StrArrayWin.StrArray := TMUIRegister(Obj).Titles;
                 EditPages.ActivePage := 4;
+                IncludeProp.Disabled := False;
+                IncludeProp.Selected := CurProp.Active;
               end
               else
+              begin
                 EditPages.ActivePage := 0;
+                IncludeProp.Disabled := True;
+              end;
             end;
             else
             begin
               EditPages.ActivePage := 0;
+              IncludeProp.Disabled := True;
             end;
           end;
           Break;
@@ -696,7 +734,10 @@ begin
     FreeMem(PP);
   end
   else
+  begin
     EditPages.ActivePage := 0;
+    IncludeProp.Disabled := True;
+  end;
 end;
 
 procedure TMainWindow.SetIntProp(Sender: TObject);
@@ -709,6 +750,9 @@ begin
     CurProp := ItemProps[Idx];
     //
     DestroyTestWin;
+    if CurItem.Properties.IndexOf(CurProp.Name) < 0 then
+      CurItem.Properties.Add(CurProp.Name);
+    CurProp.Active := True;
     SetOrdProp(CurItem.Data, CurProp.Name, IntSet.IntegerValue);
     CurProp.Value := IntToStr(IntSet.IntegerValue);
     PropList.List.Redraw(MUIV_List_Redraw_Active);
@@ -726,8 +770,11 @@ begin
     CurProp := ItemProps[Idx];
     //
     DestroyTestWin;
+    if CurItem.Properties.IndexOf(CurProp.Name) < 0 then
+      CurItem.Properties.Add(CurProp.Name);
     SetOrdProp(CurItem.Data, CurProp.Name, BoolSet.Active);
     CurProp.Value := BoolToStr(Boolean(BoolSet.Active), True);
+    CurProp.Active := True;
     PropList.List.Redraw(MUIV_List_Redraw_Active);
     CreateTestWin;
     //
@@ -756,13 +803,22 @@ begin
     end
     else
     begin
+      if CurItem.Properties.IndexOf(CurProp.Name) < 0 then
+        CurItem.Properties.Add(CurProp.Name);
       SetStrProp(CurItem.Data, CurProp.Name, StrSet.Contents);
       CurProp.Value := '''' + StrSet.Contents + '''';
+      CurProp.Active := True;
       PropList.List.Redraw(MUIV_List_Redraw_Active);
     end;
     CreateTestWin;
     //
   end;
+end;
+
+procedure TMainWindow.IncludeChange(Sender: TObject);
+begin
+  CurProp.Active := IncludeProp.Selected;
+  PropList.List.Redraw(MUIV_List_Redraw_Active);
 end;
 
 procedure TMainWindow.OpenStrArrayWin(Sender: TObject);
@@ -872,7 +928,10 @@ begin
     // add the component
     Child := CurItem.NewChild(NName, MUIComponents[Idx].MUIClass.Create);
     if IsPublishedProp(Child.Data, 'Contents') then
+    begin
+      Child.Properties.Add('Contents');
       SetStrProp(Child.Data, 'Contents', NName);
+    end;
     // update the pseudo Tree
     UpdateItemList;
     // create the Window with new component
@@ -904,5 +963,20 @@ begin
   end;
 end;
 
+
+procedure TItemProp.SetActive(AValue: Boolean);
+begin
+  FActive := AValue;
+  if Active then
+  begin
+    DisplayName := #27'b' + Name;
+    DisplayValue := #27'b' + Value;
+  end
+  else
+  begin
+    DisplayName := Name;
+    DisplayValue := Value;
+  end;
+end;
 
 end.

@@ -44,13 +44,13 @@ var
 begin
   inherited;
   SL := TStringList.Create;
-  
+
   Text := TMUIList.Create;
 
   TextView := TMUIListView.Create;
   TextView.List := Text;
   TextView.Parent := Self;
-  
+
   Grp := TMUIGroup.Create;
   with Grp do
   begin
@@ -146,7 +146,7 @@ begin
   for i := 0 to SL.Count - 1 do
   begin
     Text.InsertSingle(PChar(SL[i]), MUIV_List_Insert_Bottom);
-  end;  
+  end;
   Text.Quiet := False;
 end;
 
@@ -178,8 +178,9 @@ begin
     if (Obj is TMUICycle) and (PropName = 'Entries') then
       TMUICycle(Obj).Entries := StrArray;
     if (Obj is TMUIRegister) and (PropName = 'Titles') then
-      TMUIRegister(Obj).Titles := StrArray;  
+      TMUIRegister(Obj).Titles := StrArray;
     CurProp.Value := '<Array ' + IntToStr(Length(StrArray)) + ' Entries>';
+    CurProp.Active := True;
     MainWindow.PropList.List.Redraw(MUIV_List_Redraw_Active);
     MainWindow.CreateTestWin;
   end;
