@@ -6,7 +6,7 @@ uses
   SysUtils, StrUtils, fgl, Classes, Typinfo,
   MUI, muihelper,
   MUIClass.Base, MUIClass.Window, MUIClass.Area, MUIClass.List, MUIClass.Group,
-  NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog;
+  NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog, MUIClass.Image;
 
 type
   TItemProp = class
@@ -31,6 +31,7 @@ type
     IntSet, StrSet: TMUIString;
     BoolSet: TMUICycle;
     RemBtn: TMUIButton;
+    IncludeProp: TMUICheckMark;
     // event handler
     procedure AddClick(Sender: TObject);
     procedure RemoveClick(Sender: TObject);
@@ -68,7 +69,7 @@ uses
 // Create Main Window
 constructor TMainWindow.Create;
 var
-  Grp: TMUIGroup;
+  Grp, Grp2, Grp3: TMUIGroup;
   StrCycle: TStringArray;
   i: Integer;
 begin
@@ -140,27 +141,38 @@ begin
     Parent := Self;
   end;
 
+  Grp2 := TMUIGroup.Create;
+  with Grp2 do
+  begin
+    Grp.Frame := MUIV_Frame_Group;
+    FrameTitle := 'Set Property';
+    Parent := Self;
+  end;
   //############ Property Pages
   EditPages := TMUIGroup.Create;
   with EditPages do
   begin
+    Frame := MUIV_Frame_None;
     PageMode := True;
-    Parent := Self;
+    Parent := Grp2;
   end;
 
   // Empty Group for no properties to edit
   Grp := TMUIGroup.Create;
+  Grp.Frame := MUIV_Frame_None;
   Grp.Parent := EditPages;
   With TMUIRectangle.Create do
     Parent := Grp;
 
   // Boolean Group for boolean properties
   Grp := TMUIGroup.Create;
+  Grp.Frame := MUIV_Frame_None;
   Grp.Parent := EditPages;
   Grp.Horiz := True;
   BoolLabel := TMUIText.Create;
   with BoolLabel do
   begin
+    Frame := MUIV_Frame_None;
     Contents := 'Test            ';
     Parent := Grp;
   end;
@@ -179,6 +191,7 @@ begin
   IntLabel := TMUIText.Create;
   with IntLabel do
   begin
+    Frame := MUIV_Frame_None;
     Contents := 'Test            ';
     Parent := Grp;
   end;
@@ -192,11 +205,13 @@ begin
 
   // String Group to edit String properties
   Grp := TMUIGroup.Create;
+  Grp.Frame := MUIV_Frame_None;
   Grp.Horiz := True;
   Grp.Parent := EditPages;
   StringLabel := TMUIText.Create;
   with StringLabel do
   begin
+    Frame := MUIV_Frame_None;
     Contents := 'Test            ';
     Parent := Grp;
   end;
@@ -209,6 +224,7 @@ begin
 
   // String Array Group to edit String Array properties
   Grp := TMUIGroup.Create;
+  Grp.Frame := MUIV_Frame_None;
   Grp.Horiz := True;
   Grp.Parent := EditPages;
   StrArrayLabel := TMUIText.Create;
@@ -224,6 +240,24 @@ begin
   end;
   //############ End Property Pages
 
+  Grp := TMUIGroup.Create;
+  with Grp do
+  begin
+    Frame := MUIV_Frame_None;
+    Horiz := True;
+    Parent := Grp2;
+  end;
+
+  IncludeProp := TMUICheckmark.Create;
+  IncludeProp.Parent := Grp;
+
+  with TMUIText.Create('Include in Source') do
+  begin
+    Frame := MUIV_Frame_None;
+    Parent := Grp;
+  end;
+
+
   with TMUIButton.Create('Save') do
   begin
     OnClick := @SaveClick;
@@ -231,10 +265,10 @@ begin
   end;
 
   Tree := TItemTree.Create;
-  Tree.Name := 'Window';
+  Tree.Name := 'Window1';
   TestWin := TMUIWindow.Create;
   Tree.Data := TestWin;
-  TestWin.Title := 'TestWindow';
+  TestWin.Title := 'Window1';
 
   CurItem := Tree;
 end;
@@ -246,19 +280,78 @@ begin
   inherited;
 end;
 
-const
-  Template =
-    'unit %filename%;'#13#10 +
-    '{$mode objfpc}{$H+}'#13#10 +
-    'initialization'#13#10 +
-    'uses'#13#10 +
-    '  %uses%'#13#10 +
-    'interface'#13#10 +
-    '%interface%'#13#10 +
-    'implementation'#13#10 +
-    '%implementation'#13#10 +
-    'end.';
-// #
+procedure AddProperties(Obj: TObject; Ind: string; SL: TStringList);
+var
+  PT : PTypeData;
+  PI : PTypeInfo;
+  I,J,n : Longint;
+  PP : PPropList;
+  Value: Integer;
+  ValueS: string;
+begin
+  // normal items
+  PI := Obj.ClassInfo;
+  PT := GetTypeData(PI);
+  GetMem (PP, PT^.PropCount * SizeOf(Pointer));
+  J := GetPropList(PI, tkAny, PP);
+  for I:=0 to J-1 do
+  begin
+    with PP^[i]^ do
+    begin
+      case PropType^.Kind of
+        tkInteger: begin
+          Value := GetOrdProp(Obj, PP^[i]);
+          if Value <> Default then
+            SL.Add(Ind + Name + ' := ' + IntToStr(Value) + ';');
+        end;
+        tkBool: begin
+          Value := GetOrdProp(Obj, PP^[i]);
+          if Boolean(Value) <> Boolean(Default) then
+            SL.Add(Ind + Name + ' := ' + BoolToStr(Boolean(Value), True) + ';');
+        end;
+        tkString, tkAString: begin
+          ValueS := GetStrProp(Obj, PP^[i]);
+          if ValueS <> '' then
+            SL.Add(Ind + Name + ' := ''' + ValueS + ''';');
+
+        end;
+        tkDynArray: begin
+            if (Obj is TMUICycle) and (Name = 'Entries') then
+            begin
+              writeln('    Length ', Length(TMUICycle(Obj).Entries));
+              if Length(TMUICycle(Obj).Entries) > 0 then
+              begin
+                for n := 0 to High(TMUICycle(Obj).Entries) do
+                begin
+                  if n = 0 then
+                    ValueS := '''' + TMUICycle(Obj).Entries[0] + ''''
+                  else
+                    ValueS := ValueS + ', ''' + TMUICycle(Obj).Entries[n] + '''';
+                end;
+                SL.Add(Ind + Name + ' := [' + ValueS + '];');
+              end;
+            end;
+            if (Obj is TMUIRegister) and (Name = 'Titles') then
+            begin
+              if Length(TMUIRegister(Obj).Titles) > 0 then
+              begin
+                for n := 0 to High(TMUIRegister(Obj).Titles) do
+                begin
+                  if n = 0 then
+                    ValueS := TMUIRegister(Obj).Titles[0]
+                  else
+                    ValueS := ValueS + ', ''' + TMUIRegister(Obj).Titles[n] + '''';
+                end;
+                SL.Add(Ind + Name + ' := [' + ValueS + '];');
+              end;
+            end;
+          end;
+      end;
+    end;
+  end;
+  FreeMem(PP);
+end;
+
 procedure TMainWindow.CreateSource;
 var
   SL, UL: TStringList;
@@ -319,17 +412,26 @@ begin
     SL.Add('implementation');
     SL.Add('  constructor T' + Tree.Name + '.Create;');
     SL.Add('  begin');
-    SL.Add('    inherited');
+    SL.Add('    inherited;');
     writeln(6);
     for i := 1 to Tree.AllCount - 1 do
     begin
       Item := Tree.AllChild[i];
       Cl := Item.Data;
       SL.Add('    ' + Item.Name + ' := ' + Cl.Classname + '.Create;');
-      SL.Add('    ' + Item.Name + '.Parent := ' + Item.Parent.Name + ';');
+      SL.Add('    with ' + Item.Name + ' do');
+      SL.Add('    begin');
+      writeln('  ', i,' ', Item.Name);
+      AddProperties(cl, '      ', SL);
+      writeln('  ', i,' addproperties done');
+      if Item.Parent.Data is TMUIWindow then
+        SL.Add('      Parent := Self;')
+      else
+        SL.Add('      Parent := ' + Item.Parent.Name + ';');
+      SL.Add('    end;');
     end;
     writeln(7);
-    SL.Add('end;');
+    SL.Add('  end;');
     //
     SL.Add('end.');
     writeln(8);
@@ -343,6 +445,7 @@ begin
     SL.Add('');
     SL.Add('begin');
     SL.Add('  ' + Tree.Name + ' := T' + Tree.Name + '.Create;');
+    SL.Add('  MUIApp.Run;');
     SL.Add('end.');
     writeln(10);
     SL.SaveToFile(ExtractFilePath(Filename) + Ident + 'Main.pas');
@@ -377,7 +480,6 @@ begin
 end;
 
 procedure TMainWindow.UpdateProperties;
-
 var
   PT : PTypeData;
   PI : PTypeInfo;
@@ -787,12 +889,13 @@ begin
   Idx := ItemList.List.Active;
   if (Idx >= 1) and (Idx < Tree.AllCount) then
   begin
+    // destroy the Window
+    DestroyTestWin;
+    //
     CurItem := Tree.AllChild[Idx];
     // remove the MUIClass object and all its childs
     CurItem.Data.Free;
     CurItem.Data := nil;
-    // destroy the Window
-    DestroyTestWin;
     // destroy the object
     CurItem.Free;
     UpdateItemList;

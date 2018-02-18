@@ -714,6 +714,9 @@ begin
   SetLength(FTitles, 0);
 end;
 
+var
+  EmptyStr: string = ' ';
+
 procedure TMUIRegister.GetCreateTags(var ATagList: TATagList);
 var
   I: Integer;
@@ -728,8 +731,15 @@ begin
       PCs[i] := PChar(FTitles[i]);
     PCs[High(PCs)] := nil;
     ATagList.AddTag(MUIA_Register_Titles, AsTag(@(PCs[0])));
-
+  end
+  else
+  begin
+    SetLength(PCs, 2);
+    PCs[0] := PChar(EmptyStr);
+    PCs[1] := nil;
+    ATagList.AddTag(MUIA_Register_Titles, AsTag(@(PCs[0])));
   end;
+
 end;
 
 procedure TMUIRegister.CreateObject;

@@ -58,6 +58,7 @@ type
     FShowSelState: Boolean;
     FWeight: Integer;
     FObjectID: LongWord;
+    FShowMe: Boolean;
     function GetLeftEdge: Integer;
     function GetTopEdge: Integer;
     function GetRightEdge: Integer;
@@ -103,6 +104,7 @@ type
     function GetWindow: PWindow;
     function GetWindowObject: TMUIWindow;
     procedure SetObjectID(AValue: LongWord);
+    procedure SetShowMe(AValue: Boolean);
   protected
     procedure AfterCreateObject; override;
     procedure BeforeCloseWindow; override;
@@ -159,6 +161,7 @@ type
     property Selected: Boolean read GetSelected write SetSelected default False;
     property ShortHelp: string read FShortHelp write SetShortHelp;
     property ShowSelState: Boolean read FShowSelState write SetShowSelState default True;  // defaults to true
+    property ShowMe: Boolean read FShowMe write SetShowMe default True;  // defaults to true
     property Weight: Integer read FWeight write SetWeight default 100;
     property ObjectID: LongWord read FObjectID write SetObjectID default 0;
     // Events
@@ -443,6 +446,7 @@ begin
   FSelected := False;
   FShortHelp := '';
   FShowSelState := True;
+  FShowMe := True;
   FWeight := 100;
   FObjectID := 0;
 end;
@@ -516,6 +520,8 @@ begin
     ATagList.AddTag(MUIA_ShortHelp, AsTag(PChar(FShortHelp)));
   if not FShowSelState then
     ATagList.AddTag(MUIA_ShowSelState, AsTag(FShowSelState));
+  if not FShowMe then
+    ATagList.AddTag(MUIA_ShowMe, AsTag(FShowMe));
   if FWeight <> 100 then
     ATagList.AddTag(MUIA_Weight, AsTag(FWeight));
   if FObjectID <> 0 then
@@ -954,6 +960,18 @@ begin
     if HasObj then
     begin
       SetValue(MUIA_ShortHelp, AsTag(PChar(FShortHelp)));
+    end;
+  end;
+end;
+
+procedure TMUIArea.SetShowMe(AValue: Boolean);
+begin
+  if AValue <> FShowMe then
+  begin
+    FShowMe := AValue;
+    if HasObj then
+    begin
+      SetValue(MUIA_ShowMe, AsTag(FShowMe));
     end;
   end;
 end;
@@ -1408,7 +1426,7 @@ begin
   FSetMax := False;
   FSetMax := False;
   FSetVMax := True;
-  Frame := MUIV_Frame_Text;
+  Frame := MUIV_Frame_None;
 end;
 
 constructor TMUIText.Create(AContents: string);

@@ -424,9 +424,9 @@ procedure TMUIWindow.RemoveChild(AChild: TMUINotify);
 begin
   if Assigned(AChild) and (Childs.IndexOf(AChild) >= 0) then
   begin
-    Childs.Remove(AChild);
     if HasObj then
       DoMethod(FGroupObj, [NativeUInt(OM_REMMEMBER), AsTag(AChild.MUIObj)]);
+    Childs.Remove(AChild);
   end;
 end;
 
