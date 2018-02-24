@@ -19,6 +19,7 @@ type
   {$endif}
 
   TIOnlyEvent = procedure(AClass: TObject; Field, Value: string) of object;
+  TExceptionEvent = procedure(Sender: TObject; E: Exception) of object;
 
   TMUITimer = class;
 
@@ -133,6 +134,7 @@ type
     FTitle: string;           //* ''
     FVersion: string;         //* ''
     FMenuStrip: TMUINotify; //
+    FOnException: TExceptionEvent;
     procedure SetActive(AValue: Boolean);
     function GetActive: Boolean;
     procedure SetAuthor(AValue: string);
@@ -220,7 +222,7 @@ type
     property OnIdle: TNotifyEvent read FOnIdle write FOnIdle;
     property OnIconify: TNotifyEvent read FOnIconify write FOnIconify;
     property OnRestore: TNotifyEvent read FOnRestore write FOnRestore;
-
+    property OnException: TExceptionEvent read FOnException write FOnException;
   end;
 
   TMUIWithParent = class(TMUINotify)
@@ -299,7 +301,7 @@ implementation
 
 
 uses
-  MUIClass.Window;
+  MUIClass.Window, MUIClass.Dialog;
 
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 begin
@@ -825,8 +827,23 @@ begin
     Exit;
   end;
   FTerminated := False;
-  while Integer(DoMethod(MUIApp.MUIObj, [MUIM_Application_NewInput, AsTag(@sigs)])) <> MUIV_Application_ReturnID_Quit do
+  while not FTerminated  do
   begin
+    // poll loop
+    try
+      if Integer(DoMethod(MUIApp.MUIObj, [MUIM_Application_NewInput, AsTag(@sigs)])) = MUIV_Application_ReturnID_Quit then
+        Break;
+    except
+      On E:Exception do
+      begin
+        if Assigned(FOnException) then
+          FOnException(Self, E)
+        else
+          if MessageBox('Exception', 'Exception: ' + E.Message + #13#10 + 'To prevent Data corruption your should close the program.', ['Ignore', 'Close Program']) = 0 then
+            Break;
+      end;
+    end;
+    //
     if (FToDestroy.Count > 0) then
     begin
       for i := 0 to FToDestroy.Count - 1 do

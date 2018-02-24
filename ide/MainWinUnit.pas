@@ -8,6 +8,18 @@ uses
   MUIClass.Base, MUIClass.Window, MUIClass.Area, MUIClass.List, MUIClass.Group,
   NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog, MUIClass.Image;
 
+// Default Editor to use for editing Eventhandlers
+const
+  {$ifdef AROS}
+  EDITOR = 'sys:EdiSyn/EdiSyn';
+  {$else}
+    {$ifdef Amiga68k}
+    EDITOR = 'sys:Tools/EditPad';
+    {$else}
+    EDITOR = 'c:ed';
+    {$endif}
+  {$endif}
+
 type
   TItemProp = class
   private
@@ -25,15 +37,25 @@ type
 
   TItemProps = specialize TFPGObjectList<TItemProp>;
 
+  // If an Eventhandler is specified we save the contents
+  // because we cant connect it to the object itself like other properties
   TEventHandler = class
-    Name: string;
-    Obj: TItemNode;
-    Event: string;
-    Header: string;
-    Text: string;
+    Name: string;    // name of Event On...
+    Obj: TItemNode;  // Item Node which the Event belongs to
+    Event: string;   // Name of the EventHandler
+    Header: string;  // Full Header of the EventHandler
+    Text: string;    // Ful Text of the Eventhandler as given by user
   end;
-
   TEventHandlers = specialize TFPGObjectList<TEventHandler>;
+
+  // Types for creation of Event Footprint
+  TEventParam = record
+    Style: TParamFlags;
+    Name: string;
+    Typ: string;
+  end;
+  TEventParams = array of TEventParam;
+  PParamFlags = ^TParamFlags;
 
   TMainWindow = class(TMUIWindow)
   public
@@ -103,13 +125,17 @@ var
   i: Integer;
 begin
   inherited;
+  EventHandlers := TEventHandlers.Create(True);
+  ItemProps := TItemProps.Create(True);
+  EventProps := TItemProps.Create(True);
+
   // Window props
   LeftEdge := 0;
   Height := MUIV_Window_Height_Visible(80);
   Width := MUIV_Window_Width_Visible(30);
   OnShow := @ShowEvent;
 
-  // Top Bar ()
+  // Top Panel
   Grp := TMUIGroup.Create;
   with Grp do
   begin
@@ -117,32 +143,33 @@ begin
     Parent := Self;
   end;
 
+
+  // Choose Component
+  //    Create the ComboBox Entries from the List
   SetLength(StrCycle, Length(MUIComponents));
   for i := 0 to High(MUIComponents) do
     StrCycle[i] := '    ' + MUIComponents[i].Name + '    ';
-
   ChooseComp := TMUICycle.Create;
   with ChooseComp do
   begin
     Entries := StrCycle;
     Parent := Grp;
   end;
-
+  // Add a component
   with TMUIButton.Create('Add') do
   begin
     OnClick := @AddClick;
     Parent := Grp;
   end;
-
+  // Remove Component
   RemBtn := TMUIButton.Create('Remove');
   with RemBtn do
   begin
     OnClick := @RemoveClick;
     Parent := Grp;
   end;
-  EventHandlers := TEventHandlers.Create(True);
-  ItemProps := TItemProps.Create(True);
-  EventProps := TItemProps.Create(True);
+
+  //#####################################
   // List of Items
   ItemList := TMUIListView.Create;
   with ItemList do
@@ -192,6 +219,7 @@ begin
     FrameTitle := 'Set Property';
     Parent := Grp;
   end;
+
   //############ Property Pages
   EditPages := TMUIGroup.Create;
   with EditPages do
@@ -380,6 +408,8 @@ begin
   CurItem := Tree;
 end;
 
+
+// Destroy MainWindow
 destructor TMainWindow.Destroy;
 begin
   Tree.Free;
@@ -598,29 +628,39 @@ begin
   end;
 end;
 
+// Save the Source File
 procedure TMainWindow.SaveClick(Sender: TObject);
 begin
   CreateSource;
 end;
 
+// Update Item List from the Tree (build the Fake Tree)
 procedure TMainWindow.UpdateItemList;
 var
   i, OldActive: Integer;
 begin
+  // remember which element was active before
   OldActive := ItemList.List.Active;
+  // Block redrawing
   ItemList.List.Quiet := True;
+  // remove all entries
   while ItemList.List.Entries > 0 do
     ItemList.List.Remove(MUIV_List_Remove_Last);
+  // Updates the Nodes Texts and Numbers
   Tree.UpdateNodesText;
+  // Insert the Nodes as Pseudo Tree
   for i := 0 to Tree.NodesText.Count - 1 do
   begin
     ItemList.List.InsertSingle(PChar(Tree.NodesText[i]), MUIV_List_Insert_Bottom);
   end;
+  // ready to draw again
   ItemList.List.Quiet := False;
+  // set the active element again
   MH_Set(ItemList.List.MUIObj, MUIA_List_Active, OldActive);
-  EditPages.ActivePage := 0;
+  EditPages.ActivePage := 0; // nothing to edit by default
 end;
 
+// Find the Eventhandler for the Given Object Node and EventName (On....)
 function TMainWindow.FindEventHandler(Obj: TItemNode; Event: string): TEventHandler;
 var
   i: Integer;
@@ -636,16 +676,7 @@ begin
   end;
 end;
 
-type
-  TEventParam = record
-    Style: TParamFlags;
-    Name: string;
-    Typ: string;
-  end;
-  TEventParams = array of TEventParam;
-
-PParamFlags = ^TParamFlags;
-
+// extract Footprint of the needed Eventhandler for example: "procedure (Sender: TObject)"
 function GetParams(MT: PTypeData): TEventParams;
 var
   i, j: Integer;
@@ -653,14 +684,26 @@ var
   Str: string;
   Num: Integer;
 begin
+  // Number of Params is easy, just take it ;)
   SetLength(Result, MT^.ParamCount);
   P := @(MT^.ParamList[0]);
+  // Names and types of the Parameter you have to calculate yourself
+  //   1 Byte  Flags (like var/out/const)
+  //   1 Byte  NameLength, Number of Chars follow as Name
+  //   n Bytes Name
+  //   1 Byte  TypeLength, Number of Chars follow as Type
+  //   n Bytes TypeIdent
+  // and that for every parameter
   for i := 0 to High(Result) do
   begin
+    // Get the Flag
     Result[i].Style := PParamFlags(P)^;
     Inc(p, SizeOf(TParamFlags));
+    //
+    // Number of chars to read for name
     Num := P^;
     Inc(P);
+    // Read Chars an form the string
     Str := '';
     for j := 1 to Num do
     begin
@@ -669,8 +712,10 @@ begin
     end;
     Result[i].Name := str;
     //
+    // number of Chars to read for Type
     Num := P^;
     Inc(P);
+    // Read Chars and form the string
     Str := '';
     for j := 1 to Num do
     begin
@@ -681,7 +726,7 @@ begin
   end;
 end;
 
-
+// Update Properties of a selected Item in the ItemList
 procedure TMainWindow.UpdateProperties;
 var
   PT, MT : PTypeData;
@@ -694,34 +739,38 @@ var
   EV: TEVentHandler;
   PL: TEventParams;
 begin
+  // Block Property and Event list
   PropList.List.Quiet := True;
+  EventList.List.Quiet := True;
+  // Clear Property and Event list
   while PropList.List.Entries > 0 do
     PropList.List.Remove(MUIV_List_Remove_Last);
-  EventList.List.Quiet := True;
   while EventList.List.Entries > 0 do
     EventList.List.Remove(MUIV_List_Remove_Last);
   EventProps.Clear;
   ItemProps.Clear;
+  // Only make sense if a Item is selected and has an attached MUIClass Object
   if Assigned(CurItem) and Assigned(CurItem.Data) then
   begin
-    //Special Items
+    //Special Properties, Name is not a real field, just for us to name the field later
     ItemProp := TItemProp.Create;
     ItemProp.Name := 'Name';
     ItemProp.IsSpecial := True;
     ItemProp.Value := CurItem.Name;
     ItemProp.Active := False;
     ItemProps.Add(ItemProp);
-    // normal items
-    Obj := CurItem.Data;
+    // normal Properties
+    Obj := CurItem.Data; // Object to inspect
     PI := Obj.ClassInfo;
     PT := GetTypeData(PI);
     GetMem (PP, PT^.PropCount * SizeOf(Pointer));
-    J := GetPropList(PI, tkAny, PP);
+    J := GetPropList(PI, tkAny, PP);  // List of published properties
     for I:=0 to J-1 do
     begin
       With PP^[i]^ do
       begin
         case PropType^.Kind of
+          // ####################### Method
           tkMethod: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
@@ -754,6 +803,7 @@ begin
             ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             EventProps.Add(ItemProp);
           end;
+          // ######################## Integer
           tkInteger: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
@@ -762,6 +812,7 @@ begin
             ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             ItemProps.Add(ItemProp);
           end;
+          // ####################### Boolean
           tkBool: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
@@ -770,6 +821,7 @@ begin
             ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             ItemProps.Add(ItemProp);
           end;
+          // ####################### String
           tkString, tkAString: begin
             ItemProp := TItemProp.Create;
             ItemProp.Name := Name;
@@ -778,6 +830,7 @@ begin
             ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
             ItemProps.Add(ItemProp);
           end;
+          // ##################### DynArray (TStringArray)
           tkDynArray: begin
               if (Obj is TMUICycle) and (Name = 'Entries') then
               begin
@@ -799,36 +852,39 @@ begin
               end;
             end;
           else
-            writeln(name, ' Type: ', PropType^.Kind);
+            writeln(name, ' Type: ', PropType^.Kind); // still unknown Types needs Handler
         end;
       end;
     end;
     FreeMem(PP);
   end;
-
+  // Faster Setting to the List we form an Array with all the names
+  // for ItemList
   SetLength(A, ItemProps.Count + 1);
   for i := 0 to ItemProps.Count - 1 do
     A[i] := PChar(ItemProps[i].Name);
   A[High(A)] := nil;
   PropList.List.Insert(@a[0], ItemProps.Count, MUIV_List_Insert_Bottom);
   PropList.List.Quiet := False;
-
+  // For EventList
   SetLength(B, EventProps.Count + 1);
   for i := 0 to EventProps.Count - 1 do
     B[i] := PChar(EventProps[i].Name);
   B[High(B)] := nil;
   EventList.List.Insert(@B[0], EventProps.Count, MUIV_List_Insert_Bottom);
   EventList.List.Quiet := False;
-
+  // By default no property is selected -> EditPages is Off
   EditPages.ActivePage := 0;
 end;
 
+// Title names for the Property List and Event List
 var
   Title1: string = 'Property';
   Title2: string = 'Value';
   Title3: string = 'Event';
   Title4: string = 'Handler';
 
+// Display event for the Properties List
 procedure TMainWindow.PropDisplay(Sender: TObject; ToPrint: PPChar; Entry: PChar);
 var
   Idx: Integer;
@@ -851,6 +907,7 @@ begin
   end;
 end;
 
+// Display event for the Event List
 procedure TMainWindow.EventDisplay(Sender: TObject; ToPrint: PPChar; Entry: PChar);
 var
   Idx: Integer;
@@ -873,6 +930,7 @@ begin
   end;
 end;
 
+// Item Got selected -> show its Property
 procedure TMainWindow.ItemListSelect(Sender: TObject);
 var
   Idx: Integer;
@@ -887,6 +945,7 @@ begin
   UpdateProperties;
 end;
 
+// Property got selected -> show the Edit Panel for it
 procedure TMainWindow.PropListSelect(Sender: TObject);
 var
   Idx: Integer;
@@ -905,12 +964,12 @@ begin
     //
     if StrArrayWin.Open then
       StrArrayWin.Close;
-    //
+    // special name!
     if CurProp.IsSpecial then
     begin
       PropName := CurItem.Name + '.' + CurProp.Name;
       StringLabel.Contents := PropName;
-      StrSet.Reject := ' ,.-+*!"§$%&/()=?''~^°^<>|@';
+      StrSet.Reject := ' ,.-+*!"§$%&\/()=?''~^°^<>|@'; //-> do not allow chars not allowed in an Ident (will check later also the string again)
       StrSet.Contents := CurProp.Value;
       EditPages.ActivePage := 3;
       IncludeProp.Disabled := True;
@@ -929,6 +988,7 @@ begin
         begin
           PropName := CurItem.Name + '.' + CurProp.Name;
           case PropType^.Kind of
+            // ################## Integer
             tkInteger: begin
               IntLabel.Contents := PropName;
               IntSet.Contents := IntToStr(GetOrdProp(Obj, PP^[i]));
@@ -936,6 +996,7 @@ begin
               IncludeProp.Disabled := False;
               IncludeProp.Selected := CurProp.Active;
             end;
+            // ################## Boolean
             tkBool: begin
               BoolLabel.Contents := PropName;
               BoolSet.Active := GetOrdProp(Obj, PP^[i]);
@@ -943,6 +1004,7 @@ begin
               IncludeProp.Disabled := False;
               IncludeProp.Selected := CurProp.Active;
             end;
+            // ################## String
             tkString, tkAString: begin
               StringLabel.Contents := PropName;
               StrSet.Reject := '';
@@ -951,6 +1013,7 @@ begin
               IncludeProp.Disabled := False;
               IncludeProp.Selected := CurProp.Active;
             end;
+            // ################## dynamic arrays (TStringArray)
             tkDynArray: begin
               StrArrayLabel.Contents := PropName;
               StrArrayWin.Title := PropName;
@@ -998,6 +1061,7 @@ begin
   BlockEvents := False;
 end;
 
+// Event in the List selected -> show edit for it
 procedure TMainWindow.EventListSelect(Sender: TObject);
 var
   Idx: Integer;
@@ -1035,14 +1099,16 @@ begin
   BlockEvents := False;
 end;
 
+// Event double clicked -> auto edit it, maybe also create it
 procedure TMainWindow.EventListDblClick(Sender: TObject);
 begin
-  EventListSelect(Sender);
-  if EventName.Contents = '' then
+  EventListSelect(Sender);         // Select entry
+  if EventName.Contents = '' then  // if no Name given until now auto create it
     AutoEventClick(Sender);
-  EditEventClick(Sender);
+  EditEventClick(Sender);          // Edit the Eventhandler entry
 end;
 
+// User set a new EventHandler Name (fired on Enter press in the Edit or when AutoNaming is done)
 procedure TMainWindow.SetEvent(Sender: TObject);
 var
   Ev: TEventHandler;
@@ -1055,6 +1121,7 @@ begin
   begin
     EV := FindEventHandler(CurItem, CurEvent.Name);
     Value := Trim(EventName.Contents);
+    // if the name the user Entered is empty, we will remove the EventHandler
     if Value = '' then
     begin
       if Assigned(EV) then
@@ -1067,8 +1134,10 @@ begin
     end
     else
     begin
+      // Check if we got a valid ident
       if isValidIdent(Value) then
       begin
+        // create the Eventhandler if not exists
         if not Assigned(Ev) then
         begin
           Ev := TEventHandler.Create;
@@ -1078,6 +1147,7 @@ begin
         end;
         Ev.Event := Value;
         Ev.Header := StringReplace(CurEvent.Additional, '%name%', 'T' + Tree.Name + '.' + Value, []) + ';';
+        // Eventhandler contents, or just replace the first line with the new header
         if EV.Text = '' then
           Ev.Text := EV.Header + #13#10 +'begin'#13#10#13#10+'end;'
         else
@@ -1100,6 +1170,8 @@ begin
   end;
 end;
 
+// Program decide how the event should be named
+// by default thats the name of the Item + Name of Event (without the On)
 procedure TMainWindow.AutoEventClick(Sender: TObject);
 var
   Val: string;
@@ -1115,17 +1187,7 @@ begin
   end;
 end;
 
-const
-  {$ifdef AROS}
-  EDITOR = 'sys:EdiSyn/EdiSyn';
-  {$else}
-    {$ifdef Amiga68k}
-    EDITOR = 'sys:Tools/EditPad';
-    {$else}
-    EDITOR = 'c:ed';
-    {$endif}
-  {$endif}
-
+// Edit the Eventhandler contents, the actual code for it
 procedure TMainWindow.EditEventClick(Sender: TObject);
 var
   SL: TStringList;
@@ -1142,23 +1204,28 @@ begin
   SL := TStringList.Create;
   try
     SL.Text := EV.Text;
+    // explanation for user as comment
     SL.Insert(0,'// Edit the Eventhandler, save and close to return to MUIIDE.'#13#10'//   Do NOT change/remove the first 3 lines.');
+    // Find a temp name which is not exisiting already, if someone got the crazy idea of starting 2 MUIIDEs ;-)
     Num := 0;
     repeat
       TmpName := 'T:MUIGUI_' + IntToStr(Num) + '.pas';
       Inc(Num);
     until not FileExists(TmpName);
+    // Save the current Eventhandler Text to the temp file
     SL.SaveToFile(TmpName);
-    MUIApp.Iconified := True;
+    MUIApp.Iconified := True; // Hide the main application (or it would show bad redraw errors)
+    // Run the Editor
     try
-      SysUtils.ExecuteProcess(EDITOR, TmpName, []);
+      SysUtils.ExecuteProcess(EDITOR + 's', TmpName, []);
     except
       ShowMessage('cant execute Editor');
+      MUIApp.Iconified := False; // get main application back
       Exit;
     end;
-    MUIApp.Iconified := False;
+    MUIApp.Iconified := False; // get main application back
     try
-      SL.LoadFromFile(TmpName);
+      SL.LoadFromFile(TmpName); // load what the user did
     except
       ShowMessage('Unable to reload your changed file');
       Exit;
@@ -1177,6 +1244,7 @@ begin
   end;
 end;
 
+// Set Integer Property from the Edit Element
 procedure TMainWindow.SetIntProp(Sender: TObject);
 var
   Idx: Integer;
@@ -1199,6 +1267,7 @@ begin
   end;
 end;
 
+// set boolean property from the combobox
 procedure TMainWindow.SetBoolProp(Sender: TObject);
 var
   Idx: Integer;
@@ -1222,6 +1291,7 @@ begin
   end;
 end;
 
+// Set string property from the Edit Component
 procedure TMainWindow.SetStringProp(Sender: TObject);
 var
   Idx: Integer;
@@ -1258,17 +1328,21 @@ begin
   end;
 end;
 
+// Event for Include Checkbox/defines if the Property is included into the Source or not
 procedure TMainWindow.IncludeChange(Sender: TObject);
 begin
   CurProp.Active := IncludeProp.Selected;
   PropList.List.Redraw(MUIV_List_Redraw_Active);
 end;
 
+// Open TStringArray Edit Window to let the User edit the list of items
+// its configured already in the Property selection procedure
 procedure TMainWindow.OpenStrArrayWin(Sender: TObject);
 begin
   StrArrayWin.Show;
 end;
 
+// Create the TestWindow and show to the user the current settings visually
 procedure TMainWindow.CreateTestWin;
 var
   Item: TItemNode;
@@ -1283,6 +1357,7 @@ begin
   TestWin.Show;
 end;
 
+// Remove Parent from the MUI object for a save Destruction of the TestWindow -> see there
 procedure RemoveParent(A: TItemNode);
 var
   i: Integer;
@@ -1295,14 +1370,15 @@ begin
     TMUIWithParent(A.Data).Parent := nil;
 end;
 
+// Destroy the TestWindow
 procedure TMainWindow.DestroyTestWin;
 begin
-  if TestWin.HasObj then
+  if TestWin.HasObj then // is there something to destroy?
   begin
-    TestWin.Close;
-    RemoveParent(Tree);
-    TestWin.Parent := nil;
-    TestWin.DestroyObject;
+    TestWin.Close; // first close it (make it much faster when it does not need to redraw when we remove the childs)
+    RemoveParent(Tree);  // every MUI item loose its parent
+    TestWin.Parent := nil;  // decouple the Window from the application
+    TestWin.DestroyObject;  // and gone
   end;
 end;
 
@@ -1406,7 +1482,8 @@ begin
   end;
 end;
 
-
+// if an Property is active (means changed by user and should be included to source)
+// it will be printed bold
 procedure TItemProp.SetActive(AValue: Boolean);
 begin
   FActive := AValue;
