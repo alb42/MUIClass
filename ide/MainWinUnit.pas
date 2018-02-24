@@ -1217,7 +1217,7 @@ begin
     MUIApp.Iconified := True; // Hide the main application (or it would show bad redraw errors)
     // Run the Editor
     try
-      SysUtils.ExecuteProcess(EDITOR + 's', TmpName, []);
+      SysUtils.ExecuteProcess(EDITOR, TmpName, []);
     except
       ShowMessage('cant execute Editor');
       MUIApp.Iconified := False; // get main application back
