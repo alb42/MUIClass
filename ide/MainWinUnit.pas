@@ -1219,7 +1219,7 @@ begin
     try
       SysUtils.ExecuteProcess(EDITOR, TmpName, []);
     except
-      ShowMessage('cant execute Editor');
+      ShowMessage('Cant execute Editor: "' + Editor + '"');
       MUIApp.Iconified := False; // get main application back
       Exit;
     end;
