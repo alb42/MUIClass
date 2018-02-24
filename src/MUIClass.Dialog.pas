@@ -191,7 +191,7 @@ begin
     if FName <> '' then
       TagList.AddTag(ASLFR_InitialFile, AsTag(PChar(FName)));
     if FDirectory = '' then
-      FDirectory := GetCurrentDir;
+      FDirectory := SysUtils.GetCurrentDir;
     TagList.AddTag(ASLFR_InitialDrawer, AsTag(PChar(FDirectory)));
     if FPattern <> '' then
     begin
