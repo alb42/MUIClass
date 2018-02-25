@@ -251,8 +251,13 @@ end;
 
 procedure TMUIDrawPanel.DoDrawObject(Rp: PRastPort; DrawRect: TRect);
 begin
-  if Assigned(FOnDrawObject) then
-    FOnDrawObject(Self, Rp, DrawRect);
+  try
+    if Assigned(FOnDrawObject) then
+      FOnDrawObject(Self, Rp, DrawRect);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIDrawPanel.ResetDblClickTime;
@@ -457,21 +462,26 @@ function MPBDispatcher(cl: PIClass; Obj: PObject_; Msg: intuition.PMsg): PtrUInt
 var
   MUIPB: TMUIDrawPanel;
 begin
-  case Msg^.MethodID of
-    MUIM_Setup,
-    MUIM_Cleanup,
-    MUIM_AskMinMax,
-    MUIM_Draw,
-    MUIM_HANDLEEVENT:
-    begin
-      MUIPB := TMUIDrawPanel(INST_DATA(cl, Pointer(obj))^); // get class
-      if Assigned(MUIPB) then
-        MPBDispatcher := MUIPB.MUIEvent(cl, Obj, Msg)                       // call the class dispatcher
+  try
+    case Msg^.MethodID of
+      MUIM_Setup,
+      MUIM_Cleanup,
+      MUIM_AskMinMax,
+      MUIM_Draw,
+      MUIM_HANDLEEVENT:
+      begin
+        MUIPB := TMUIDrawPanel(INST_DATA(cl, Pointer(obj))^); // get class
+        if Assigned(MUIPB) then
+          MPBDispatcher := MUIPB.MUIEvent(cl, Obj, Msg)                       // call the class dispatcher
+        else
+          MPBDispatcher := DoSuperMethodA(cl, obj, msg);     // Still not assigned just use default
+      end;
       else
-        MPBDispatcher := DoSuperMethodA(cl, obj, msg);     // Still not assigned just use default
+        MPBDispatcher := DoSuperMethodA(cl, obj, msg);
     end;
-    else
-      MPBDispatcher := DoSuperMethodA(cl, obj, msg);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
   end;
 end;
 

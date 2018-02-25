@@ -312,20 +312,30 @@ function DropFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIList;
 begin
-  Result := 0;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnDrop) then
-    PasObj.FOnDrop(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnDrop) then
+      PasObj.FOnDrop(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function ActiveFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIList;
 begin
-  Result := 0;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnActiveChange) then
-    PasObj.FOnActiveChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnActiveChange) then
+      PasObj.FOnActiveChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIList.AfterCreateObject;
@@ -604,11 +614,16 @@ function DisplayFunc(Hook: PHook; CArray: PPChar; Entry: PChar): PtrInt;
 var
   PasObj: TMUIList;
 begin
-  Result := 0;
-  CArray[0] := nil;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnDisplay) then
-    PasObj.FOnDisplay(PasObj, CArray, Entry);
+  try
+    Result := 0;
+    CArray[0] := nil;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnDisplay) then
+      PasObj.FOnDisplay(PasObj, CArray, Entry);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIList.SetOnDisplay(AValue: TDisplayEvent);
@@ -628,10 +643,15 @@ function CompareFunc(Hook: PHook; Entry1: PChar; Entry2: PChar): PtrInt;
 var
   PasObj: TMUIList;
 begin
-  Result := 0;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnCompare) then
-    Result := PasObj.FOnCompare(PasObj, Entry1, Entry2);
+  try
+    Result := 0;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnCompare) then
+      Result := PasObj.FOnCompare(PasObj, Entry1, Entry2);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIList.SetOnCompare(AValue: TCompareEvent);
@@ -651,10 +671,15 @@ function ConstructFunc(Hook: PHook; Pool: Pointer; Str: PChar): Pointer;
 var
   PasObj: TMUIList;
 begin
-  Result := nil;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnConstruct) then
-    Result := PasObj.FOnConstruct(PasObj, Pool, Str);
+  try
+    Result := nil;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnConstruct) then
+      Result := PasObj.FOnConstruct(PasObj, Pool, Str);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIList.SetOnConstruct(AValue: TConstructEvent);
@@ -674,10 +699,15 @@ function DestructFunc(Hook: PHook; Pool: Pointer; Entry: PChar): PtrInt;
 var
   PasObj: TMUIList;
 begin
-  Result := 0;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnDestruct) then
-    PasObj.FOnDestruct(PasObj, Pool, Entry);
+  try
+    Result := 0;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnDestruct) then
+      PasObj.FOnDestruct(PasObj, Pool, Entry);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIList.SetOnDestruct(AValue: TDestructEvent);
@@ -697,10 +727,15 @@ function MultiTestFunc(Hook: PHook; Dummy: Pointer; Entry: PChar): PtrInt;
 var
   PasObj: TMUIList;
 begin
-  Result := MUI_TRUE;
-  PasObj := TMUIList(Hook^.h_Data);
-  if Assigned(PasObj.FOnMultiTest) then
-    Result := AsTag(PasObj.FOnMultiTest(PasObj, Entry));
+  try
+    Result := MUI_TRUE;
+    PasObj := TMUIList(Hook^.h_Data);
+    if Assigned(PasObj.FOnMultiTest) then
+      Result := AsTag(PasObj.FOnMultiTest(PasObj, Entry));
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIList.SetOnMultiTest(AValue: TMultiTestEvent);
@@ -897,20 +932,30 @@ function StatusValidFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIDirList;
 begin
-  Result := 0;
-  PasObj := TMUIDirList(Hook^.h_Data);
-  if Assigned(PasObj.FOnStatusValid) then
-    PasObj.FOnStatusValid(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIDirList(Hook^.h_Data);
+    if Assigned(PasObj.FOnStatusValid) then
+      PasObj.FOnStatusValid(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function StatusInvalidFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIDirList;
 begin
-  Result := 0;
-  PasObj := TMUIDirList(Hook^.h_Data);
-  if Assigned(PasObj.FOnStatusInvalid) then
-    PasObj.FOnStatusInvalid(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIDirList(Hook^.h_Data);
+    if Assigned(PasObj.FOnStatusInvalid) then
+      PasObj.FOnStatusInvalid(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIDirList.AfterCreateObject;

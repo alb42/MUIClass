@@ -355,10 +355,15 @@ function PageFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIGroup;
 begin
-  Result := 0;
-  PasObj := TMUIGroup(Hook^.h_Data);
-  if Assigned(PasObj.FOnPageChange) then
-    PasObj.FOnPageChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIGroup(Hook^.h_Data);
+    if Assigned(PasObj.FOnPageChange) then
+      PasObj.FOnPageChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIGroup.AfterCreateObject;
@@ -598,30 +603,45 @@ function ColumnClickFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIListView;
 begin
-  Result := 0;
-  PasObj := TMUIListView(Hook^.h_Data);
-  if Assigned(PasObj.FOnClick) then
-    PasObj.FOnClick(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIListView(Hook^.h_Data);
+    if Assigned(PasObj.FOnClick) then
+      PasObj.FOnClick(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function DoubleClickFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIListView;
 begin
-  Result := 0;
-  PasObj := TMUIListView(Hook^.h_Data);
-  if Assigned(PasObj.FOnDoubleClick) then
-    PasObj.FOnDoubleClick(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIListView(Hook^.h_Data);
+    if Assigned(PasObj.FOnDoubleClick) then
+      PasObj.FOnDoubleClick(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function SelectChangeFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIListView;
 begin
-  Result := 0;
-  PasObj := TMUIListView(Hook^.h_Data);
-  if Assigned(PasObj.FOnSelectChange) then
-    PasObj.FOnSelectChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIListView(Hook^.h_Data);
+    if Assigned(PasObj.FOnSelectChange) then
+      PasObj.FOnSelectChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 
@@ -1017,10 +1037,15 @@ function RadioFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIRadio;
 begin
-  Result := 0;
-  PasObj := TMUIRadio(Hook^.h_Data);
-  if Assigned(PasObj.FOnActiveChange) then
-    PasObj.FOnActiveChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIRadio(Hook^.h_Data);
+    if Assigned(PasObj.FOnActiveChange) then
+      PasObj.FOnActiveChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIRadio.AfterCreateObject;
@@ -1102,10 +1127,15 @@ function CycleFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUICycle;
 begin
-  Result := 0;
-  PasObj := TMUICycle(Hook^.h_Data);
-  if Assigned(PasObj.FOnActiveChange) then
-    PasObj.FOnActiveChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUICycle(Hook^.h_Data);
+    if Assigned(PasObj.FOnActiveChange) then
+      PasObj.FOnActiveChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUICycle.AfterCreateObject;
@@ -1192,10 +1222,15 @@ function ColFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIColorAdjust;
 begin
-  Result := 0;
-  PasObj := TMUIColorAdjust(Hook^.h_Data);
-  if Assigned(PasObj.FOnColorChange) then
-    PasObj.FOnColorChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIColorAdjust(Hook^.h_Data);
+    if Assigned(PasObj.FOnColorChange) then
+      PasObj.FOnColorChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIColorAdjust.AfterCreateObject;

@@ -151,10 +151,15 @@ function ValueFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUINumeric;
 begin
-  Result := 0;
-  PasObj := TMUINumeric(Hook^.h_Data);
-  if Assigned(PasObj.FOnValueChange) then
-    PasObj.FOnValueChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUINumeric(Hook^.h_Data);
+    if Assigned(PasObj.FOnValueChange) then
+      PasObj.FOnValueChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUINumeric.AfterCreateObject;

@@ -330,10 +330,15 @@ function ActivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIWindow;
 begin
-  Result := 0;
-  PasObj := TMUIWindow(Hook^.h_Data);
-  if Assigned(PasObj.FOnActivate) then
-    PasObj.FOnActivate(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIWindow(Hook^.h_Data);
+    if Assigned(PasObj.FOnActivate) then
+      PasObj.FOnActivate(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function CloseReqFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
@@ -344,9 +349,14 @@ begin
   CloseAction := caClose;
   Result := 0;
   PasObj := TMUIWindow(Hook^.h_Data);
-  // ask the user if we should close it ;)
-  if Assigned(PasObj.FOnCloseRequest) then
-    PasObj.FOnCloseRequest(PasObj, CloseAction);
+  try
+    // ask the user if we should close it ;)
+    if Assigned(PasObj.FOnCloseRequest) then
+      PasObj.FOnCloseRequest(PasObj, CloseAction);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
   // User has no objection, close the Window
   case CloseAction of
     caClose: PasObj.Close;

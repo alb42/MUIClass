@@ -144,10 +144,15 @@ function IntuiFunc(Hook: PHook; Obj: PObject_; Data: Pointer): Integer;
 var
   IMsg: PIntuiMessage;
 begin
-  Result := 0;
-  IMsg := Data;
-  if Imsg^.iClass = IDCMP_REFRESHWINDOW then
-    MUIApp.CheckRefresh();
+  try
+    Result := 0;
+    IMsg := Data;
+    if Imsg^.iClass = IDCMP_REFRESHWINDOW then
+      MUIApp.CheckRefresh();
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 type

@@ -236,10 +236,15 @@ function TriggerFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIMenuItem;
 begin
-  Result := 0;
-  PasObj := TMUIMenuItem(Hook^.h_Data);
-  if Assigned(PasObj.OnTrigger) then
-    PasObj.OnTrigger(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIMenuItem(Hook^.h_Data);
+    if Assigned(PasObj.OnTrigger) then
+      PasObj.OnTrigger(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 

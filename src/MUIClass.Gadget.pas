@@ -215,20 +215,30 @@ function AckFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIString;
 begin
-  Result := 0;
-  PasObj := TMUIString(Hook^.h_Data);
-  if Assigned(PasObj.FOnAcknowledge) then
-    PasObj.FOnAcknowledge(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIString(Hook^.h_Data);
+    if Assigned(PasObj.FOnAcknowledge) then
+      PasObj.FOnAcknowledge(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function ContentsFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIString;
 begin
-  Result := 0;
-  PasObj := TMUIString(Hook^.h_Data);
-  if Assigned(PasObj.FOnContentsChange) then
-    PasObj.FOnContentsChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIString(Hook^.h_Data);
+    if Assigned(PasObj.FOnContentsChange) then
+      PasObj.FOnContentsChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIString.AfterCreateObject;
@@ -403,10 +413,15 @@ function PropFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIProp;
 begin
-  Result := 0;
-  PasObj := TMUIProp(Hook^.h_Data);
-  if Assigned(PasObj.FOnFirstChange) then
-    PasObj.FOnFirstChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIProp(Hook^.h_Data);
+    if Assigned(PasObj.FOnFirstChange) then
+      PasObj.FOnFirstChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIProp.AfterCreateObject;

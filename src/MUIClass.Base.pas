@@ -176,6 +176,7 @@ type
     property Childs;
   public
     procedure AddToDestroy(AObj: TMUINotify);
+    procedure DoException(E: Exception); virtual;
     // MUI Methods
     procedure AboutMUI(Window: TMUINotify = nil); // TMUIWindow
     procedure AddInputHandler(IhNode: PMUI_InputHandlerNode);
@@ -739,50 +740,75 @@ function ActivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
-  Result := 0;
-  PasObj := TMUIApplication(Hook^.h_Data);
-  if Assigned(PasObj.FOnActivate) then
-    PasObj.FOnActivate(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIApplication(Hook^.h_Data);
+    if Assigned(PasObj.FOnActivate) then
+      PasObj.FOnActivate(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function DeactivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
-  Result := 0;
-  PasObj := TMUIApplication(Hook^.h_Data);
-  if Assigned(PasObj.FOnDeactivate) then
-    PasObj.FOnDeactivate(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIApplication(Hook^.h_Data);
+    if Assigned(PasObj.FOnDeactivate) then
+      PasObj.FOnDeactivate(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function DoubleStartFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
-  Result := 0;
-  PasObj := TMUIApplication(Hook^.h_Data);
-  if Assigned(PasObj.FOnDoubleStart) then
-    PasObj.FOnDoubleStart(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIApplication(Hook^.h_Data);
+    if Assigned(PasObj.FOnDoubleStart) then
+      PasObj.FOnDoubleStart(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function IconifyFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
-  Result := 0;
-  PasObj := TMUIApplication(Hook^.h_Data);
-  if Assigned(PasObj.FOnIconify) then
-    PasObj.FOnIconify(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIApplication(Hook^.h_Data);
+    if Assigned(PasObj.FOnIconify) then
+      PasObj.FOnIconify(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function RestoreFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
-  Result := 0;
-  PasObj := TMUIApplication(Hook^.h_Data);
-  if Assigned(PasObj.FOnRestore) then
-    PasObj.FOnRestore(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIApplication(Hook^.h_Data);
+    if Assigned(PasObj.FOnRestore) then
+      PasObj.FOnRestore(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 
@@ -796,6 +822,15 @@ begin
   ConnectHook(MUIA_Application_Iconified, MUI_FALSE, @RestoreFunc);
 end;
 
+
+procedure TMUIApplication.DoException(E: Exception);
+begin
+  if Assigned(FOnException) then
+    FOnException(Self, E)
+  else
+    if MessageBox('Exception', 'Exception: ' + E.Message + #10 + 'To prevent Data corruption your should close the program.', ['Ignore', 'Close Program']) = 0 then
+      Terminate;
+end;
 
 procedure TMUIApplication.Run;
 var
@@ -836,11 +871,8 @@ begin
     except
       On E:Exception do
       begin
-        if Assigned(FOnException) then
-          FOnException(Self, E)
-        else
-          if MessageBox('Exception', 'Exception: ' + E.Message + #10 + 'To prevent Data corruption your should close the program.', ['Ignore', 'Close Program']) = 0 then
-            Break;
+        if FTerminated then
+          Break;
       end;
     end;
     //

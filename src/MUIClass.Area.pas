@@ -547,20 +547,30 @@ function PressFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIArea;
 begin
-  Result := 0;
-  PasObj := TMUIArea(Hook^.h_Data);
-  if Assigned(PasObj.FOnClick) then
-    PasObj.FOnClick(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIArea(Hook^.h_Data);
+    if Assigned(PasObj.FOnClick) then
+      PasObj.FOnClick(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function SelectedFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIArea;
 begin
-  Result := 0;
-  PasObj := TMUIArea(Hook^.h_Data);
-  if Assigned(PasObj.FOnSelected) then
-    PasObj.FOnSelected(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIArea(Hook^.h_Data);
+    if Assigned(PasObj.FOnSelected) then
+      PasObj.FOnSelected(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIArea.AfterCreateObject;
@@ -1581,10 +1591,15 @@ function SpecFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPenDisplay;
 begin
-  Result := 0;
-  PasObj := TMUIPenDisplay(Hook^.h_Data);
-  if Assigned(PasObj.FOnSpecChange) then
-    PasObj.FOnSpecChange(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIPenDisplay(Hook^.h_Data);
+    if Assigned(PasObj.FOnSpecChange) then
+      PasObj.FOnSpecChange(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIPenDisplay.AfterCreateObject;

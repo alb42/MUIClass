@@ -270,10 +270,15 @@ function OpenFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopString;
 begin
-  Result := AsTag(False);
-  PasObj := TMUIPopString(Hook^.h_Data);
-  if Assigned(PasObj.FOnOpen) then
-    Result := AsTag(PasObj.FOnOpen(PasObj));
+  try
+    Result := AsTag(False);
+    PasObj := TMUIPopString(Hook^.h_Data);
+    if Assigned(PasObj.FOnOpen) then
+      Result := AsTag(PasObj.FOnOpen(PasObj));
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIPopString.SetOnOpen(AOnOpen: TOpenPopEvent);
@@ -302,14 +307,17 @@ var
   CMsg: ^TCloseMsg;
   PasObj: TMUIPopString;
 begin
-  writeln('onClose');
-  Result := 0;
-  PasObj := TMUIPopString(Hook^.h_Data);
-  if Assigned(PasObj.FOnClose) then
-  begin
-    CMsg := Msg;
-    writeln('MSG: ', CMsg^.Res);
-    PasObj.FOnClose(PasObj, CMsg^.Res <> 0);
+  try
+    Result := 0;
+    PasObj := TMUIPopString(Hook^.h_Data);
+    if Assigned(PasObj.FOnClose) then
+    begin
+      CMsg := Msg;
+      PasObj.FOnClose(PasObj, CMsg^.Res <> 0);
+    end;
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
   end;
 end;
 
@@ -496,20 +504,30 @@ function StrObjFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopObject;
 begin
-  Result := AsTag(False);
-  PasObj := TMUIPopObject(Hook^.h_Data);
-  if Assigned(PasObj.FOnStrObj) then
-    Result := AsTag(PasObj.FOnStrObj(PasObj));
+  try
+    Result := AsTag(False);
+    PasObj := TMUIPopObject(Hook^.h_Data);
+    if Assigned(PasObj.FOnStrObj) then
+      Result := AsTag(PasObj.FOnStrObj(PasObj));
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 function ObjStrFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopObject;
 begin
-  Result := 0;
-  PasObj := TMUIPopObject(Hook^.h_Data);
-  if Assigned(PasObj.FOnObjStr) then
-    PasObj.FOnObjStr(PasObj);
+  try
+    Result := 0;
+    PasObj := TMUIPopObject(Hook^.h_Data);
+    if Assigned(PasObj.FOnObjStr) then
+      PasObj.FOnObjStr(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
 end;
 
 procedure TMUIPopObject.SetOnStrObj(AOnStrObj: TOpenPopEvent);
