@@ -21,7 +21,7 @@ OS=aros
 endif
 BDIR=units
 ODIR=$(BDIR)/$(CPU)-$(OS)
-FPCFLAGS=-FU$(ODIR) -Fu$(ODIR) -T$(OS) -P$(CPU) $(OPT)
+FPCFLAGS=-Fu$(ODIR) -T$(OS) -P$(CPU) $(OPT)
 SOURCES=$(wildcard src/*.pas)
 OBJECTS=$(patsubst src/%.pas, $(ODIR)/%.o, $(SOURCES))
 EXSRC=$(wildcard examples/*.pas)
@@ -38,7 +38,7 @@ zip: all MUIIDE examples
 	gzip MUIClass.$(CPU)-$(OS).tar
 
 $(ODIR)/%.o: src/%.pas
-	$(FPC) $(FPCFLAGS) $<
+	$(FPC) -FU$(ODIR) $(FPCFLAGS) $<
 	
 examples/%: examples/%.pas
 	$(FPC) $(FPCFLAGS) $<
