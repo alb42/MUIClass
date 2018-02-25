@@ -26,7 +26,7 @@ type
     FOnAcknowledge: TNotifyEvent;
     FOnContentsChange: TNotifyEvent;
     FContents: string;
-    FFormat: Integer;
+    FFormat: PtrInt;
     FInteger: Integer;
     FIntegerSet: Boolean;
     FMaxLen: Integer;
@@ -40,7 +40,7 @@ type
     procedure SetContents(AValue: string);
     function GetDisplayPos: Integer;
     procedure SetDisplayPos(AValue: Integer);
-    procedure SetFormat(AValue: Integer);
+    procedure SetFormat(AValue: PtrInt);
     function GetInteger: Integer;
     procedure SetInteger(AValue: Integer);
     procedure SetMaxLen(AValue: Integer);
@@ -61,7 +61,7 @@ type
     // AttachedList -> needs to be implemented first
     property Contents: string read GetContents write SetContents;                          //
     // EditHook -> own Event? (does not work in AROS)
-    property Format: Integer read FFormat write SetFormat default MUIV_String_Format_Left; //I MUIV_StringFormat_*
+    property Format: PtrInt read FFormat write SetFormat default MUIV_String_Format_Left; //I MUIV_StringFormat_*
     property IntegerValue: Integer read GetInteger write SetInteger default 0;             //
     // LonelyEditHook -> see EditHook
     property MaxLen: Integer read FMaxLen write SetMaxLen default 79;                      //I maximal length of the string in the Gadget WITHOUT #0 at the end! (class add one to it ;-))
@@ -187,11 +187,11 @@ begin
   if FContents <> '' then
     ATagList.AddTag(MUIA_String_Contents, AsTag(PChar(FContents)));
   if FFormat <> MUIV_String_Format_Left then
-    ATagList.AddTag(MUIA_String_Format, AsTag(FFormat));
+    ATagList.AddTag(MUIA_String_Format, FFormat);
   if FIntegerSet then
     ATagList.AddTag(MUIA_String_Integer, AsTag(FInteger));
   if FMaxLen <> 79 then
-    ATagList.AddTag(MUIA_String_MaxLen, AsTag(FMaxLen + 1)); // one more, mui wants that with #0... how stupid!
+    ATagList.AddTag(MUIA_String_MaxLen, FMaxLen + 1); // one more, mui wants that with #0... how stupid!
   if FReject <> '' then
     ATagList.AddTag(MUIA_String_Reject, AsTag(PChar(FReject)));
   if FSecret then

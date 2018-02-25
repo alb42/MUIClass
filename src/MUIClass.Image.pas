@@ -129,7 +129,7 @@ begin
   if Assigned(FOldImage) then
     ATagList.AddTag(MUIA_Image_OldImage, AsTag(FOldImage));
   if FSpec.IsSet then
-    ATagList.AddTag(MUIA_Image_Spec, AsTag(FSpec.Spec));
+    ATagList.AddTag(MUIA_Image_Spec, FSpec.Spec);
 end;
 
 procedure TMUIImage.CreateObject;

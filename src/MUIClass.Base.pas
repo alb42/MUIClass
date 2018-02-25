@@ -401,7 +401,7 @@ end;
 procedure TMUIRootClass.SetValue(Tag: LongWord; Value: PtrInt);
 begin
   if Assigned(FMUIObj) then
-    MH_Set(FMUIObj, Tag, AsTag(Value));
+    MH_Set(FMUIObj, Tag, Value);
 end;
 
 procedure TMUIRootClass.SetValue(Tag: LongWord; Value: Boolean);

@@ -465,7 +465,7 @@ procedure TMUIArea.GetCreateTags(var ATagList: TATagList);
 begin
   inherited;
   if FBackground.IsSet then
-    ATagList.AddTag(MUIA_Background, AsTag(FBackground.FSpec));
+    ATagList.AddTag(MUIA_Background, FBackground.FSpec);
   if FControlChar <> #0 then
     ATagList.AddTag(MUIA_ControlChar, AsTag(Integer(FControlChar)));
   if FCycleChain <> 0 then
@@ -487,9 +487,9 @@ begin
   if FFixWidthTxt <> '' then
     ATagList.AddTag(MUIA_FixWidthTxt, AsTag(PChar(FFixWidthTxt)));
   if FFont <> 0 then
-    ATagList.AddTag(MUIA_Font, AsTag(FFont));
+    ATagList.AddTag(MUIA_Font, FFont);
   if FFrame <> 0 then
-    ATagList.AddTag(MUIA_Frame, AsTag(FFrame));
+    ATagList.AddTag(MUIA_Frame, FFrame);
   if FFramePhantomHoriz then
     ATagList.AddTag(MUIA_FramePhantomHoriz, AsTag(FFramePhantomHoriz));
   if FFrameTitle <> '' then
@@ -1470,7 +1470,7 @@ begin
   if FContents <> '' then
     ATagList.AddTag(MUIA_Text_Contents, AsTag(PChar(FContents)));
   if FHiChar <> #0 then
-    ATagList.AddTag(MUIA_Text_HiChar, AsTag(PtrUInt(FHiChar)));
+    ATagList.AddTag(MUIA_Text_HiChar, PtrUInt(FHiChar));
   if FPreParse <>  '' then
     ATagList.AddTag(MUIA_Text_PreParse, AsTag(PChar(FPreParse)));
   if FSetMax then
