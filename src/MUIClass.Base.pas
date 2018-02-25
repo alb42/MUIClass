@@ -840,25 +840,23 @@ var
 begin
   if Childs.Count = 0 then
   begin
-    writeln('No Windows to open, Exit');
+    ShowMessage('No Windows to open, Exit');
     Exit;
   end;
   // Create the objects
   CreateObject;
   if not HasObj then
   begin
-    writeln('cannot create application');
+    ShowMessage('Unable to create application');
     Exit;
   end;
   // connect the close event to first Window
   FMainWindow := TMUINotify(Childs[0]);
-  {DoMethod(FMainWindow.MuiObj, [MUIM_Notify, MUIA_Window_CloseRequest, MUI_TRUE,
-      AsTag(MUIObj), 2, AsTag(MUIM_Application_ReturnID), AsTag(MUIV_Application_ReturnID_Quit)]);}
   //
   TMUIWindow(FMainWindow).Show;
   if not TMUIWindow(FMainWindow).Open then
   begin
-    writeln('cannot open Window');
+    ShowMessage('Unable to  open Window');
     Exit;
   end;
   FTerminated := False;
@@ -932,8 +930,6 @@ begin
   if Assigned(AObj) then
     FToDestroy.Add(AObj);
 end;
-
-
 
 procedure TMUIApplication.SetActive(AValue: Boolean);
 begin

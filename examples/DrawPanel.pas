@@ -4,6 +4,7 @@ uses
   Types, MUIClass.Base, MUIClass.Window, MUIClass.DrawPanel, AGraphics;
 type
   TMyWindow = class(TMUIWindow)
+  public
     Down: Boolean;
     procedure PaintMe(Sender: TObject; RP: PRastPort; DrawRect: TRect);
     procedure MouseDown(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
