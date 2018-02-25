@@ -2,7 +2,8 @@
 Wrapper to use Amiga MUI Objects with standard Pascal objects
 
 ## Units
-Dokumentation created from the docu folder: <a href="http://www.alb42.de/muiclass-docu/">MUIClass Docu</a>
+Dokumentation created from the docu folder: <a href="http://build.alb42.de/MUIClass/html/">MUIClass Docu</a><BR>
+Binaries (IDE, examples, units) for all Amiga systems: <a href="http://build.alb42.de/MUIClass/">MUIClass Binaries</a><BR>
 <table border=1>
 <tr><td>Unit Name</td><td>Objects</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.base/index.html">MUIClass.Base</a></td><td>RootClass, Notify, Application, Family, Semaphore, Dataspace, HSpace, VSpace, HBar, VBar, BarTitle, Timer</td></tr>
