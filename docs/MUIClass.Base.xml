@@ -161,6 +161,26 @@
 </descr>
 </element>
 
+<!-- property Visibility: public -->
+<element name="TExceptionEvent">
+<short>Type for <link id="TMUIApplication.OnException">OnException</link> Event.</short>
+<descr>
+</descr>
+<seealso>
+  <link id="TMUIApplication.OnException">OnException</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TExceptionEvent.Sender">
+<short>The Sender usually MUIApp or nil</short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TExceptionEvent.E">
+<short>The Exception happend</short>
+</element>
+
 <!-- class Visibility: default -->
 <element name="THookList">
 <short>A List of Hooks, wich will be automatically destroyed on exit</short>
@@ -885,6 +905,47 @@ end;
   </p>
 </descr>
 <seealso>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIApplication.DoException">
+<short>Call when a Exception appears to show a MessageBox</short>
+<descr>
+  <p>
+  If the program connected the <link id="TMUIApplication.OnException">OnException</link> Event
+  DoException will call this EventHandler and let the program decide what to do with the Exception.
+  </p>
+  <p>
+    If <link id="TMUIApplication.OnException">OnException</link> Event is not connected it will show a Messagebox with the
+    Exception Message and let the User decide to terminate the program.
+  </p>
+</descr>
+<seealso>
+  <link id="TMUIApplication.OnException">OnException</link>
+</seealso>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIApplication.DoException.E">
+<short>The Exception happend</short>
+</element>
+
+<!-- property Visibility: public -->
+<element name="TMUIApplication.OnException">
+<short>Event called when an Exception happend</short>
+<descr>
+  <p>
+  Handle the Exception for yourself, you can show a warn message or put to debugout, or even kill the application with
+  <link id="TMUIApplication.Terminate">MUIApp.Terminate</link>.
+  </p>
+  <p>if this event is not connected it will show the exception as warn message and ask the user if ignore it, or end the program.
+  </p>
+  <p>Note: Exceptions catched in the program code via try ... except ... end; will not trigger this event. (unless the program
+  calls <link id="TMUIApplication.DoException">DoException()</link> inside the except block.</p>
+</descr>
+<seealso>
+  <link id="TMUIApplication.DoException">DoException()</link>
 </seealso>
 </element>
 

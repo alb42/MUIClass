@@ -828,7 +828,7 @@ begin
   if Assigned(FOnException) then
     FOnException(Self, E)
   else
-    if MessageBox('Exception', 'Exception: ' + E.Message + #10 + 'To prevent Data corruption your should close the program.', ['Ignore', 'Close Program']) = 0 then
+    if MessageBox('Exception', 'Exception: ' + E.Message + #10 + 'To prevent Data corruption you should close the program.', ['Ignore', 'Close Program']) = 0 then
       Terminate;
 end;
 

@@ -854,6 +854,7 @@ objects with a big disappear level.
   <link id="TMUIArea.Selected">Selected</link>
   <link id="TMUIArea.Pressed">Pressed</link>
   <link id="TMUIArea.OnClick">OnClick</link>
+  <link id="TMUIArea.OnSelected">OnSelected</link>
 </seealso>
 </element>
 
@@ -966,8 +967,20 @@ object is resizable. A <link id="TMUIArea.VertWeight">VertWeight</link> for a
 </element>
 
 <!-- property Visibility: published -->
+<element name="TMUIArea.OnSelected">
+<short>Event when Item is clicked and in <link id="TMUIArea.InputMode">InputMode</link> = MUIV_InputMode_Immediate or MUIV_InputMode_Toggle </short>
+<descr>
+<p>Mainly use for Radio button and CheckBoxes. The event reacts on change of <link id="TMUIArea.Selected">Selected</link> </p>
+</descr>
+<seealso>
+  <link id="TMUIArea.InputMode">InputMode</link>
+  <link id="TMUIArea.Selected">Selected</link>
+</seealso>
+</element>
+
+<!-- property Visibility: published -->
 <element name="TMUIArea.OnClick">
-<short>Event when Item is clicked and in <link id="TMUIArea.InputMode">InputMode</link> = MUIV_InputMode_RelVerify </short>
+<short>Event when Item is selected and in <link id="TMUIArea.InputMode">InputMode</link> = MUIV_InputMode_RelVerify </short>
 <descr>
 <p>Mainly use for Buttons to check when the Button is clicked. The event reacts on the release of <link id="TMUIArea.Pressed">Pressed</link> </p>
 </descr>

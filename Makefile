@@ -35,7 +35,7 @@ examples: all $(EXAMPLES)
 
 zip: all MUIIDE examples
 	-tar cvf MUIClass.$(CPU)-$(OS).tar --warning=no-file-changed $(ODIR) ide/MUIIDE $(EXSRC) $(EXAMPLES)
-	gzip MUIClass.$(CPU)-$(OS).tar
+	gzip -f MUIClass.$(CPU)-$(OS).tar
 
 $(ODIR)/%.o: src/%.pas
 	$(FPC) -FU$(ODIR) $(FPCFLAGS) $<
@@ -59,5 +59,5 @@ distclean: clean
 docs:
 	fpdoc --package=MUIClass --warn-no-node --format=html --output=html/ --charset=UTF-8 --index-colcount=4 --footer-date=yyyy-mm-dd --input-dir=./src/ --descr-dir=./docs/
 	-tar cvf MUIClass.docs.tar --warning=no-file-changed html
-	gzip MUIClass.docs.tar
+	gzip -f MUIClass.docs.tar
 	
