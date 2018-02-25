@@ -140,7 +140,7 @@ begin
   FSaveMode := False;
 end;
 
-function IntuiFunc(Hook: PHook; Obj: PObject_; Data: Pointer): Integer;
+function IntuiFunc(Hook: PHook; Obj: PObject_; Data: Pointer): PtrInt;
 var
   IMsg: PIntuiMessage;
 begin
