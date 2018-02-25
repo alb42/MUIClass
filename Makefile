@@ -49,9 +49,15 @@ $(ODIR):
 MUIIDE:
 	$(FPC) $(FPCFLAGS) -Fuide ide/MUIIDE.pas
 	
-.PHONY: clean
+.PHONY: clean distclean docs
 
 clean:
-	rm -f $(ODIR)/*.o $(ODIR)/*.ppu examples/*.o examples/*.ppu ide/*.o ide/*.ppu MUIIDE $(EXAMPLES) *.tar.gz *.tar
+	rm -rf html $(ODIR)/*.o $(ODIR)/*.ppu examples/*.o examples/*.ppu ide/*.o ide/*.ppu MUIIDE $(EXAMPLES) *.tar.gz *.tar
 distclean: clean
 	rm -rf $(BDIR)
+	
+docs:
+	fpdoc --package=MUIClass --warn-no-node --format=html --output=html/ --charset=UTF-8 --index-colcount=4 --footer-date=yyyy-mm-dd --input-dir=./src/ --descr-dir=./docs/
+	-tar cvf MUIClass.docs.tar --warning=no-file-changed html
+	gzip MUIClass.docs.tar
+	
