@@ -21,7 +21,7 @@ OS=aros
 endif
 BDIR=units
 ODIR=$(BDIR)/$(CPU)-$(OS)
-FPCFLAGS=-FU$(ODIR) -Fu$(ODIR) -T$(OS) -P$(CPU)
+FPCFLAGS=-FU$(ODIR) -Fu$(ODIR) -T$(OS) -P$(CPU) $(OPT)
 SOURCES=$(wildcard src/*.pas)
 OBJECTS=$(patsubst src/%.pas, $(ODIR)/%.o, $(SOURCES))
 EXSRC=$(wildcard examples/*.pas)
