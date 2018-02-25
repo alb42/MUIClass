@@ -3,50 +3,83 @@ unit MUICompUnit;
 interface
 
 uses
-  SysUtils,
+  SysUtils, Fgl, TypInfo,
   MUIClass.Base, MUIClass.Area, MUIClass.Window, MUIClass.Group,
   MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric;
 
 type
   TMUIClass = class of TMUINotify;
-  TMUIComponent = record
+  TMUIComp = class
+  public
     MUIClass: TMUIClass;
     HasChild: Boolean;
     Name: string;
     AUnit: string
   end;
+  TMUIComps = specialize TFPGObjectList<TMUIComp>;
 
-const
-  MUIComponents: array[0..19] of TMUIComponent =
-    ((MUIClass: TMUIBalance;       HasChild: False; Name: 'Balance';       AUnit: 'MUIClass.Area'),
-     (MUIClass: TMUIButton;        HasChild: False; Name: 'Button';        AUnit: 'MUIClass.Area'),
-     (MUIClass: TMUIGauge;         HasChild: False; Name: 'Gauge';         AUnit: 'MUIClass.Area'),
-     (MUIClass: TMUIText;          HasChild: False; Name: 'Text';          AUnit: 'MUIClass.Area'),
-     (MUIClass: TMUIRectangle;     HasChild: False; Name: 'Rectangle';     AUnit: 'MUIClass.Area'),
-     (MUIClass: TMUIScale;         HasChild: False; Name: 'Scale';         AUnit: 'MUIClass.Area'),
- 
-     (MUIClass: TMUIGroup;         HasChild: True;  Name: 'Group';         AUnit: 'MUIClass.Group'),
-     (MUIClass: TMUIRegister;      HasChild: True;  Name: 'Register';      AUnit: 'MUIClass.Group'),
-     (MUIClass: TMUICycle;         HasChild: False; Name: 'Cycle';         AUnit: 'MUIClass.Group'),
+procedure RegisterMUIClass(MUIClass: TMUIClass; HasChilds: Boolean = False; Name: string = '');
 
-     (MUIClass: TMUIString;        HasChild: False; Name: 'String';        AUnit: 'MUIClass.Gadget'),
-
-     (MUIClass: TMUIProp;          HasChild: False; Name: 'Prop';          AUnit: 'MUIClass.Prop'),
-     (MUIClass: TMUIScrollBar;     HasChild: False; Name: 'ScrollBar';     AUnit: 'MUIClass.Gadget'),
-     
-     (MUIClass: TMUIImage;         HasChild: False; Name: 'Image';         AUnit: 'MUIClass.Image'),
-     (MUIClass: TMUICheckmark;     HasChild: False; Name: 'Checkmark';     AUnit: 'MUIClass.Image'),
-     (MUIClass: TMUIPopButton;     HasChild: False; Name: 'PopButton';     AUnit: 'MUIClass.Image'),
-
-     (MUIClass: TMUIFloatText;     HasChild: False; Name: 'FloatText';     AUnit: 'MUIClass.List'),
-
-     (MUIClass: TMUIKnob;          HasChild: False; Name: 'Knob';          AUnit: 'MUIClass.Numeric'),
-     (MUIClass: TMUILevelMeter;    HasChild: False; Name: 'Levelmeter';    AUnit: 'MUIClass.Numeric'),
-     (MUIClass: TMUINumericButton; HasChild: False; Name: 'NumericButton'; AUnit: 'MUIClass.Numeric'),
-     (MUIClass: TMUISlider;        HasChild: False; Name: 'Slider';        AUnit: 'MUIClass.Numeric')
-
-    );
-
+var
+  MUIComps: TMUIComps;
 implementation
 
+
+procedure RegisterBasics;
+begin
+  // Area classes
+  RegisterMUIClass(TMUIBalance);
+  RegisterMUIClass(TMUIButton);
+  RegisterMUIClass(TMUIGauge);
+  RegisterMUIClass(TMUIText);
+  RegisterMUIClass(TMUIRectangle);
+  RegisterMUIClass(TMUIScale);
+  // Group Classes
+  RegisterMUIClass(TMUIGroup, True);
+  RegisterMUIClass(TMUIRegister, True);
+  RegisterMUIClass(TMUICycle);
+  // Gaget Classes
+  RegisterMUIClass(TMUIString);
+  RegisterMUIClass(TMUIProp);
+  RegisterMUIClass(TMUIScrollBar);
+  // Image classes
+  RegisterMUIClass(TMUIImage);
+  RegisterMUIClass(TMUICheckmark);
+  RegisterMUIClass(TMUIPopButton);
+  // other classes
+  RegisterMUIClass(TMUIKnob);
+  RegisterMUIClass(TMUILevelMeter);
+  RegisterMUIClass(TMUINumericButton);
+  RegisterMUIClass(TMUISlider);
+
+end;
+
+procedure RegisterMUIClass(MUIClass: TMUIClass; HasChilds: Boolean = False; Name: string = '');
+var
+  MUIComp: TMUIComp;
+begin
+  MUIComp := TMUIComp.Create;
+  MUIComp.MUIClass := MUIClass;
+  MUIComp.HasChild := HasChilds;
+  if Name = '' then
+  begin
+    MUIComp.Name := MUIClass.ClassName;
+    if UpperCase(Copy(MUIComp.Name, 1, 1)) = 'T' then
+      Delete(MUIComp.Name, 1, 1);
+    if UpperCase(Copy(MUIComp.Name, 1, 3)) = 'MUI' then
+      Delete(MUIComp.Name, 1, 3);
+  end
+  else
+    MUIComp.Name := Name;
+  MUIComp.AUnit := MUIClass.UnitName;
+  MUIComps.Add(MUIComp);
+end;
+
+initialization
+
+  MUIComps := TMUIComps.Create(True);
+  RegisterBasics;
+
+finalization
+  MUIComps.Free;
 end.

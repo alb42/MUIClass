@@ -146,9 +146,9 @@ begin
 
   // Choose Component
   //    Create the ComboBox Entries from the List
-  SetLength(StrCycle, Length(MUIComponents));
-  for i := 0 to High(MUIComponents) do
-    StrCycle[i] := '    ' + MUIComponents[i].Name + '    ';
+  SetLength(StrCycle, MUIComps.Count);
+  for i := 0 to MUIComps.Count - 1 do
+    StrCycle[i] := '    ' + MUIComps[i].Name + '    ';
   ChooseComp := TMUICycle.Create;
   with ChooseComp do
   begin
@@ -539,12 +539,12 @@ begin
     for i := 0 to Tree.AllCount - 1 do
     begin
       Cl := Tree.AllChild[i].Data;
-      for j := 0 to High(MUIComponents) do
+      for j := 0 to MUIComps.Count - 1 do
       begin
-        if Cl.ClassName = MUIComponents[j].MUIClass.ClassName then
+        if Cl.ClassName = MUIComps[j].MUIClass.ClassName then
         begin
-          if UL.IndexOf(MUIComponents[j].AUnit) < 0 then
-            UL.Add(MUIComponents[j].AUnit);
+          if UL.IndexOf(MUIComps[j].AUnit) < 0 then
+            UL.Add(MUIComps[j].AUnit);
           Break;
         end;
       end;
@@ -1398,11 +1398,11 @@ var
   i: Integer;
 begin
   Result := False;
-  for i := 0 to High(MUIComponents) do
+  for i := 0 to MUIComps.Count - 1 do
   begin
-    if Obj.ClassName = MUIComponents[i].MUIClass.ClassName then
+    if Obj.ClassName = MUIComps[i].MUIClass.ClassName then
     begin
-      Result := MUIComponents[i].HasChild;
+      Result := MUIComps[i].HasChild;
       Break;
     end;
   end;
@@ -1434,18 +1434,18 @@ begin
       CurItem := Tree;
     // Which element to add
     Idx := ChooseComp.Active;
-    if (Idx < 0) or (Idx > High(MUIComponents)) then
+    if (Idx < 0) or (Idx > MUIComps.Count - 1) then
       Exit;
     // get the name of the component
     Num := 1;
     repeat
-      NName := MUIComponents[Idx].Name + IntToStr(Num);
+      NName := MUIComps[Idx].Name + IntToStr(Num);
       Inc(Num);
     Until Tree.AllChildByName(NName) < 0;
     // destroy window
     DestroyTestWin;
     // add the component
-    Child := CurItem.NewChild(NName, MUIComponents[Idx].MUIClass.Create);
+    Child := CurItem.NewChild(NName, MUIComps[Idx].MUIClass.Create);
     if IsPublishedProp(Child.Data, 'Contents') then
     begin
       Child.Properties.Add('Contents');
