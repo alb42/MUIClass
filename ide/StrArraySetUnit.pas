@@ -7,7 +7,7 @@ uses
   MUIClass.Base, MUIClass.Area, MUIClass.Window, MUIClass.Group,
   MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric,
   MainWinUnit,
-  IDETypes;
+  NodeTreeUnit, IDETypes;
 
 type
   TStrArrayWin = class(TMUIWindow)
@@ -28,6 +28,7 @@ type
     Obj: TObject;
     PropName: string;
     CurProp: TItemProp;
+    CurItem: TItemNode;
     constructor Create; override;
     destructor Destroy; override;
     property StrArray: TStringArray read GetStringArray write SetStringArray;
@@ -182,6 +183,8 @@ begin
       TMUIRegister(Obj).Titles := StrArray;
     CurProp.Value := '<Array ' + IntToStr(Length(StrArray)) + ' Entries>';
     CurProp.Active := True;
+    CurItem.Properties.Add(PropName);
+    MainWindow.IncludeProp.Selected := True;
     MainWindow.PropList.List.Redraw(MUIV_List_Redraw_Active);
     MainWindow.CreateTestWin;
   end;

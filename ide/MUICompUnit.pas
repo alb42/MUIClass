@@ -19,6 +19,7 @@ type
   TMUIComps = specialize TFPGObjectList<TMUIComp>;
 
 procedure RegisterMUIClass(MUIClass: TMUIClass; HasChilds: Boolean = False; Name: string = '');
+function GetClassByClassName(AName: string):TMUIClass;
 
 var
   MUIComps: TMUIComps;
@@ -74,6 +75,22 @@ begin
   MUIComp.AUnit := MUIClass.UnitName;
   MUIComps.Add(MUIComp);
 end;
+
+function GetClassByClassName(AName: string): TMUIClass;
+var
+  i: Integer;
+begin
+  Result := nil;
+  for i := 0 to MUIComps.Count - 1 do
+  begin
+    if MUIComps[i].MUIClass.ClassName = AName then
+    begin
+      Result := MUIComps[i].MUIClass;
+      Exit;
+    end;
+  end;
+end;
+
 
 initialization
 

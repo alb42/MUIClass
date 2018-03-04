@@ -25,6 +25,9 @@ const
 type
 
   TMainWindow = class(TMUIWindow)
+  private
+    FProjName: string;
+    procedure SetProjName(AValue: string);
   public
     Tree: TItemTree;
     ItemList, PropList, EventList: TMUIListView;
@@ -58,7 +61,10 @@ type
     procedure AutoEventClick(Sender: TObject);
     procedure EditEventClick(Sender: TObject);
     // Menu events
+    procedure NewClick(Sender: TObject);
+    procedure LoadClick(Sender: TObject);
     procedure SaveClick(Sender: TObject);
+    procedure ExportClick(Sender: TObject);
     procedure QuitClick(Sender: TObject);
     procedure AboutMenuClick(Sender: TObject);
     procedure ConfigMUIMenuClick(Sender: TObject);
@@ -82,15 +88,17 @@ type
   public
     constructor Create; override;
     destructor Destroy; override;
+    property ProjName: string read FProjName write SetProjName;
   end;
 
 var
   MainWindow: TMainWindow;
+  DefaultPath: string;
 
 implementation
 
 uses
-  StrArraySetUnit;
+  StrArraySetUnit, math;
 
 // Create Main Window
 constructor TMainWindow.Create;
@@ -101,6 +109,10 @@ var
   i: Integer;
 begin
   inherited;
+
+  ProjName := '';
+
+  DefaultPath := ExtractFilePath(ParamStr(0));
   EventHandlers := TEventHandlers.Create(True);
   ItemProps := TItemProps.Create(True);
   EventProps := TItemProps.Create(True);
@@ -118,7 +130,6 @@ begin
     Horiz := True;
     Parent := Self;
   end;
-
 
   // Choose Component
   //    Create the ComboBox Entries from the List
@@ -368,18 +379,7 @@ begin
   end;
   // ############# End Event Stuff
 
-  Tree := TItemTree.Create;
-  Tree.Name := 'Window1';
-  TestWin := TMUIWindow.Create;
-  Tree.Data := TestWin;
-  Tree.Properties.Add('Title');
-  TestWin.Title := 'Window1';
-
-  CurItem := Tree;
-
-
-
-  // Menu Entries
+  // ############# Start Menu Entries
 
   MenuStrip := TMUIMenuStrip.Create;
 
@@ -393,8 +393,33 @@ begin
 
   with TMUIMenuItem.Create do
   begin
-    Title := 'Export As Source';
+    Title := 'New';
+    OnTrigger := @NewClick;
+    Parent := ME;
+  end;
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'Load...';
+    OnTrigger := @LoadClick;
+    Parent := ME;
+  end;
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'Save...';
     OnTrigger := @SaveClick;
+    Parent := ME;
+  end;
+
+  with TMUIMenuItem.Create do
+  begin
+    Title := '-';
+    Parent := ME;
+  end;
+
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'Export As Source';
+    OnTrigger := @ExportClick;
     Parent := ME;
   end;
 
@@ -410,6 +435,7 @@ begin
     OnTrigger := @QuitClick;
     Parent := ME;
   end;
+
   // About ;)
 
   ME := TMUIMenu.Create;
@@ -436,6 +462,20 @@ begin
     OnTrigger := @ConfigMUIMenuClick;
     Parent := ME;
   end;
+
+  // ############# End Menu Entries
+
+  Tree := TItemTree.Create;
+  Tree.Name := 'Window1';
+  TestWin := TMUIWindow.Create;
+  Tree.Data := TestWin;
+  Tree.Properties.Add('Title');
+  TestWin.Title := 'Window1';
+
+  CurItem := Tree;
+
+  if ParamCount > 0 then
+    Tree.LoadFromFile(ParamStr(1));
 end;
 
 
@@ -649,17 +689,21 @@ begin
 end;
 
 // Save the Source File
-procedure TMainWindow.SaveClick(Sender: TObject);
+procedure TMainWindow.ExportClick(Sender: TObject);
 var
   FD: TFileDialog;
 begin
   FD := TFileDialog.Create;
   try
-    FD.FileName := ExtractFilePath(PAramStr(0)) + 'MyProgram.pas';
+    FD.TitleText := 'Choose Name for Source file to export';
+    FD.FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'MyProgram.pas';
     FD.Pattern := '#?.pas';
     FD.SaveMode := True;
     if FD.Execute then
+    begin
+      DefaultPath := FD.Directory;
       CreateSource(FD.FileName);
+    end;
   finally
     FD.Free;
   end;
@@ -1052,6 +1096,7 @@ begin
               StrArrayWin.Obj := Obj;
               StrArrayWin.PropName := CurProp.Name;
               StrArrayWin.CurProp := CurProp;
+              StrArrayWin.CurItem := CurItem;
               if (Obj is TMUICycle) and (CurProp.Name = 'Entries') then
               begin
                 StrArrayWin.StrArray := TMUICycle(Obj).Entries;
@@ -1538,6 +1583,75 @@ begin
 end;
 
 // MainMenu Events
+
+procedure TMainWindow.NewClick(Sender: TObject);
+begin
+  ProjName := '';
+  DestroyTestWin;
+  Tree.Free;
+  Tree := TItemTree.Create;
+  Tree.Name := 'Window1';
+  TestWin := TMUIWindow.Create;
+  Tree.Data := TestWin;
+  Tree.Properties.Add('Title');
+  TestWin.Title := 'Window1';
+
+  CurItem := Tree;
+  UpdateItemList;
+  ItemList.List.Active := 0;
+  CreateTestWin;
+end;
+
+procedure TMainWindow.LoadClick(Sender: TObject);
+var
+  FD: TFileDialog;
+begin
+  FD := TFileDialog.Create;
+  try
+    FD.TitleText := 'Choose Project to Load';
+    FD.FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'MyProgram' + ProjectExtension;
+    FD.Pattern := '#?' + ProjectExtension;
+    FD.SaveMode := False;
+    if FD.Execute then
+    begin
+      DefaultPath := FD.Directory;
+      NewClick(nil);
+      DestroyTestWin;
+      ProjName := FD.FileName;
+      Tree.LoadFromFile(FD.Filename);
+      CurItem := Tree;
+      UpdateItemList;
+      ItemList.List.Active := 0;
+      CreateTestWin;
+    end;
+  finally
+    FD.Free;
+  end;
+  //
+end;
+
+procedure TMainWindow.SaveClick(Sender: TObject);
+var
+  FD: TFileDialog;
+begin
+  FD := TFileDialog.Create;
+  try
+    FD.TitleText := 'Choose Name for your Project';
+    FD.FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'MyProgram' + ProjectExtension;
+    FD.Pattern := '#?' + ProjectExtension;
+    FD.SaveMode := True;
+    if FD.Execute then
+    begin
+      DefaultPath := FD.Directory;
+      ProjName := ChangeFileExt(FD.Filename, ProjectExtension);
+      Tree.SaveToFile(ProjName);
+    end;
+  finally
+    FD.Free;
+  end;
+  //
+end;
+
 procedure TMainWindow.AboutMenuClick(Sender: TObject);
 begin
   MUIApp.AboutMUI(Self);
@@ -1551,6 +1665,15 @@ end;
 procedure TMainWindow.QuitClick(Sender: TObject);
 begin
   Self.Close;
+end;
+
+procedure TMainWindow.SetProjName(AValue: string);
+begin
+  FProjName := AValue;
+  if FProjName = '' then
+    Self.Title := 'MUIIDE - <New Project>'
+  else
+    Self.Title := 'MUIIDE - <' + ExtractFileName(FProjName) + '>';
 end;
 
 end.

@@ -4,7 +4,11 @@ unit NodeTreeUnit;
 interface
 
 uses
-  Classes, SysUtils, FGL;
+  Classes, SysUtils, FGL, typinfo,
+  MUIClass.Group;
+
+const
+  ProjectExtension = '.miprj';
 
 type
   TItemNode = class;
@@ -54,10 +58,16 @@ type
     function AllChildByName(AName: string): Integer;
     property AllCount: Integer read GetAllCount;
     property AllChild[Idx: Integer]: TItemNode read GetAllChild;
+
+    function SaveToFile(AFileName: string): Boolean;
+    function LoadFromFile(AFileName: string): Boolean;
   end;
 
 
 implementation
+
+uses
+  DOM, XMLWrite, XMLRead, MUICompUnit;
 
 constructor TItemNode.Create(ATopNode: TItemTree);
 begin
@@ -207,6 +217,237 @@ begin
       Result := i;
       Exit;
     end;
+  end;
+end;
+
+function TItemTree.SaveToFile(AFileName: string): Boolean;
+var
+  Doc: TXMLDocument;
+  Root: TDOMNode;
+
+  procedure PutProperties(ParentNode: TDOMNode; ItemNode: TItemNode);
+  var
+    Obj: TObject;
+    PP : PPropList;
+    PT : PTypeData;
+    PI : PTypeInfo;
+    i, j: Integer;
+    Node, SaNode: TDOMNode;
+    UseSa: Boolean;
+    Sa: TStringArray;
+  begin
+    Obj := ItemNode.Data; // Object to inspect
+    PI := Obj.ClassInfo;
+    PT := GetTypeData(PI);
+    GetMem (PP, PT^.PropCount * SizeOf(Pointer));
+    J := GetPropList(PI, tkAny, PP);  // List of published properties
+    for I := 0 to J - 1 do
+    begin
+      with PP^[i]^ do
+      begin
+        if ItemNode.Properties.IndexOf(Name) < 0 then
+          Continue;
+        case PropType^.Kind of
+          // ####################### Method
+          tkMethod: begin
+
+          end;
+          // ######################## Integer
+          tkInteger: begin
+            Node := Doc.CreateElement('property');
+            ParentNode.AppendChild(Node);
+            TDOMElement(Node).SetAttribute('name', WideString(Name));
+            TDOMElement(Node).SetAttribute('type', WideString(IntToStr(Ord(PropType^.Kind))));
+            TDOMElement(Node).TextContent := WideString(IntToStr(GetOrdProp(Obj, PP^[i])));
+          end;
+          // ####################### Boolean
+          tkBool: begin
+            Node := Doc.CreateElement('property');
+            ParentNode.AppendChild(Node);
+            TDOMElement(Node).SetAttribute('name', WideString(Name));
+            TDOMElement(Node).SetAttribute('type', WideString(IntToStr(Ord(PropType^.Kind))));
+            TDOMElement(Node).TextContent := WideString(IntToStr(GetOrdProp(Obj, PP^[i])));
+          end;
+          // ####################### String
+          tkString, tkAString: begin
+            Node := Doc.CreateElement('property');
+            ParentNode.AppendChild(Node);
+            TDOMElement(Node).SetAttribute('name', WideString(Name));
+            TDOMElement(Node).SetAttribute('type', WideString(IntToStr(Ord(PropType^.Kind))));
+            TDOMElement(Node).TextContent := WideString(GetStrProp(Obj, PP^[i]));
+          end;
+          // ##################### DynArray (TStringArray)
+          tkDynArray: begin
+            UseSa := False;
+            if (Obj is TMUICycle) and (Name = 'Entries') then
+            begin
+              sa := TMUICycle(Obj).Entries;
+              UseSa := True;
+            end;
+            if (Obj is TMUIRegister) and (Name = 'Titles') then
+            begin
+              sa := TMUIRegister(Obj).Titles;
+              UseSa := True;
+            end;
+            if UseSa then
+            begin
+              Node := Doc.CreateElement('property');
+              ParentNode.AppendChild(Node);
+              TDOMElement(Node).SetAttribute('name', WideString(Name));
+              TDOMElement(Node).SetAttribute('type', WideString(IntToStr(Ord(PropType^.Kind))));
+              for j := 0 to High(Sa) do
+              begin
+                SaNode := Doc.CreateElement('entry');
+                Node.AppendChild(SaNode);
+                SaNode.TextContent := WideString(Sa[j]);
+              end;
+            end;
+          end;
+          else
+            writeln(name, 'Not handled Type: ', PropType^.Kind); // still unknown Types needs Handler
+        end;
+      end;
+    end;
+    FreeMem(PP);
+  end;
+
+  procedure PutInNode(ParentNode: TDOMNode; ItemNode: TItemNode);
+  var
+    Node: TDOMNode;
+    i: Integer;
+  begin
+    Node := Doc.CreateElement('element');
+    ParentNode.AppendChild(Node);
+    TDOMElement(Node).SetAttribute('name', WideString(ItemNode.Name));
+    TDOMElement(Node).SetAttribute('class', WideString(ItemNode.Data.ClassName));
+    PutProperties(Node, ItemNode);
+    for i := 0 to ItemNode.Childs.Count - 1 do
+      PutInNode(Node, ItemNode.Childs[i]);
+  end;
+begin
+  Result := False;
+  Doc := TXMLDocument.Create;
+  try
+    Root := Doc.CreateElement('application');
+    Doc.AppendChild(Root);
+    Root := Doc.DocumentElement;
+    PutInNode(Root, Self);
+    //
+    WriteXMLFile(Doc, AFileName);
+    Result := True;
+  finally
+    Doc.Free;
+  end;
+end;
+
+function TItemTree.LoadFromFile(AFileName: string): Boolean;
+var
+  Doc: TXMLDocument;
+  App, Win: TDOMNode;
+
+  procedure GetProperties(Node: TDOMNode; ItemNode: TItemNode);
+  var
+    i, j : Integer;
+    Prop: TDOMNode;
+    Field: string;
+    Temp: Integer;
+    Obj: TObject;
+    sa: TStringArray;
+  begin
+    Obj := ItemNode.Data;
+    for i := 0 to Node.ChildNodes.Count - 1 do
+    begin
+      Prop := Node.ChildNodes[i];
+      if Prop.NodeName = 'property' then
+      begin
+        Field := AnsiString(TDOMElement(Prop).GetAttribute('name'));
+        ItemNode.Properties.Add(Field);
+        Temp := StrToIntDef(AnsiString(TDOMElement(Prop).GetAttribute('type')), -1);
+        if Temp < 0 then
+          Continue;
+        case TTypeKind(Temp) of
+          // ####################### Method
+          tkMethod: begin
+
+          end;
+          // ####################### Boolean
+          // ######################## Integer
+          tkBool,
+          tkInteger: begin
+            if TryStrToInt(AnsiString(Prop.TextContent), Temp) then
+              SetOrdProp(Obj, Field, Temp);
+          end;
+          // ####################### String
+          tkString, tkAString: begin
+            SetStrProp(Obj, Field, AnsiString(Prop.TextContent));
+          end;
+          // ##################### DynArray (TStringArray)
+          tkDynArray: begin
+            SetLength(Sa, Prop.ChildNodes.Count);
+            for j := 0 to Prop.ChildNodes.Count - 1 do
+            begin
+              Sa[j] := AnsiString(Prop.ChildNodes[j].TextContent);
+            end;
+            if (Obj is TMUICycle) and (Field = 'Entries') then
+            begin
+              TMUICycle(Obj).Entries := sa;
+            end;
+            if (Obj is TMUIRegister) and (Field = 'Titles') then
+            begin
+              TMUIRegister(Obj).Titles := sa;
+            end;
+          end;
+          else
+            writeln(name, 'Not handled Type: ', TTypeKind(Temp)); // still unknown Types needs Handler
+        end;
+      end;
+    end;
+  end;
+
+  procedure GetChilds(ParentNode: TDOMNode; ItemNode: TItemNode);
+  var
+    Elem: TDOMNode;
+    i: Integer;
+    AName: string;
+    NObj: TMUIClass;
+    NItemNode: TItemNode;
+  begin
+    for i := 0 to ParentNode.ChildNodes.Count - 1 do
+    begin
+      Elem := ParentNode.ChildNodes[i];
+      if Elem.NodeName = 'element' then
+      begin
+        AName :=  AnsiString(TDOMElement(Elem).GetAttribute('name'));
+        NObj := GetClassByClassName(AnsiString(TDOMElement(Elem).GetAttribute('class')));
+        if Assigned(NObj) then
+        begin
+          NItemNode := ItemNode.NewChild(AName, NObj.Create);
+          GetProperties(Elem, NItemNode);
+          GetChilds(Elem, NItemNode);
+        end;
+      end;
+    end;
+  end;
+
+
+begin
+  Result := False;
+  Doc := nil;
+  try
+    ReadXMLFile(Doc, AFileName);
+    App := Doc.FindNode('application');
+    if Assigned(App) then
+    begin
+      Win := App.FindNode('element');
+      if Assigned(Win) then
+      begin
+        Self.Name := AnsiString(TDOMElement(Win).GetAttribute('name'));
+        GetProperties(Win, Self);
+        GetChilds(Win, Self);
+      end;
+    end;
+  finally
+    Doc.Free;
   end;
 end;
 
