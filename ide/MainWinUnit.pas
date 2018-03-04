@@ -104,6 +104,8 @@ type
     procedure SetBoolProp(Sender: TObject);
     procedure SetStringProp(Sender: TObject);
     procedure SetEvent(Sender: TObject);
+
+    procedure ClickEvent(Sender: TObject);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -477,7 +479,6 @@ begin
             // Cycle.Entries
             if (Obj is TMUICycle) and (Name = 'Entries') then
             begin
-              writeln('    Length ', Length(TMUICycle(Obj).Entries));
               if Length(TMUICycle(Obj).Entries) > 0 then
               begin
                 for n := 0 to High(TMUICycle(Obj).Entries) do
@@ -526,14 +527,12 @@ begin
   Ident := ChangeFileExt(ExtractFileName(Filename), '');
   SL := TStringList.Create;
   UL := TStringList.Create;
-  writeln(1);
   try
     SL.Add('unit ' + Ident + ';');
     SL.Add('{$mode objfpc}{$H+}');
     SL.Add('interface');
     SL.Add('uses');
     //
-    writeln(2);
     UL.Add('MUIClass.Base');
     UL.Add('MUIClass.Window');
     for i := 0 to Tree.AllCount - 1 do
@@ -549,7 +548,6 @@ begin
         end;
       end;
     end;
-    writeln(3);
     for i := 0 to UL.Count - 1 do
     begin
       if i = 0 then
@@ -557,11 +555,9 @@ begin
       else
         str := str + ', ' + UL[i];
     end;
-    writeln(4);
     SL.Add(str + ';');
     SL.Add('type');
     SL.Add('  T' + Tree.Name + ' = class(TMUIWindow)');
-    writeln(5);
     for i := 1 to Tree.AllCount - 1 do
     begin
       SL.Add('    ' + Tree.AllChild[i].Name + ': ' + Tree.AllChild[i].Data.ClassName + ';');
@@ -571,7 +567,6 @@ begin
       EV := EventHandlers[i];
       SL.Add('    ' + StringReplace(EV.Header, 'T' + Tree.Name + '.', '', [rfReplaceAll]));
     end;
-    writeln(5);
     SL.Add('    constructor Create; override;');
     SL.Add('  end;');
     SL.Add('var');
@@ -581,7 +576,6 @@ begin
     SL.Add('constructor T' + Tree.Name + '.Create;');
     SL.Add('begin');
     SL.Add('  inherited;');
-    writeln(6);
     for i := 1 to Tree.AllCount - 1 do
     begin
       Item := Tree.AllChild[i];
@@ -595,6 +589,7 @@ begin
       else
         SL.Add('    Parent := ' + Item.Parent.Name + ';');
       SL.Add('  end;');
+      SL.Add('  ');
     end;
     SL.Add('end;');
     SL.Add('');
@@ -602,13 +597,11 @@ begin
     for i := 0 to EventHandlers.Count - 1 do
     begin
       SL.Add(EventHandlers[i].Text);
+      SL.Add('');
     end;
-    writeln(7);
     //
     SL.Add('end.');
-    writeln(8);
     SL.SaveToFile(FileName);
-    writeln(9);
     SL.Clear;
     SL.Add('program ' + Ident + 'Main;');
     SL.Add('{$mode objfpc}{$H+}');
@@ -619,9 +612,7 @@ begin
     SL.Add('  ' + Tree.Name + ' := T' + Tree.Name + '.Create;');
     SL.Add('  MUIApp.Run;');
     SL.Add('end.');
-    writeln(10);
     SL.SaveToFile(ExtractFilePath(Filename) + Ident + 'Main.pas');
-    writeln(11);
   finally
     UL.Free;
     SL.Free;
@@ -852,7 +843,7 @@ begin
               end;
             end;
           else
-            writeln(name, ' Type: ', PropType^.Kind); // still unknown Types needs Handler
+            writeln(name, 'Not handled Type: ', PropType^.Kind); // still unknown Types needs Handler
         end;
       end;
     end;
@@ -973,6 +964,7 @@ begin
       StrSet.Contents := CurProp.Value;
       EditPages.ActivePage := 3;
       IncludeProp.Disabled := True;
+      BlockEvents := False;
       Exit;
     end;
     Obj := CurItem.Data;
@@ -1262,6 +1254,7 @@ begin
     CurProp.Active := True;
     SetOrdProp(CurItem.Data, CurProp.Name, IntSet.IntegerValue);
     CurProp.Value := IntToStr(IntSet.IntegerValue);
+    IncludeProp.Selected := True;
     PropList.List.Redraw(MUIV_List_Redraw_Active);
     CreateTestWin;
   end;
@@ -1285,6 +1278,7 @@ begin
     SetOrdProp(CurItem.Data, CurProp.Name, BoolSet.Active);
     CurProp.Value := BoolToStr(Boolean(BoolSet.Active), True);
     CurProp.Active := True;
+    IncludeProp.Selected := True;
     PropList.List.Redraw(MUIV_List_Redraw_Active);
     CreateTestWin;
     //
@@ -1321,6 +1315,7 @@ begin
       SetStrProp(CurItem.Data, CurProp.Name, StrSet.Contents);
       CurProp.Value := '''' + StrSet.Contents + '''';
       CurProp.Active := True;
+      IncludeProp.Selected := True;
       PropList.List.Redraw(MUIV_List_Redraw_Active);
     end;
     CreateTestWin;
@@ -1340,6 +1335,21 @@ end;
 procedure TMainWindow.OpenStrArrayWin(Sender: TObject);
 begin
   StrArrayWin.Show;
+end;
+
+procedure TMainWindow.ClickEvent(Sender: TObject);
+var
+  i: Integer;
+begin
+  for i := 0 to Tree.AllCount - 1 do
+  begin
+    if Tree.AllChild[i].Data = Sender then
+    begin
+      if ItemList.List.Active <> i then
+        ItemList.List.Active := i;
+      Break;
+    end;
+  end;
 end;
 
 // Create the TestWindow and show to the user the current settings visually
@@ -1450,6 +1460,11 @@ begin
     begin
       Child.Properties.Add('Contents');
       SetStrProp(Child.Data, 'Contents', NName);
+    end;
+    if Child.Data is TMUIArea then
+    begin
+      TMUIArea(Child.Data).OnClick := @ClickEvent;
+      TMUIArea(Child.Data).OnSelected := @ClickEvent;
     end;
     // update the pseudo Tree
     UpdateItemList;
