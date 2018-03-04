@@ -6,7 +6,8 @@ uses
   SysUtils, Classes, MUI,
   MUIClass.Base, MUIClass.Area, MUIClass.Window, MUIClass.Group,
   MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric,
-  MainWinUnit;
+  MainWinUnit,
+  IDETypes;
 
 type
   TStrArrayWin = class(TMUIWindow)

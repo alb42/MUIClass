@@ -6,7 +6,9 @@ uses
   SysUtils, StrUtils, fgl, Classes, Typinfo,
   MUI, muihelper,
   MUIClass.Base, MUIClass.Window, MUIClass.Area, MUIClass.List, MUIClass.Group,
-  NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog, MUIClass.Image;
+  NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog, MUIClass.Image,
+  MUIClass.Menu,
+  IDETypes;
 
 // Default Editor to use for editing Eventhandlers
 const
@@ -21,41 +23,6 @@ const
   {$endif}
 
 type
-  TItemProp = class
-  private
-    FActive: Boolean;
-    procedure SetActive(AValue: Boolean);
-  public
-    Name: string;
-    Value: string;
-    DisplayName: string;
-    DisplayValue: string;
-    Additional: string;
-    IsSpecial: Boolean;
-    property Active: boolean read FActive write SetActive;
-  end;
-
-  TItemProps = specialize TFPGObjectList<TItemProp>;
-
-  // If an Eventhandler is specified we save the contents
-  // because we cant connect it to the object itself like other properties
-  TEventHandler = class
-    Name: string;    // name of Event On...
-    Obj: TItemNode;  // Item Node which the Event belongs to
-    Event: string;   // Name of the EventHandler
-    Header: string;  // Full Header of the EventHandler
-    Text: string;    // Ful Text of the Eventhandler as given by user
-  end;
-  TEventHandlers = specialize TFPGObjectList<TEventHandler>;
-
-  // Types for creation of Event Footprint
-  TEventParam = record
-    Style: TParamFlags;
-    Name: string;
-    Typ: string;
-  end;
-  TEventParams = array of TEventParam;
-  PParamFlags = ^TParamFlags;
 
   TMainWindow = class(TMUIWindow)
   public
@@ -86,14 +53,20 @@ type
     procedure EventListDblClick(Sender: TObject);
     procedure EventDisplay(Sender: TObject; ToPrint: PPChar; Entry: PChar);
     procedure OpenStrArrayWin(Sender: TObject);
-    procedure SaveClick(Sender: TObject);
+
     procedure IncludeChange(Sender: TObject);
     procedure AutoEventClick(Sender: TObject);
     procedure EditEventClick(Sender: TObject);
+    // Menu events
+    procedure SaveClick(Sender: TObject);
+    procedure QuitClick(Sender: TObject);
+    procedure AboutMenuClick(Sender: TObject);
+    procedure ConfigMUIMenuClick(Sender: TObject);
+
     // Update Properties of CurItem
     procedure UpdateProperties;
     procedure UpdateItemList;
-    procedure CreateSource;
+    procedure CreateSource(FileName: string);
     function FindEventHandler(Obj: TItemNode; Event: string): TEventHandler;
   public
     // TestWin stuff
@@ -124,6 +97,7 @@ constructor TMainWindow.Create;
 var
   Grp, Grp2: TMUIGroup;
   StrCycle: TStringArray;
+  ME: TMUIMenu;
   i: Integer;
 begin
   inherited;
@@ -394,12 +368,6 @@ begin
   end;
   // ############# End Event Stuff
 
-  with TMUIButton.Create('Save') do
-  begin
-    OnClick := @SaveClick;
-    Parent := Self;
-  end;
-
   Tree := TItemTree.Create;
   Tree.Name := 'Window1';
   TestWin := TMUIWindow.Create;
@@ -408,6 +376,66 @@ begin
   TestWin.Title := 'Window1';
 
   CurItem := Tree;
+
+
+
+  // Menu Entries
+
+  MenuStrip := TMUIMenuStrip.Create;
+
+
+  ME := TMUIMenu.Create;
+  with ME do
+  begin
+    Title := 'Project';
+    Parent := MenuStrip
+  end;
+
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'Export As Source';
+    OnTrigger := @SaveClick;
+    Parent := ME;
+  end;
+
+  with TMUIMenuItem.Create do
+  begin
+    Title := '-';
+    Parent := ME;
+  end;
+
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'Quit';
+    OnTrigger := @QuitClick;
+    Parent := ME;
+  end;
+  // About ;)
+
+  ME := TMUIMenu.Create;
+  with ME do
+  begin
+    Title := 'About';
+    Parent := MenuStrip
+  end;
+
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'About MUI...';
+    OnTrigger := @AboutMenuClick;
+    Parent := ME;
+  end;
+  with TMUIMenuItem.Create do
+  begin
+    Title := '-';
+    Parent := ME;
+  end;
+  with TMUIMenuItem.Create do
+  begin
+    Title := 'Settings/MUI...';
+    OnTrigger := @ConfigMUIMenuClick;
+    Parent := ME;
+  end;
 end;
 
 
@@ -514,19 +542,18 @@ begin
 end;
 
 // Create the Source code from the settings
-procedure TMainWindow.CreateSource;
+procedure TMainWindow.CreateSource(FileName: string);
 var
   SL, UL: TStringList;
   Cl: TObject;
   i, j: Integer;
-  FileName, Ident, str: string;
+  Ident, str: string;
   Item: TItemNode;
   EV: TEventHandler;
 begin
-  FileName := 'TestSource.pas';
-  Ident := ChangeFileExt(ExtractFileName(Filename), '');
   SL := TStringList.Create;
   UL := TStringList.Create;
+  Ident := Tree.Name + 'Unit';
   try
     SL.Add('unit ' + Ident + ';');
     SL.Add('{$mode objfpc}{$H+}');
@@ -601,9 +628,11 @@ begin
     end;
     //
     SL.Add('end.');
-    SL.SaveToFile(FileName);
+    SL.SaveToFile(ExtractFilePath(Filename) + Ident + '.pas');
     SL.Clear;
-    SL.Add('program ' + Ident + 'Main;');
+    // Main Program
+    Ident := ChangeFileExt(ExtractFileName(Filename), '');
+    SL.Add('program ' + Ident + ';');
     SL.Add('{$mode objfpc}{$H+}');
     SL.Add('uses');
     SL.Add('  MUIClass.Base, ' + Ident + ';');
@@ -612,7 +641,7 @@ begin
     SL.Add('  ' + Tree.Name + ' := T' + Tree.Name + '.Create;');
     SL.Add('  MUIApp.Run;');
     SL.Add('end.');
-    SL.SaveToFile(ExtractFilePath(Filename) + Ident + 'Main.pas');
+    SL.SaveToFile(ExtractFilePath(Filename) + Ident + '.pas');
   finally
     UL.Free;
     SL.Free;
@@ -621,8 +650,19 @@ end;
 
 // Save the Source File
 procedure TMainWindow.SaveClick(Sender: TObject);
+var
+  FD: TFileDialog;
 begin
-  CreateSource;
+  FD := TFileDialog.Create;
+  try
+    FD.FileName := ExtractFilePath(PAramStr(0)) + 'MyProgram.pas';
+    FD.Pattern := '#?.pas';
+    FD.SaveMode := True;
+    if FD.Execute then
+      CreateSource(FD.FileName);
+  finally
+    FD.Free;
+  end;
 end;
 
 // Update Item List from the Tree (build the Fake Tree)
@@ -1497,21 +1537,20 @@ begin
   end;
 end;
 
-// if an Property is active (means changed by user and should be included to source)
-// it will be printed bold
-procedure TItemProp.SetActive(AValue: Boolean);
+// MainMenu Events
+procedure TMainWindow.AboutMenuClick(Sender: TObject);
 begin
-  FActive := AValue;
-  if Active then
-  begin
-    DisplayName := #27'b' + Name;
-    DisplayValue := #27'b' + Value;
-  end
-  else
-  begin
-    DisplayName := Name;
-    DisplayValue := Value;
-  end;
+  MUIApp.AboutMUI(Self);
+end;
+
+procedure TMainWindow.ConfigMUIMenuClick(Sender: TObject);
+begin
+  MUIApp.OpenConfigWindow();
+end;
+
+procedure TMainWindow.QuitClick(Sender: TObject);
+begin
+  Self.Close;
 end;
 
 end.
