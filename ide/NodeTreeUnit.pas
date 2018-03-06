@@ -11,6 +11,18 @@ const
   ProjectExtension = '.miprj';
 
 type
+    // If an Eventhandler is specified we save the contents
+  // because we cant connect it to the object itself like other properties
+  TEventHandler = class
+    Name: string;    // name of Event On...
+    Event: string;   // Name of the EventHandler
+    PlainHeader: string; // Plain Header
+    Header: string;  // Full Header of the EventHandler
+    Text: string;    // Ful Text of the Eventhandler as given by user
+  end;
+  TEventHandlers = specialize TFPGObjectList<TEventHandler>;
+
+
   TItemNode = class;
   TItemTree = class;
 
@@ -25,6 +37,7 @@ type
     FData: TObject;
     FProps: TStringList;
     FGlobalIdx: Integer;
+    FEvents: TEventHandlers;
     function GetCount: Integer;
     function GetChild(Idx: Integer): TItemNode;
   protected
@@ -39,6 +52,7 @@ type
     property Parent: TItemNode read FParent;
     property Data: TObject read FData write FData;
     property Properties: TStringList read FProps;
+    property Events: TEventHandlers read FEvents;
     property Count: Integer read GetCount;
     property Child[Idx: Integer]: TItemNode read GetChild; default;
     property GlobalIdx: Integer read FGlobalIdx;
@@ -74,6 +88,7 @@ begin
   TopNode := ATopNode;
   Childs := TItemNodes.Create(False);
   FProps := TStringList.Create;
+  FEvents := TEventHandlers.Create(True);
 end;
 
 destructor TItemNode.Destroy;
@@ -91,6 +106,7 @@ begin
   Childs.Clear;
   Childs.Free;
   FProps.Free;
+  FEvents.Free;
   if Assigned(TopNode) and Assigned(TopNode.AllChilds) then
   begin
     TopNode.AllChilds.Remove(Self);
@@ -311,6 +327,36 @@ var
     FreeMem(PP);
   end;
 
+  procedure PutEvents(ParentNode: TDOMNode; ItemNode: TItemNode);
+  var
+    i: Integer;
+    ANode, Node: TDOMNode;
+    EV: TEVentHandler;
+  begin
+    for i := 0 to ItemNode.Events.Count - 1 do
+    begin
+      EV := ItemNode.Events[i];
+      //
+      Node := Doc.CreateElement('event');
+      ParentNode.AppendChild(Node);
+      TDOMElement(Node).SetAttribute('name', WideString(EV.Name));
+      TDOMElement(Node).SetAttribute('eventname', WideString(EV.Event));
+
+      ANode := Doc.CreateElement('plainheader');
+      Node.AppendChild(ANode);
+      ANode.TextContent := WideString(Ev.PlainHeader);
+
+      ANode := Doc.CreateElement('header');
+      Node.AppendChild(ANode);
+      ANode.TextContent := WideString(Ev.Header);
+
+      ANode := Doc.CreateElement('text');
+      Node.AppendChild(ANode);
+      ANode.TextContent := WideString(Ev.Text);
+
+    end;
+  end;
+
   procedure PutInNode(ParentNode: TDOMNode; ItemNode: TItemNode);
   var
     Node: TDOMNode;
@@ -321,6 +367,7 @@ var
     TDOMElement(Node).SetAttribute('name', WideString(ItemNode.Name));
     TDOMElement(Node).SetAttribute('class', WideString(ItemNode.Data.ClassName));
     PutProperties(Node, ItemNode);
+    PutEvents(Node, ItemNode);
     for i := 0 to ItemNode.Childs.Count - 1 do
       PutInNode(Node, ItemNode.Childs[i]);
   end;
@@ -348,11 +395,12 @@ var
   procedure GetProperties(Node: TDOMNode; ItemNode: TItemNode);
   var
     i, j : Integer;
-    Prop: TDOMNode;
+    Prop, ANode: TDOMNode;
     Field: string;
     Temp: Integer;
     Obj: TObject;
     sa: TStringArray;
+    EV: TEventHandler;
   begin
     Obj := ItemNode.Data;
     for i := 0 to Node.ChildNodes.Count - 1 do
@@ -400,6 +448,26 @@ var
           else
             writeln(name, 'Not handled Type: ', TTypeKind(Temp)); // still unknown Types needs Handler
         end;
+      end
+      else
+      if Prop.NodeName = 'event' then
+      begin
+        EV := TEventHandler.Create;
+        EV.Name := AnsiString(TDOMElement(Prop).GetAttribute('name'));
+        EV.Event := AnsiString(TDOMElement(Prop).GetAttribute('eventname'));
+        for j := 0 to Prop.ChildNodes.Count - 1 do
+        begin
+          ANode := Prop.ChildNodes[j];
+          if ANode.NodeName = 'plainheader' then
+            EV.PlainHeader := AnsiString(ANode.TextContent)
+          else
+          if ANode.NodeName = 'header' then
+            EV.Header := AnsiString(ANode.TextContent)
+          else
+          if ANode.NodeName = 'text' then
+            EV.Text := AnsiString(ANode.TextContent)
+        end;
+        ItemNode.Events.Add(Ev);
       end;
     end;
   end;

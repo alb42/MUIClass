@@ -34,7 +34,6 @@ type
     CurItem: TItemNode;
     CurProp,CurEvent: TItemProp;
     ItemProps, EventProps: TItemProps;
-    EventHandlers: TEventHandlers;
     TestApp: TMUIApplication;
     ChooseComp: TMUICycle;
     EditPages: TMUIGroup;
@@ -115,7 +114,6 @@ begin
   ProjName := '';
 
   DefaultPath := ExtractFilePath(ParamStr(0));
-  EventHandlers := TEventHandlers.Create(True);
   ItemProps := TItemProps.Create(True);
   EventProps := TItemProps.Create(True);
 
@@ -494,7 +492,6 @@ begin
   Tree.Free;
   ItemProps.Free;
   EventProps.Free;
-  Eventhandlers.Free;
   inherited;
 end;
 
@@ -620,6 +617,16 @@ begin
   end;
 end;
 
+procedure CollectEventHeader(Indent: string; Base: TItemNode; SL: TStringList);
+var
+  i: Integer;
+begin
+  for i := 0 to Base.Events.Count - 1 do
+    SL.Add(Indent + StringReplace(Base.Events[i].PlainHeader, '%name%.', '', [rfReplaceAll]));
+  for i := 0 to Base.Count - 1 do
+    CollectEventHeader(Indent, Base.Child[i], SL);
+end;
+
 procedure CollectInits(Indent: string; Base: TItemNode; SL: TStringList);
 var
   i: Integer;
@@ -643,16 +650,28 @@ begin
     //
     CollectInits(Indent, Item, SL);
   end;
+end;
 
+procedure CollectEvents(Indent: string; Base: TItemNode; SL: TStringList);
+var
+  i: Integer;
+begin
+  // eventhandlers
+  for i := 0 to Base.Events.Count - 1 do
+  begin
+    SL.Add(Base.Events[i].Text);
+    SL.Add('');
+  end;
+  for i := 0 to Base.Count - 1 do
+    CollectEvents(Indent, Base.Child[i], SL);
 end;
 
 // Create the Source code from the settings
 procedure TMainWindow.CreateSource(FileName: string);
 var
   SL, UL, TL: TStringList;
-  i, n: Integer;
+  i, n, m: Integer;
   Ident, str: string;
-  EV: TEventHandler;
   Win: TItemNode;
   MainUnits: string;
 begin
@@ -689,30 +708,43 @@ begin
         SL.Add('type');
         SL.Add('  T' + Win.Name + ' = class(TMUIWindow)');
         CollectFields('    ', Win, SL);
-        for i := 0 to EventHandlers.Count - 1 do
-        begin
-          EV := EventHandlers[i];
-          SL.Add('    ' + StringReplace(EV.Header, 'T' + Win.Name + '.', '', [rfReplaceAll]));
-        end;
+        CollectEventHeader('    ', Win, SL);
         SL.Add('    constructor Create; override;');
         SL.Add('  end;');
         SL.Add('var');
         SL.Add('  ' + Win.Name + ': T' + Win.Name + ';');
         SL.Add('implementation');
+        UL.Clear;
+        for m := 0 to Tree.Count - 1 do
+        begin
+          if (Tree.Child[m].Data is TMUIWindow) and (m <> n) then
+            UL.Add(Tree.Child[m].Name + 'Unit');
+        end;
+        if UL.Count > 0 then
+        begin
+          for i := 0 to UL.Count - 1 do
+          begin
+            if i = 0 then
+              str := '  ' + UL[0]
+            else
+              str := str + ', ' + UL[i];
+          end;
+          SL.Add('uses');
+          SL.Add(str + ';');
+        end;
         SL.Add('');
         SL.Add('constructor T' + Win.Name + '.Create;');
         SL.Add('begin');
         SL.Add('  inherited;');
+        AddProperties(Win, '  ', SL);
         CollectInits('    ', Win, SL);
         SL.Add('end;');
         SL.Add('');
-        // eventhandlers
-        for i := 0 to EventHandlers.Count - 1 do
-        begin
-          SL.Add(EventHandlers[i].Text);
-          SL.Add('');
-        end;
+
+        CollectEvents('    ', Win, SL);
+
         //
+        SL.Add('');
         SL.Add('end.');
         SL.SaveToFile(ExtractFilePath(Filename) + Ident + '.pas');
         TL.Add(Win.Name);
@@ -790,17 +822,18 @@ begin
   EditPages.ActivePage := 0; // nothing to edit by default
 end;
 
+
 // Find the Eventhandler for the Given Object Node and EventName (On....)
 function TMainWindow.FindEventHandler(Obj: TItemNode; Event: string): TEventHandler;
 var
   i: Integer;
 begin
   Result := nil;
-  for i := 0 to EventHandlers.Count - 1 do
+  for i := 0 to Obj.Events.Count - 1 do
   begin
-    if (Obj = EventHandlers[i].Obj) and (Event =  EventHandlers[i].Name) then
+    if Event =  Obj.Events[i].Name then
     begin
-      Result := EventHandlers[i];
+      Result := Obj.Events[i];
       Break;
     end;
   end;
@@ -930,7 +963,7 @@ begin
               ItemProp.Value := Ev.Event
             else
               ItemProp.Value := '';
-            ItemProp.Active := CurItem.Properties.IndexOf(Name) >= 0;
+            ItemProp.Active := Assigned(Ev);
             EventProps.Add(ItemProp);
           end;
           // ######################## Integer
@@ -981,8 +1014,8 @@ begin
                 ItemProps.Add(ItemProp);
               end;
             end;
-          else
-            writeln(name, 'Not handled Type: ', PropType^.Kind); // still unknown Types needs Handler
+          //else
+          //  writeln(name, 'Not handled Type: ', PropType^.Kind); // still unknown Types needs Handler
         end;
       end;
     end;
@@ -1277,7 +1310,7 @@ begin
     if Value = '' then
     begin
       if Assigned(EV) then
-        EventHandlers.Delete(Eventhandlers.IndexOf(Ev));
+        CurItem.Events.Remove(Ev);
       CurEvent.Value := '';
       CurEvent.Active := False;
       EventList.List.Redraw(MUIV_List_Redraw_Active);
@@ -1293,9 +1326,8 @@ begin
         if not Assigned(Ev) then
         begin
           Ev := TEventHandler.Create;
-          Ev.Obj := CurItem;
           Ev.Name := CurEvent.Name;
-          EventHandlers.Add(Ev);
+          CurItem.Events.Add(Ev);
         end;
         Ev.Event := Value;
         WinName := 'Dummy';
@@ -1308,6 +1340,7 @@ begin
           end;
           SNode := SNode.Parent;
         until not Assigned(SNode);
+        Ev.PlainHeader := StringReplace(CurEvent.Additional, '%name%', Value, []) + ';';
         Ev.Header := StringReplace(CurEvent.Additional, '%name%', 'T' + WinName + '.' + Value, []) + ';';
         // Eventhandler contents, or just replace the first line with the new header
         if EV.Text = '' then

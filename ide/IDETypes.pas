@@ -22,17 +22,6 @@ type
 
   TItemProps = specialize TFPGObjectList<TItemProp>;
 
-  // If an Eventhandler is specified we save the contents
-  // because we cant connect it to the object itself like other properties
-  TEventHandler = class
-    Name: string;    // name of Event On...
-    Obj: TItemNode;  // Item Node which the Event belongs to
-    Event: string;   // Name of the EventHandler
-    Header: string;  // Full Header of the EventHandler
-    Text: string;    // Ful Text of the Eventhandler as given by user
-  end;
-  TEventHandlers = specialize TFPGObjectList<TEventHandler>;
-
   // Types for creation of Event Footprint
   TEventParam = record
     Style: TParamFlags;
