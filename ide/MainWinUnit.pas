@@ -35,13 +35,13 @@ type
     CurProp,CurEvent: TItemProp;
     ItemProps, EventProps: TItemProps;
     EventHandlers: TEventHandlers;
-    TestWin: TMUIWindow;
+    TestApp: TMUIApplication;
     ChooseComp: TMUICycle;
     EditPages: TMUIGroup;
     BoolLabel, IntLabel, StringLabel, StrArrayLabel, ItemName, EventLabel: TMUIText;
     IntSet, StrSet, EventName: TMUIString;
     BoolSet: TMUICycle;
-    RemBtn, AutoEvent, EditEvent: TMUIButton;
+    AddBtn, RemBtn, AutoEvent, EditEvent: TMUIButton;
     IncludeProp: TMUICheckMark;
     PropPages: TMUIRegister;
     BlockEvents: Boolean;
@@ -106,6 +106,8 @@ var
   Grp, Grp2: TMUIGroup;
   StrCycle: TStringArray;
   ME: TMUIMenu;
+  ItemWin: TItemNode;
+  TestWin: TMUIWindow;
   i: Integer;
 begin
   inherited;
@@ -143,7 +145,8 @@ begin
     Parent := Grp;
   end;
   // Add a component
-  with TMUIButton.Create('Add') do
+  AddBtn := TMUIButton.Create('Add');
+  with AddBtn do
   begin
     OnClick := @AddClick;
     Parent := Grp;
@@ -466,10 +469,16 @@ begin
   // ############# End Menu Entries
 
   Tree := TItemTree.Create;
-  Tree.Name := 'Window1';
+  Tree.Name := 'MUIApp';
+  TestApp := TMUIApplication.Create;
+  TestApp.Title := '';
+  Tree.Data := TestApp;
+
+
   TestWin := TMUIWindow.Create;
-  Tree.Data := TestWin;
-  Tree.Properties.Add('Title');
+  ItemWin := Tree.NewChild('Window1', TestWin);
+
+  ItemWin.Properties.Add('Title');
   TestWin.Title := 'Window1';
 
   CurItem := Tree;
@@ -581,110 +590,156 @@ begin
   FreeMem(PP);
 end;
 
+procedure CollectUnits(Base: TItemNode; SL: TStringList);
+var
+  i: Integer;
+  CL: TObject;
+begin
+  Cl := Base.Data;
+  for i := 0 to MUIComps.Count - 1 do
+  begin
+    if Cl.ClassName = MUIComps[i].MUIClass.ClassName then
+    begin
+      if SL.IndexOf(MUIComps[i].AUnit) < 0 then
+        SL.Add(MUIComps[i].AUnit);
+      Break;
+    end;
+  end;
+  for i := 0 to Base.Count - 1 do
+    CollectUnits(Base.Child[i], SL);
+end;
+
+procedure CollectFields(Indent: string; Base: TItemNode; SL: TStringList);
+var
+  i: Integer;
+begin
+  for i := 0 to Base.Count - 1 do
+  begin
+    SL.Add(Indent + Base.Child[i].Name + ': ' + Base.Child[i].Data.ClassName + ';');
+    CollectFields(Indent, Base.Child[i], SL);
+  end;
+end;
+
+procedure CollectInits(Indent: string; Base: TItemNode; SL: TStringList);
+var
+  i: Integer;
+  Item: TItemNode;
+  Cl: TObject;
+begin
+  for i := 0 to Base.Count - 1 do
+  begin
+    Item := Base.Child[i];
+    Cl := Item.Data;
+    SL.Add('  ' + Item.Name + ' := ' + Cl.Classname + '.Create;');
+    SL.Add('  with ' + Item.Name + ' do');
+    SL.Add('  begin');
+    AddProperties(Item, '    ', SL);
+    if Item.Parent.Data is TMUIWindow then
+      SL.Add('    Parent := Self;')
+    else
+      SL.Add('    Parent := ' + Item.Parent.Name + ';');
+    SL.Add('  end;');
+    SL.Add('  ');
+    //
+    CollectInits(Indent, Item, SL);
+  end;
+
+end;
+
 // Create the Source code from the settings
 procedure TMainWindow.CreateSource(FileName: string);
 var
-  SL, UL: TStringList;
-  Cl: TObject;
-  i, j: Integer;
+  SL, UL, TL: TStringList;
+  i, n: Integer;
   Ident, str: string;
-  Item: TItemNode;
   EV: TEventHandler;
+  Win: TItemNode;
+  MainUnits: string;
 begin
   SL := TStringList.Create;
   UL := TStringList.Create;
-  Ident := Tree.Name + 'Unit';
+  TL := TStringList.Create;
   try
-    SL.Add('unit ' + Ident + ';');
-    SL.Add('{$mode objfpc}{$H+}');
-    SL.Add('interface');
-    SL.Add('uses');
-    //
-    UL.Add('MUIClass.Base');
-    UL.Add('MUIClass.Window');
-    for i := 0 to Tree.AllCount - 1 do
+    MainUnits := 'MUIClass.Base';
+    for n := 0 to Tree.Count - 1 do
     begin
-      Cl := Tree.AllChild[i].Data;
-      for j := 0 to MUIComps.Count - 1 do
+      if Tree.Child[n].Data is TMUIWindow then
       begin
-        if Cl.ClassName = MUIComps[j].MUIClass.ClassName then
+        Win := Tree.Child[n];
+        UL.Clear;
+        SL.Clear;
+        Ident := Win.Name + 'Unit';
+        MainUnits := MainUnits + ', ' + Ident;
+        SL.Add('unit ' + Ident + ';');
+        SL.Add('{$mode objfpc}{$H+}');
+        SL.Add('interface');
+        SL.Add('uses');
+        //
+        UL.Add('MUIClass.Base');
+        UL.Add('MUIClass.Window');
+        CollectUnits(Win, UL);
+        for i := 0 to UL.Count - 1 do
         begin
-          if UL.IndexOf(MUIComps[j].AUnit) < 0 then
-            UL.Add(MUIComps[j].AUnit);
-          Break;
+          if i = 0 then
+            str := '  ' + UL[0]
+          else
+            str := str + ', ' + UL[i];
         end;
+        SL.Add(str + ';');
+        SL.Add('type');
+        SL.Add('  T' + Win.Name + ' = class(TMUIWindow)');
+        CollectFields('    ', Win, SL);
+        for i := 0 to EventHandlers.Count - 1 do
+        begin
+          EV := EventHandlers[i];
+          SL.Add('    ' + StringReplace(EV.Header, 'T' + Win.Name + '.', '', [rfReplaceAll]));
+        end;
+        SL.Add('    constructor Create; override;');
+        SL.Add('  end;');
+        SL.Add('var');
+        SL.Add('  ' + Win.Name + ': T' + Win.Name + ';');
+        SL.Add('implementation');
+        SL.Add('');
+        SL.Add('constructor T' + Win.Name + '.Create;');
+        SL.Add('begin');
+        SL.Add('  inherited;');
+        CollectInits('    ', Win, SL);
+        SL.Add('end;');
+        SL.Add('');
+        // eventhandlers
+        for i := 0 to EventHandlers.Count - 1 do
+        begin
+          SL.Add(EventHandlers[i].Text);
+          SL.Add('');
+        end;
+        //
+        SL.Add('end.');
+        SL.SaveToFile(ExtractFilePath(Filename) + Ident + '.pas');
+        TL.Add(Win.Name);
       end;
     end;
-    for i := 0 to UL.Count - 1 do
-    begin
-      if i = 0 then
-        str := '  ' + UL[0]
-      else
-        str := str + ', ' + UL[i];
-    end;
-    SL.Add(str + ';');
-    SL.Add('type');
-    SL.Add('  T' + Tree.Name + ' = class(TMUIWindow)');
-    for i := 1 to Tree.AllCount - 1 do
-    begin
-      SL.Add('    ' + Tree.AllChild[i].Name + ': ' + Tree.AllChild[i].Data.ClassName + ';');
-    end;
-    for i := 0 to EventHandlers.Count - 1 do
-    begin
-      EV := EventHandlers[i];
-      SL.Add('    ' + StringReplace(EV.Header, 'T' + Tree.Name + '.', '', [rfReplaceAll]));
-    end;
-    SL.Add('    constructor Create; override;');
-    SL.Add('  end;');
-    SL.Add('var');
-    SL.Add('  ' + Tree.Name + ': T' + Tree.Name + ';');
-    SL.Add('implementation');
-    SL.Add('');
-    SL.Add('constructor T' + Tree.Name + '.Create;');
-    SL.Add('begin');
-    SL.Add('  inherited;');
-    for i := 1 to Tree.AllCount - 1 do
-    begin
-      Item := Tree.AllChild[i];
-      Cl := Item.Data;
-      SL.Add('  ' + Item.Name + ' := ' + Cl.Classname + '.Create;');
-      SL.Add('  with ' + Item.Name + ' do');
-      SL.Add('  begin');
-      AddProperties(Item, '    ', SL);
-      if Item.Parent.Data is TMUIWindow then
-        SL.Add('    Parent := Self;')
-      else
-        SL.Add('    Parent := ' + Item.Parent.Name + ';');
-      SL.Add('  end;');
-      SL.Add('  ');
-    end;
-    SL.Add('end;');
-    SL.Add('');
-    // eventhandlers
-    for i := 0 to EventHandlers.Count - 1 do
-    begin
-      SL.Add(EventHandlers[i].Text);
-      SL.Add('');
-    end;
-    //
-    SL.Add('end.');
-    SL.SaveToFile(ExtractFilePath(Filename) + Ident + '.pas');
     SL.Clear;
     // Main Program
     Ident := ChangeFileExt(ExtractFileName(Filename), '');
     SL.Add('program ' + Ident + ';');
     SL.Add('{$mode objfpc}{$H+}');
     SL.Add('uses');
-    SL.Add('  MUIClass.Base, ' + Ident + ';');
+    SL.Add('  ' + MainUnits + ';');
     SL.Add('');
     SL.Add('begin');
-    SL.Add('  ' + Tree.Name + ' := T' + Tree.Name + '.Create;');
+    for i := 0 to TL.Count - 1 do
+      SL.Add('  ' + TL[i] + ' := T' + TL[i] + '.Create;');
+    SL.Add('  with MUIApp do');
+    SL.Add('  begin');
+    AddProperties(Tree, '    ', SL);
+    SL.Add('  end;');
     SL.Add('  MUIApp.Run;');
     SL.Add('end.');
     SL.SaveToFile(ExtractFilePath(Filename) + Ident + '.pas');
   finally
     UL.Free;
     SL.Free;
+    TL.Free;
   end;
 end;
 
@@ -1015,8 +1070,20 @@ begin
   begin
     CurItem := Tree.AllChild[Idx];
     ItemName.Contents := 'Properties of ' + CurItem.Name;
+
+    if CurItem.Data is TMUIApplication then
+    begin
+      ChooseComp.Disabled := True;
+      AddBtn.Contents := 'Add Window';
+      RemBtn.Disabled := True;
+    end
+    else
+    begin
+      ChooseComp.Disabled := False;
+      AddBtn.Contents := 'Add';
+      RemBtn.Disabled := False;
+    end;
   end;
-  RemBtn.Disabled := not (Idx > 0);
   UpdateProperties;
 end;
 
@@ -1042,6 +1109,13 @@ begin
     // special name!
     if CurProp.IsSpecial then
     begin
+      // Name of Application not editable
+      if CurItem.Data is TMUIApplication then
+      begin
+        EditPages.ActivePage := 0;
+        IncludeProp.Disabled := True;
+        Exit;
+      end;
       PropName := CurItem.Name + '.' + CurProp.Name;
       StringLabel.Contents := PropName;
       StrSet.Reject := ' ,.-+*!"§$%&\/()=?''~^°^<>|@'; //-> do not allow chars not allowed in an Ident (will check later also the string again)
@@ -1189,8 +1263,9 @@ end;
 procedure TMainWindow.SetEvent(Sender: TObject);
 var
   Ev: TEventHandler;
-  Value: string;
+  WinName, Value: string;
   SL: TStringList;
+  SNode: TItemNode;
 begin
   if BlockEvents then
     Exit;
@@ -1223,7 +1298,17 @@ begin
           EventHandlers.Add(Ev);
         end;
         Ev.Event := Value;
-        Ev.Header := StringReplace(CurEvent.Additional, '%name%', 'T' + Tree.Name + '.' + Value, []) + ';';
+        WinName := 'Dummy';
+        SNode := CurItem;
+        repeat
+          if SNode.Data is TMUIWindow then
+          begin
+            WinName := SNode.Name;
+            Break;
+          end;
+          SNode := SNode.Parent;
+        until not Assigned(SNode);
+        Ev.Header := StringReplace(CurEvent.Additional, '%name%', 'T' + WinName + '.' + Value, []) + ';';
         // Eventhandler contents, or just replace the first line with the new header
         if EV.Text = '' then
           Ev.Text := EV.Header + #13#10 +'begin'#13#10#13#10+'end;'
@@ -1442,14 +1527,25 @@ procedure TMainWindow.CreateTestWin;
 var
   Item: TItemNode;
   i: Integer;
+  TestWin: TMUIWindow;
 begin
   for i := 0 to Tree.AllCount - 1 do
   begin
     Item := Tree.AllChild[i];
-    if Assigned(Item.Parent) then
+    if Assigned(Item.Parent) and (not (Item.Data is TMUIWindow)) then
       TMUIWithParent(Item.Data).Parent := TMUIWithParent(Item.Parent.Data);
   end;
-  TestWin.Show;
+  for i := 0 to Tree.Count - 1 do
+  begin
+    Item := Tree.Child[i];
+    TestWin := nil;
+    if Item.Data is TMUIWindow then
+    begin
+      TestWin := TMUIWindow(Item.Data);
+      TestWin.Show;
+    end;
+  end;
+  Activate := True;
 end;
 
 // Remove Parent from the MUI object for a save Destruction of the TestWindow -> see there
@@ -1467,13 +1563,25 @@ end;
 
 // Destroy the TestWindow
 procedure TMainWindow.DestroyTestWin;
+var
+  I: Integer;
+  Item: TItemNode;
+  Win: TMUIWindow;
 begin
-  if TestWin.HasObj then // is there something to destroy?
+  for i := 0 to Tree.Count - 1 do
   begin
-    TestWin.Close; // first close it (make it much faster when it does not need to redraw when we remove the childs)
-    RemoveParent(Tree);  // every MUI item loose its parent
-    TestWin.Parent := nil;  // decouple the Window from the application
-    TestWin.DestroyObject;  // and gone
+    Item := Tree.Child[i];
+    if Item.Data is TMUIWindow then
+    begin
+      Win := TMUIWindow(Item.Data);
+      if Win.HasObj then // is there something to destroy?
+      begin
+        Win.Close; // first close it (make it much faster when it does not need to redraw when we remove the childs)
+        RemoveParent(Item);  // every MUI item loose its parent
+        Win.Parent := nil;  // decouple the Window from the application
+        Win.DestroyObject;  // and gone
+      end;
+    end;
   end;
 end;
 
@@ -1515,18 +1623,39 @@ begin
   Idx := ItemList.List.Active;
   if (Idx >= 0) and (Idx < Tree.AllCount) then
   begin
-    // get thi ITem on this Element
+    // get the Item on this Element
     CurItem := Tree.AllChild[Idx];
+    if CurItem.Data is TMUIApplication then
+    begin
+      DestroyTestWin;
+      Num := 1;
+      repeat
+        NName := 'Window' + IntToStr(Num);
+        Inc(Num);
+      Until Tree.AllChildByName(NName) < 0;
+      Child := CurItem.NewChild(NName, TMUIWindow.Create);
+      if IsPublishedProp(Child.Data, 'Contents') then
+      begin
+        Child.Properties.Add('Contents');
+        SetStrProp(Child.Data, 'Contents', NName);
+      end;
+      // update the pseudo Tree
+      UpdateItemList;
+      // create the Window with new component
+      CreateTestWin;
+      Exit;
+    end;
     // Check if this element can have parents!
     while Assigned(CurItem) do
     begin
-      if CanHaveChild(CurItem.Data) then
+      if CanHaveChild(CurItem.Data) or (CurItem.Data is TMUIWindow) then
         Break;
       CurItem := CurItem.Parent;
     end;
     // if not assigned -> use the main Window as Parent
     if not Assigned(CurItem) then
-      CurItem := Tree;
+      exit;
+      //CurItem := Tree;
     // Which element to add
     Idx := ChooseComp.Active;
     if (Idx < 0) or (Idx > MUIComps.Count - 1) then
@@ -1585,15 +1714,24 @@ end;
 // MainMenu Events
 
 procedure TMainWindow.NewClick(Sender: TObject);
+var
+  TestWin: TMUIWindow;
+  ItemWin: TItemNode;
 begin
   ProjName := '';
   DestroyTestWin;
-  Tree.Free;
+
   Tree := TItemTree.Create;
-  Tree.Name := 'Window1';
+  Tree.Name := 'MUIApp';
+  TestApp := TMUIApplication.Create;
+  TestApp.Title := '';
+  Tree.Data := TestApp;
+
+
   TestWin := TMUIWindow.Create;
-  Tree.Data := TestWin;
-  Tree.Properties.Add('Title');
+  ItemWin := Tree.NewChild('Window1', TestWin);
+
+  ItemWin.Properties.Add('Title');
   TestWin.Title := 'Window1';
 
   CurItem := Tree;
@@ -1620,6 +1758,11 @@ begin
       ProjName := FD.FileName;
       Tree.LoadFromFile(FD.Filename);
       CurItem := Tree;
+      if Tree.Count > 1 then
+      begin
+        // remove the Window, the loaded one will have a window, usually
+        Tree.Child[0].Free;
+      end;
       UpdateItemList;
       ItemList.List.Active := 0;
       CreateTestWin;

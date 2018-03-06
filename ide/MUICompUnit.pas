@@ -81,6 +81,11 @@ var
   i: Integer;
 begin
   Result := nil;
+  if AName = 'TMUIWindow' then
+  begin
+    Result := TMUIWindow;
+    Exit;
+  end;
   for i := 0 to MUIComps.Count - 1 do
   begin
     if MUIComps[i].MUIClass.ClassName = AName then
