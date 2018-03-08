@@ -92,7 +92,8 @@ type
 
 var
   MainWindow: TMainWindow;
-  DefaultPath: string;
+  DefaultProjectPath: string;
+  DefaultExportPath: string;
 
 implementation
 
@@ -113,7 +114,10 @@ begin
 
   ProjName := '';
 
-  DefaultPath := ExtractFilePath(ParamStr(0));
+  DefaultProjectPath := ExtractFilePath(ParamStr(0));
+  if FileExists(IncludeTrailingPathDelimiter(DefaultProjectPath) + 'projects') then
+    DefaultProjectPath := IncludeTrailingPathDelimiter(DefaultProjectPath) + 'projects';
+  DefaultExportPath := ExtractFilePath(ParamStr(0));
   ItemProps := TItemProps.Create(True);
   EventProps := TItemProps.Create(True);
 
@@ -783,12 +787,12 @@ begin
   FD := TFileDialog.Create;
   try
     FD.TitleText := 'Choose Name for Source file to export';
-    FD.FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'MyProgram.pas';
+    FD.FileName := IncludeTrailingPathDelimiter(DefaultExportPath) + 'MyProgram.pas';
     FD.Pattern := '#?.pas';
     FD.SaveMode := True;
     if FD.Execute then
     begin
-      DefaultPath := FD.Directory;
+      DefaultExportPath := FD.Directory;
       CreateSource(FD.FileName);
     end;
   finally
@@ -1780,12 +1784,12 @@ begin
   FD := TFileDialog.Create;
   try
     FD.TitleText := 'Choose Project to Load';
-    FD.FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'MyProgram' + ProjectExtension;
+    FD.FileName := IncludeTrailingPathDelimiter(DefaultExportPath) + 'MyProgram' + ProjectExtension;
     FD.Pattern := '#?' + ProjectExtension;
     FD.SaveMode := False;
     if FD.Execute then
     begin
-      DefaultPath := FD.Directory;
+      DefaultExportPath := FD.Directory;
       NewClick(nil);
       DestroyTestWin;
       ProjName := FD.FileName;
@@ -1813,12 +1817,12 @@ begin
   FD := TFileDialog.Create;
   try
     FD.TitleText := 'Choose Name for your Project';
-    FD.FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'MyProgram' + ProjectExtension;
+    FD.FileName := IncludeTrailingPathDelimiter(DefaultProjectPath) + 'MyProgram' + ProjectExtension;
     FD.Pattern := '#?' + ProjectExtension;
     FD.SaveMode := True;
     if FD.Execute then
     begin
-      DefaultPath := FD.Directory;
+      DefaultProjectPath := FD.Directory;
       ProjName := ChangeFileExt(FD.Filename, ProjectExtension);
       Tree.SaveToFile(ProjName);
     end;

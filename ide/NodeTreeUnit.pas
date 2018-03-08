@@ -416,7 +416,7 @@ var
         case TTypeKind(Temp) of
           // ####################### Method
           tkMethod: begin
-
+            // see further down
           end;
           // ####################### Boolean
           // ######################## Integer
