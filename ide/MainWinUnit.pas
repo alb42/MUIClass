@@ -10,17 +10,6 @@ uses
   MUIClass.Menu,
   IDETypes;
 
-// Default Editor to use for editing Eventhandlers
-const
-  {$ifdef AROS}
-  EDITOR = 'sys:EdiSyn/EdiSyn';
-  {$else}
-    {$ifdef Amiga68k}
-    EDITOR = 'sys:Tools/EditPad';
-    {$else}
-    EDITOR = 'c:ed';
-    {$endif}
-  {$endif}
 
 type
 
@@ -98,7 +87,7 @@ var
 implementation
 
 uses
-  StrArraySetUnit, math;
+  StrArraySetUnit, math, prefsunit;
 
 // Create Main Window
 constructor TMainWindow.Create;
@@ -1416,13 +1405,15 @@ begin
     MUIApp.Iconified := True; // Hide the main application (or it would show bad redraw errors)
     // Run the Editor
     try
-      SysUtils.ExecuteProcess(EDITOR, TmpName, []);
+      SysUtils.ExecuteProcess(IDEPrefs.Editor, TmpName, []);
     except
-      ShowMessage('Cant execute Editor: "' + Editor + '"');
+      ShowMessage('Cant execute Editor: "' + IDEPrefs.Editor + '"');
       MUIApp.Iconified := False; // get main application back
       Exit;
     end;
     MUIApp.Iconified := False; // get main application back
+    if IDEPrefs.EditorMsg then
+      ShowMessage('Press OK when you finished editing.');
     try
       SL.LoadFromFile(TmpName); // load what the user did
     except
