@@ -41,6 +41,7 @@ type
     HookList: THookList;
     FFirstOpen: Boolean;
     FMUIObj: PObject_;
+    FTag: PtrInt;
     procedure GetCreateTags(var ATagList: TATagList); virtual;
     //
     procedure DoFirstOpen; virtual;
@@ -68,6 +69,7 @@ type
 
     property MUIObj: PObject_ read FMUIObj write FMUIObj;
     property HasObj: Boolean read GetHasObj;
+    property Tag: PtrInt read FTag write FTag;
   end;
 
   TChildList = specialize TFPGObjectList<TMUIRootclass>;
@@ -353,6 +355,7 @@ end;
 
 constructor TMUIRootClass.Create;
 begin
+  FTag := 0;
   FFirstOpen := True;
   FMuiObj := nil;
   HookList := THookList.Create;

@@ -6,7 +6,6 @@ uses
 
 // Default Editor to use for editing Eventhandlers
 const
-  
   {$ifdef AROS}
   DEFEDITOR = 'sys:EdiSyn/EdiSyn';
   EDITORMSG = 0;
@@ -25,9 +24,6 @@ const
   {$endif}
   {$endif}
 
-const
-  NumSettings= 2;
-
 type
   TPrefsType = (ptString, ptInteger, ptBoolean);
   TPrefsInit = record
@@ -39,19 +35,22 @@ type
     Value: Integer;
   end;
 
+const
+  NumSettings= 2;
+
 var
   PrefsInit: array[0..NumSettings - 1] of TPrefsInit =
     (
     // 0
-    (Name: 'Editor';
+     (Name: 'Editor';
       ValType: ptString;
       DefaultStr: DEFEDITOR;
       ValueStr: DEFEDITOR;
       DefaultInt: 0;
       Value: 0),
       
-     // 1 
-      (Name: 'EditorMessage';
+    // 1 
+     (Name: 'EditorMessage';
       ValType: ptBoolean;
       DefaultStr: '';
       ValueStr: '';
