@@ -5,7 +5,8 @@ interface
 uses
   SysUtils, Fgl, TypInfo,
   MUIClass.Base, MUIClass.Area, MUIClass.Window, MUIClass.Group,
-  MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric;
+  MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric,
+  MUIClass.Menu;
 
 type
   TMUIClass = class of TMUINotify;
@@ -52,7 +53,10 @@ begin
   RegisterMUIClass(TMUILevelMeter);
   RegisterMUIClass(TMUINumericButton);
   RegisterMUIClass(TMUISlider);
-
+  // Menus
+  //RegisterMUIClass(TMUIMenuStrip);
+  //RegisterMUIClass(TMUIMenu);
+  //RegisterMUIClass(TMUIMenuItem);
 end;
 
 procedure RegisterMUIClass(MUIClass: TMUIClass; HasChilds: Boolean = False; Name: string = '');

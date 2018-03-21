@@ -3,10 +3,12 @@ program MUIIDE;
 uses
   MUIClass.Base,
   MainWinUnit,
-  StrArraySetUnit;
+  StrArraySetUnit,
+  MenuEditorUnit;
 
 begin
   MainWindow := TMainWindow.Create;
   StrArrayWin := TStrArrayWin.Create;
+  MenuEditor := TMenuEditor.Create;
   MUIApp.Run;
 end.

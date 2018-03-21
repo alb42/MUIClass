@@ -22,8 +22,8 @@ type
   end;
   TEventHandlers = specialize TFPGObjectList<TEventHandler>;
 
-
   TItemNode = class;
+  TAItemNode = class;
   TItemTree = class;
 
   TItemNodes = specialize TFPGObjectList<TItemNode>;
@@ -47,6 +47,7 @@ type
     destructor Destroy; override;
     //
     function NewChild(AName: string; AData: TObject = nil): TItemNode;
+    function NewOtherChild(AIdent: string; AName: string; AData: TObject = nil): TAItemNode;
     function ChildByName(AName: string): Integer; virtual;
     property Name: string read FName write FName;
     property Parent: TItemNode read FParent;
@@ -56,6 +57,10 @@ type
     property Count: Integer read GetCount;
     property Child[Idx: Integer]: TItemNode read GetChild; default;
     property GlobalIdx: Integer read FGlobalIdx;
+  end;
+
+  TAItemNode = class(TItemNode)
+    ParentIdent: string;
   end;
 
   TItemTree = class(TItemNode)
@@ -129,6 +134,21 @@ begin
   end;
 end;
 
+function TItemNode.NewOtherChild(AIdent: string; AName: string; AData: TObject = nil): TAItemNode;
+begin
+  Result := TAItemNode.Create(TopNode);
+  Result.ParentIdent := AIdent;
+  Result.Name := AName;
+  Result.Data := AData;
+  Result.FParent := Self;
+  Childs.Add(Result);
+  if Assigned(TopNode) then
+  begin
+    TopNode.AllChilds.Add(Result);
+    TopNode.UpdateNodesText;
+  end;
+end;    
+
 function TItemNode.ChildByName(AName: string): Integer;
 var
   I: Integer;
@@ -160,6 +180,8 @@ procedure TItemNode.SetNodesText(Indent: string; SL: TStringList; LastEntry: Boo
 var
   I: Integer;
 begin
+  if Self is TAItemNode then
+    Indent := Indent + #27 + 'i';
   FGlobalIdx := SL.Count;
   if Assigned(FData) then
     SL.Add(Indent + FName + ' (' + FData.ClassName + ')')

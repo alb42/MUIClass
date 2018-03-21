@@ -8,7 +8,7 @@ uses
   MUIClass.Base, MUIClass.Window, MUIClass.Area, MUIClass.List, MUIClass.Group,
   NodeTreeUnit, MUICompUnit, MUIClass.Gadget, MUIClass.Dialog, MUIClass.Image,
   MUIClass.Menu,
-  IDETypes;
+  IDETypes, menueditorunit;
 
 
 type
@@ -33,6 +33,7 @@ type
     IncludeProp: TMUICheckMark;
     PropPages: TMUIRegister;
     BlockEvents: Boolean;
+    MenuLabel: TMUIText;
     // event handler
     procedure AddClick(Sender: TObject);
     procedure RemoveClick(Sender: TObject);
@@ -44,6 +45,10 @@ type
     procedure EventListDblClick(Sender: TObject);
     procedure EventDisplay(Sender: TObject; ToPrint: PPChar; Entry: PChar);
     procedure OpenStrArrayWin(Sender: TObject);
+    procedure CreateMenuStrip(Sender: TObject);
+    procedure RemoveMenuStrip(Sender: TObject);
+    procedure MenuChangedEvent(Sender: TObject);
+    procedure MenuSelectEvent(Sender: TObject);
 
     procedure IncludeChange(Sender: TObject);
     procedure AutoEventClick(Sender: TObject);
@@ -292,7 +297,30 @@ begin
     OnClick := @OpenStrArrayWin;
     Parent := Grp;
   end;
-
+  
+  // Edit Menu strips properties
+  Grp := TMUIGroup.Create;
+  Grp.Frame := MUIV_Frame_None;
+  Grp.Horiz := True;
+  Grp.Parent := EditPages;
+  MenuLabel := TMUIText.Create;
+  with MenuLabel do
+  begin
+    Contents := 'Test            ';
+    Parent := Grp;
+  end;
+  with TMUIButton.Create('Create/Edit') do
+  begin
+    OnClick := @CreateMenuStrip;
+    Parent := Grp;
+  end;
+  with TMUIButton.Create('Delete') do
+  begin
+    OnClick := @RemoveMenuStrip;
+    Parent := Grp;
+  end;
+  
+  // Include to File
   Grp := TMUIGroup.Create;
   with Grp do
   begin
@@ -926,6 +954,29 @@ begin
       With PP^[i]^ do
       begin
         case PropType^.Kind of
+          // ####################### Class
+          tkClass: begin
+            if LowerCase(Name) = 'menustrip' then
+            begin
+              ItemProp := TItemProp.Create;
+              ItemProp.Name := Name;
+              ItemProp.IsSpecial := False;
+              ItemProp.Value := '<>';
+              ItemProp.Active := False;
+              for n := 0 to CurItem.Count - 1 do
+              begin
+                if (CurItem[n] is TAItemNode) and (LowerCase(TAItemNode(CurItem[n]).ParentIdent) = 'menustrip') then
+                begin
+                  ItemProp.Value := '<' + CurItem[n].Name + '>';
+                  ItemProp.Active := True;
+                  Break;
+                end;
+              end;
+              ItemProps.Add(ItemProp);    
+            end
+            else
+            writeln(name,  ' as class found ', GetObjectPropClass(Obj, Name).ClassName);
+          end;
           // ####################### Method
           tkMethod: begin
             ItemProp := TItemProp.Create;
@@ -1096,19 +1147,28 @@ begin
   begin
     CurItem := Tree.AllChild[Idx];
     ItemName.Contents := 'Properties of ' + CurItem.Name;
-
-    if CurItem.Data is TMUIApplication then
+    if CurItem is TAItemNode then
     begin
       ChooseComp.Disabled := True;
-      AddBtn.Contents := 'Add Window';
+      AddBtn.Contents := 'Add';
+      AddBtn.Disabled := True;
       RemBtn.Disabled := True;
     end
     else
-    begin
-      ChooseComp.Disabled := False;
-      AddBtn.Contents := 'Add';
-      RemBtn.Disabled := False;
-    end;
+			if CurItem.Data is TMUIApplication then
+			begin
+				ChooseComp.Disabled := True;
+				AddBtn.Disabled := False;
+				AddBtn.Contents := 'Add Window';
+				RemBtn.Disabled := True;
+			end
+			else
+			begin
+				ChooseComp.Disabled := False;
+				AddBtn.Disabled := False;
+				AddBtn.Contents := 'Add';
+				RemBtn.Disabled := False;
+			end;
   end;
   UpdateProperties;
 end;
@@ -1164,6 +1224,13 @@ begin
         begin
           PropName := CurItem.Name + '.' + CurProp.Name;
           case PropType^.Kind of
+            tkClass: begin
+              if LowerCase(Name) = 'menustrip' then
+              begin
+                MenuLabel.Contents := PropName;
+                EditPages.ActivePage := 5;  
+              end; 
+            end;
             // ################## Integer
             tkInteger: begin
               IntLabel.Contents := PropName;
@@ -1454,6 +1521,8 @@ begin
     CurProp.Value := IntToStr(IntSet.IntegerValue);
     IncludeProp.Selected := True;
     PropList.List.Redraw(MUIV_List_Redraw_Active);
+    if (CurItem.Data is TMUIFamily) and MenuEditor.Open then
+        MenuEditor.Recreate;
     CreateTestWin;
   end;
 end;
@@ -1478,6 +1547,8 @@ begin
     CurProp.Active := True;
     IncludeProp.Selected := True;
     PropList.List.Redraw(MUIV_List_Redraw_Active);
+    if (CurItem.Data is TMUIFamily) and MenuEditor.Open then
+        MenuEditor.Recreate;
     CreateTestWin;
     //
   end;
@@ -1505,6 +1576,8 @@ begin
       else
         ShowMessage('''' + Str + ''' is not a valid identifier');
       UpdateItemList;
+      if (CurItem.Data is TMUIFamily) and MenuEditor.Open then
+        MenuEditor.Recreate;
     end
     else
     begin
@@ -1515,6 +1588,8 @@ begin
       CurProp.Active := True;
       IncludeProp.Selected := True;
       PropList.List.Redraw(MUIV_List_Redraw_Active);
+      if (CurItem.Data is TMUIFamily) and MenuEditor.Open then
+        MenuEditor.Recreate;
     end;
     CreateTestWin;
     //
@@ -1533,6 +1608,90 @@ end;
 procedure TMainWindow.OpenStrArrayWin(Sender: TObject);
 begin
   StrArrayWin.Show;
+end;
+
+procedure TMainWindow.CreateMenuStrip(Sender: TObject);
+var
+  Node: TItemNode;
+  NName: string;
+  i, Num: Integer;
+begin
+  Node := nil;
+  for i := 0 to CurItem.Count - 1 do
+  begin
+    if (CurItem[i] is TAItemNode) and (LowerCase(TAItemNode(CurItem[i]).ParentIdent) = 'menustrip') then
+    begin
+      Node := CurItem[i];
+      Break; 
+    end;
+  end; 
+  if not Assigned(Node) then
+  begin
+    Num := 1;
+		repeat
+			NName := 'MenuStrip' + IntToStr(Num);
+			Inc(Num);
+		Until Tree.AllChildByName(NName) < 0;
+		DestroyTestWin;
+    Node := CurItem.NewOtherChild('MenuStrip', NName, TMUIMenuStrip.Create);
+    Num := 1;
+		repeat
+			NName := 'Menu' + IntToStr(Num);
+			Inc(Num);
+		Until Tree.AllChildByName(NName) < 0;
+    Node.NewChild(NName, TMUIMenu.Create);
+    CreateTestWin;
+  end;
+  MenuEditor.Execute(Node); 
+  UpdateItemList;
+end;
+
+procedure TMainWindow.RemoveMenuStrip(Sender: TObject);
+var
+  Node: TItemNode;
+  i: Integer;
+begin
+  Node := nil;
+  for i := 0 to CurItem.Count - 1 do
+  begin
+    if (CurItem[i] is TAItemNode) and (LowerCase(TAItemNode(CurItem[i]).ParentIdent) = 'menustrip') then
+    begin
+      Node := CurItem[i];
+      Break; 
+    end;
+  end;
+  if Assigned(Node) then
+  begin  
+    DestroyTestWin;
+    Node.Free;
+    CreateTestWin;
+    UpdateItemList;
+  end;
+end;
+
+procedure TMainWindow.MenuChangedEvent(Sender: TObject);
+begin
+  DestroyTestWin;
+  CreateTestWin;
+  UpdateItemList;
+end;
+
+procedure TMainWindow.MenuSelectEvent(Sender: TObject);
+var
+  i: Integer;
+begin
+  if Assigned(MenuEditor.SelectedItem) then
+  begin
+    for i := 0 to Tree.AllCount - 1 do
+		begin
+			if Tree.AllChild[i] = MenuEditor.SelectedItem then
+			begin
+				if ItemList.List.Active <> i then
+					ItemList.List.Active := i;
+				Break;
+			end;
+		end;
+  end;
 end;
 
 procedure TMainWindow.ClickEvent(Sender: TObject);
@@ -1561,7 +1720,17 @@ begin
   begin
     Item := Tree.AllChild[i];
     if Assigned(Item.Parent) and (not (Item.Data is TMUIWindow)) then
-      TMUIWithParent(Item.Data).Parent := TMUIWithParent(Item.Parent.Data);
+    begin
+      if Item is TAItemNode then
+      begin
+        try
+          SetObjectProp(Item.Parent.Data, TAItemNode(Item).ParentIdent, Item.Data);
+        except
+        end;
+      end
+      else
+        TMUIWithParent(Item.Data).Parent := TMUIWithParent(Item.Parent.Data);
+    end;
   end;
   for i := 0 to Tree.Count - 1 do
   begin
@@ -1619,6 +1788,8 @@ begin
   UpdateItemList;
   ItemList.List.Active := 0;
   CreateTestWin;
+  MenuEditor.OnMenuChanged := @MenuChangedEvent; // event for the menu editor to trigger recreation of itemlist
+  MenuEditor.OnItemSelect := @MenuSelectEvent; // event for the menu editor to trigger recreation of itemlis
 end;
 
 // Checks if an object can have a child
