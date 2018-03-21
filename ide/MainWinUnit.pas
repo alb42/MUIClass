@@ -662,11 +662,19 @@ begin
     SL.Add('  with ' + Item.Name + ' do');
     SL.Add('  begin');
     AddProperties(Item, '    ', SL);
-    if Item.Parent.Data is TMUIWindow then
-      SL.Add('    Parent := Self;')
-    else
-      SL.Add('    Parent := ' + Item.Parent.Name + ';');
+    if Item.ParentIdent = '' then
+			if Item.Parent.Data is TMUIWindow then
+				SL.Add('    Parent := Self;')
+			else
+				SL.Add('    Parent := ' + Item.Parent.Name + ';');
     SL.Add('  end;');
+    if Item.ParentIdent <> '' then
+    begin
+      if Item.Parent.Data is TMUIWindow then
+        SL.Add('  ' + Item.ParentIdent + ' := ' + Item.Name + ';')
+			else
+			  SL.Add('  ' + Item.Parent.Name + '.' + Item.ParentIdent + ' := ' + Item.Name + ';')
+    end;
     SL.Add('  ');
     //
     CollectInits(Indent, Item, SL);
@@ -717,6 +725,7 @@ begin
         //
         UL.Add('MUIClass.Base');
         UL.Add('MUIClass.Window');
+        UL.Add('MUIClass.Menu');
         CollectUnits(Win, UL);
         for i := 0 to UL.Count - 1 do
         begin

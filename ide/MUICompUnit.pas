@@ -98,6 +98,7 @@ begin
       Exit;
     end;
   end;
+  // Special (Hidden) cases for menu items
   if AName = TMUIMenustrip.ClassName then
   begin
     Result := TMUIMenustrip;
