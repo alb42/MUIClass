@@ -965,7 +965,7 @@ begin
               ItemProp.Active := False;
               for n := 0 to CurItem.Count - 1 do
               begin
-                if (CurItem[n] is TAItemNode) and (LowerCase(TAItemNode(CurItem[n]).ParentIdent) = 'menustrip') then
+                if (LowerCase(CurItem[n].ParentIdent) = 'menustrip') then
                 begin
                   ItemProp.Value := '<' + CurItem[n].Name + '>';
                   ItemProp.Active := True;
@@ -1147,7 +1147,7 @@ begin
   begin
     CurItem := Tree.AllChild[Idx];
     ItemName.Contents := 'Properties of ' + CurItem.Name;
-    if CurItem is TAItemNode then
+    if CurItem.Data is TMUIFamily then
     begin
       ChooseComp.Disabled := True;
       AddBtn.Contents := 'Add';
@@ -1619,7 +1619,7 @@ begin
   Node := nil;
   for i := 0 to CurItem.Count - 1 do
   begin
-    if (CurItem[i] is TAItemNode) and (LowerCase(TAItemNode(CurItem[i]).ParentIdent) = 'menustrip') then
+    if LowerCase(CurItem[i].ParentIdent) = 'menustrip' then
     begin
       Node := CurItem[i];
       Break; 
@@ -1654,7 +1654,7 @@ begin
   Node := nil;
   for i := 0 to CurItem.Count - 1 do
   begin
-    if (CurItem[i] is TAItemNode) and (LowerCase(TAItemNode(CurItem[i]).ParentIdent) = 'menustrip') then
+    if LowerCase(CurItem[i].ParentIdent) = 'menustrip' then
     begin
       Node := CurItem[i];
       Break; 
@@ -1721,10 +1721,10 @@ begin
     Item := Tree.AllChild[i];
     if Assigned(Item.Parent) and (not (Item.Data is TMUIWindow)) then
     begin
-      if Item is TAItemNode then
+      if Item.ParentIdent <> '' then
       begin
         try
-          SetObjectProp(Item.Parent.Data, TAItemNode(Item).ParentIdent, Item.Data);
+          SetObjectProp(Item.Parent.Data, Item.ParentIdent, Item.Data);
         except
         end;
       end

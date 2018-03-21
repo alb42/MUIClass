@@ -98,6 +98,21 @@ begin
       Exit;
     end;
   end;
+  if AName = TMUIMenustrip.ClassName then
+  begin
+    Result := TMUIMenustrip;
+    Exit;
+  end;
+  if AName = TMUIMenu.Classname then
+  begin
+    Result := TMUIMenu;
+    Exit;
+  end;
+  if AName = TMUIMenuItem.Classname then
+  begin
+    Result := TMUIMenuItem;
+    Exit;
+  end;
 end;
 
 

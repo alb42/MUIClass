@@ -23,7 +23,6 @@ type
   TEventHandlers = specialize TFPGObjectList<TEventHandler>;
 
   TItemNode = class;
-  TAItemNode = class;
   TItemTree = class;
 
   TItemNodes = specialize TFPGObjectList<TItemNode>;
@@ -38,6 +37,7 @@ type
     FProps: TStringList;
     FGlobalIdx: Integer;
     FEvents: TEventHandlers;
+    FParentIdent: string;
     function GetCount: Integer;
     function GetChild(Idx: Integer): TItemNode;
   protected
@@ -47,7 +47,7 @@ type
     destructor Destroy; override;
     //
     function NewChild(AName: string; AData: TObject = nil): TItemNode;
-    function NewOtherChild(AIdent: string; AName: string; AData: TObject = nil): TAItemNode;
+    function NewOtherChild(AIdent: string; AName: string; AData: TObject = nil): TItemNode;
     function ChildByName(AName: string): Integer; virtual;
     property Name: string read FName write FName;
     property Parent: TItemNode read FParent;
@@ -57,10 +57,7 @@ type
     property Count: Integer read GetCount;
     property Child[Idx: Integer]: TItemNode read GetChild; default;
     property GlobalIdx: Integer read FGlobalIdx;
-  end;
-
-  TAItemNode = class(TItemNode)
-    ParentIdent: string;
+    property ParentIdent: string read FParentIdent;
   end;
 
   TItemTree = class(TItemNode)
@@ -94,6 +91,7 @@ begin
   Childs := TItemNodes.Create(False);
   FProps := TStringList.Create;
   FEvents := TEventHandlers.Create(True);
+  FParentIdent := '';
 end;
 
 destructor TItemNode.Destroy;
@@ -134,10 +132,10 @@ begin
   end;
 end;
 
-function TItemNode.NewOtherChild(AIdent: string; AName: string; AData: TObject = nil): TAItemNode;
+function TItemNode.NewOtherChild(AIdent: string; AName: string; AData: TObject = nil): TItemNode;
 begin
-  Result := TAItemNode.Create(TopNode);
-  Result.ParentIdent := AIdent;
+  Result := TItemNode.Create(TopNode);
+  Result.FParentIdent := AIdent;
   Result.Name := AName;
   Result.Data := AData;
   Result.FParent := Self;
@@ -180,7 +178,7 @@ procedure TItemNode.SetNodesText(Indent: string; SL: TStringList; LastEntry: Boo
 var
   I: Integer;
 begin
-  if Self is TAItemNode then
+  if ParentIdent <> '' then
     Indent := Indent + #27 + 'i';
   FGlobalIdx := SL.Count;
   if Assigned(FData) then
@@ -387,6 +385,7 @@ var
     Node := Doc.CreateElement('element');
     ParentNode.AppendChild(Node);
     TDOMElement(Node).SetAttribute('name', WideString(ItemNode.Name));
+    TDOMElement(Node).SetAttribute('parentident', WideString(ItemNode.ParentIdent));
     TDOMElement(Node).SetAttribute('class', WideString(ItemNode.Data.ClassName));
     PutProperties(Node, ItemNode);
     PutEvents(Node, ItemNode);
@@ -499,6 +498,7 @@ var
     Elem: TDOMNode;
     i: Integer;
     AName: string;
+    PIdent: string;
     NObj: TMUIClass;
     NItemNode: TItemNode;
   begin
@@ -508,10 +508,16 @@ var
       if Elem.NodeName = 'element' then
       begin
         AName :=  AnsiString(TDOMElement(Elem).GetAttribute('name'));
+        try
+        PIdent :=  AnsiString(TDOMElement(Elem).GetAttribute('parentident'));
+        except
+          PIdent := '';
+        end;
         NObj := GetClassByClassName(AnsiString(TDOMElement(Elem).GetAttribute('class')));
         if Assigned(NObj) then
         begin
           NItemNode := ItemNode.NewChild(AName, NObj.Create);
+          NItemNode.FParentIdent := PIdent;
           GetProperties(Elem, NItemNode);
           GetChilds(Elem, NItemNode);
         end;
