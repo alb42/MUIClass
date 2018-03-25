@@ -1251,7 +1251,14 @@ begin
             // ################## Boolean
             tkBool: begin
               BoolLabel.Contents := PropName;
-              BoolSet.Active := GetOrdProp(Obj, PP^[i]);
+              if GetOrdProp(Obj, PP^[i]) = 0 then
+              begin
+                BoolSet.Active := 0
+              end
+              else
+              begin
+                BoolSet.Active := 1;
+              end;
               EditPages.ActivePage := 1;
               IncludeProp.Disabled := False;
               IncludeProp.Selected := CurProp.Active;
