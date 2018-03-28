@@ -139,8 +139,7 @@ begin
   inherited;
   if not FEnabled then
     ATagList.AddTag(MUIA_Menu_Enabled, AsTag(FEnabled));
-  if FTitle <> '' then
-    ATagList.AddTag(MUIA_Menu_Title, AsTag(PChar(FTitle)));
+  ATagList.AddTag(MUIA_Menu_Title, AsTag(PChar(FTitle)));
 end;
 
 
@@ -197,13 +196,10 @@ begin
   inherited;
   if not FEnabled then
     ATagList.AddTag(MUIA_MenuItem_Enabled, AsTag(FEnabled));
-  if FTitle <> '' then
-  begin
-    if FTitle = '-' then
-      ATagList.AddTag(MUIA_MenuItem_Title, AsTag(NM_BarLabel))
-    else
-      ATagList.AddTag(MUIA_MenuItem_Title, AsTag(PChar(FTitle)));
-  end;
+  if FTitle = '-' then
+    ATagList.AddTag(MUIA_MenuItem_Title, AsTag(NM_BarLabel))
+  else
+    ATagList.AddTag(MUIA_MenuItem_Title, AsTag(PChar(FTitle)));
   if FCheckIt then
     ATagList.AddTag(MUIA_MenuItem_CheckIt, AsTag(FCheckIt));
   if FChecked then

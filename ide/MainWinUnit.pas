@@ -297,7 +297,7 @@ begin
     OnClick := @OpenStrArrayWin;
     Parent := Grp;
   end;
-  
+
   // Edit Menu strips properties
   Grp := TMUIGroup.Create;
   Grp.Frame := MUIV_Frame_None;
@@ -319,7 +319,7 @@ begin
     OnClick := @RemoveMenuStrip;
     Parent := Grp;
   end;
-  
+
   // Include to File
   Grp := TMUIGroup.Create;
   with Grp do
@@ -663,17 +663,17 @@ begin
     SL.Add('  begin');
     AddProperties(Item, '    ', SL);
     if Item.ParentIdent = '' then
-			if Item.Parent.Data is TMUIWindow then
-				SL.Add('    Parent := Self;')
-			else
-				SL.Add('    Parent := ' + Item.Parent.Name + ';');
+      if Item.Parent.Data is TMUIWindow then
+        SL.Add('    Parent := Self;')
+      else
+        SL.Add('    Parent := ' + Item.Parent.Name + ';');
     SL.Add('  end;');
     if Item.ParentIdent <> '' then
     begin
       if Item.Parent.Data is TMUIWindow then
         SL.Add('  ' + Item.ParentIdent + ' := ' + Item.Name + ';')
-			else
-			  SL.Add('  ' + Item.Parent.Name + '.' + Item.ParentIdent + ' := ' + Item.Name + ';')
+      else
+        SL.Add('  ' + Item.Parent.Name + '.' + Item.ParentIdent + ' := ' + Item.Name + ';')
     end;
     SL.Add('  ');
     //
@@ -981,7 +981,7 @@ begin
                   Break;
                 end;
               end;
-              ItemProps.Add(ItemProp);    
+              ItemProps.Add(ItemProp);
             end
             else
             writeln(name,  ' as class found ', GetObjectPropClass(Obj, Name).ClassName);
@@ -1164,20 +1164,20 @@ begin
       RemBtn.Disabled := True;
     end
     else
-			if CurItem.Data is TMUIApplication then
-			begin
-				ChooseComp.Disabled := True;
-				AddBtn.Disabled := False;
-				AddBtn.Contents := 'Add Window';
-				RemBtn.Disabled := True;
-			end
-			else
-			begin
-				ChooseComp.Disabled := False;
-				AddBtn.Disabled := False;
-				AddBtn.Contents := 'Add';
-				RemBtn.Disabled := False;
-			end;
+      if CurItem.Data is TMUIApplication then
+      begin
+        ChooseComp.Disabled := True;
+        AddBtn.Disabled := False;
+        AddBtn.Contents := 'Add Window';
+        RemBtn.Disabled := True;
+      end
+      else
+      begin
+        ChooseComp.Disabled := False;
+        AddBtn.Disabled := False;
+        AddBtn.Contents := 'Add';
+        RemBtn.Disabled := False;
+      end;
   end;
   UpdateProperties;
 end;
@@ -1237,8 +1237,8 @@ begin
               if LowerCase(Name) = 'menustrip' then
               begin
                 MenuLabel.Contents := PropName;
-                EditPages.ActivePage := 5;  
-              end; 
+                EditPages.ActivePage := 5;
+              end;
             end;
             // ################## Integer
             tkInteger: begin
@@ -1629,6 +1629,7 @@ end;
 procedure TMainWindow.CreateMenuStrip(Sender: TObject);
 var
   Node: TItemNode;
+  NMenu: TMUIMenu;
   NName: string;
   i, Num: Integer;
 begin
@@ -1638,27 +1639,30 @@ begin
     if LowerCase(CurItem[i].ParentIdent) = 'menustrip' then
     begin
       Node := CurItem[i];
-      Break; 
+      Break;
     end;
-  end; 
+  end;
   if not Assigned(Node) then
   begin
     Num := 1;
-		repeat
-			NName := 'MenuStrip' + IntToStr(Num);
-			Inc(Num);
-		Until Tree.AllChildByName(NName) < 0;
-		DestroyTestWin;
+    repeat
+      NName := 'MenuStrip' + IntToStr(Num);
+      Inc(Num);
+    Until Tree.AllChildByName(NName) < 0;
+    DestroyTestWin;
     Node := CurItem.NewOtherChild('MenuStrip', NName, TMUIMenuStrip.Create);
     Num := 1;
-		repeat
-			NName := 'Menu' + IntToStr(Num);
-			Inc(Num);
-		Until Tree.AllChildByName(NName) < 0;
-    Node.NewChild(NName, TMUIMenu.Create);
+    repeat
+      NName := 'Menu' + IntToStr(Num);
+      Inc(Num);
+    Until Tree.AllChildByName(NName) < 0;
+    NMenu := TMUIMenu.Create;
+    Node := Node.NewChild(NName, NMenu);
+    NMenu.Title := NName;
+    Node.Properties.Add('Title');
     CreateTestWin;
   end;
-  MenuEditor.Execute(Node); 
+  MenuEditor.Execute(Node);
   UpdateItemList;
 end;
 
@@ -1673,11 +1677,11 @@ begin
     if LowerCase(CurItem[i].ParentIdent) = 'menustrip' then
     begin
       Node := CurItem[i];
-      Break; 
+      Break;
     end;
   end;
   if Assigned(Node) then
-  begin  
+  begin
     DestroyTestWin;
     Node.Free;
     CreateTestWin;
@@ -1699,14 +1703,14 @@ begin
   if Assigned(MenuEditor.SelectedItem) then
   begin
     for i := 0 to Tree.AllCount - 1 do
-		begin
-			if Tree.AllChild[i] = MenuEditor.SelectedItem then
-			begin
-				if ItemList.List.Active <> i then
-					ItemList.List.Active := i;
-				Break;
-			end;
-		end;
+    begin
+      if Tree.AllChild[i] = MenuEditor.SelectedItem then
+      begin
+        if ItemList.List.Active <> i then
+          ItemList.List.Active := i;
+        Break;
+      end;
+    end;
   end;
 end;
 
@@ -1766,12 +1770,15 @@ procedure RemoveParent(A: TItemNode);
 var
   i: Integer;
 begin
-  for i := 0 to A.Count - 1 do
+  if A.ParentIdent = '' then
   begin
-    RemoveParent(A.Child[i]);
+    for i := 0 to A.Count - 1 do
+      RemoveParent(A.Child[i]);
+    if A.Data is TMUIWithParent then
+    begin
+      TMUIWithParent(A.Data).Parent := nil;
+    end;
   end;
-  if A.Data is TMUIWithParent then
-    TMUIWithParent(A.Data).Parent := nil;
 end;
 
 // Destroy the TestWindow
