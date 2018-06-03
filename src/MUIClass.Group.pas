@@ -84,13 +84,13 @@ type
 
   protected
     procedure GetCreateTags(var ATagList: TATagList); override;
-
+    procedure AfterCreateObject; override;
   public
     constructor Create; override;
     destructor Destroy; override;
 
     procedure CreateObject; override;
-    procedure AfterCreateObject; override;
+
 
     procedure DestroyObject; override;
     procedure ClearObject; override;
