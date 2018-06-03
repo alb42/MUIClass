@@ -99,6 +99,7 @@ type
     procedure Select(Pos, SelType: Integer; var State: Integer);
     procedure Sort;
     function TestPos(x, y: Integer): TMUI_List_TestPos_Result;
+    procedure Clear;
     // Fields
     property DropMark: Integer read GetDropMark;
     property Entries: Integer read GetEntries;
@@ -597,6 +598,12 @@ procedure TMUIList.Sort;
 begin
   if HasObj then
     DoMethod(MUIObj, [MUIM_List_Sort]);
+end;
+
+procedure TMUIList.Clear;
+begin
+  if HasObj then
+    DoMethod(MUIObj, [MUIM_List_Clear]);
 end;
 
 function TMUIList.TestPos(x, y: Integer): TMUI_List_TestPos_Result;
