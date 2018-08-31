@@ -965,7 +965,7 @@ end;
 
 procedure TMUIArea.SetSelected(AValue: Boolean);
 begin
-  if AValue <> FSelected then
+  if AValue <> Selected then
   begin
     FSelected := AValue;
     if HasObj then

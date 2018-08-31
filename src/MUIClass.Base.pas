@@ -891,7 +891,9 @@ begin
       if Assigned(FOnIdle) or (FActiveTimer) then
       begin
         if Assigned(FOnIdle) then
-          FOnIdle(Self);
+          FOnIdle(Self)
+        else
+          Sysutils.Sleep(25);
         t1 := GetTickCount64;
         I := 0;
         while i < FTimerList.Count do
