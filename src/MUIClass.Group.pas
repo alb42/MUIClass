@@ -1065,7 +1065,7 @@ end;
 
 procedure TMUIRadio.SetActive(AValue: Integer);
 begin
-  if AValue <> FActive then
+  if AValue <> Active then
   begin
     FActive := AValue;
     if HasObj then
@@ -1155,7 +1155,7 @@ end;
 
 procedure TMUICycle.SetActive(AValue: Integer);
 begin
-  if AValue <> FActive then
+  if AValue <> Active then
   begin
     FActive := AValue;
     if HasObj then
