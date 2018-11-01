@@ -258,7 +258,7 @@ end;
 
 procedure TMUINumeric.SetValue(AValue: Integer);
 begin
-  if AValue <> FValue then
+  if AValue <> Value then
   begin
     FValue := AValue;
     if Assigned(FMUIObj) then

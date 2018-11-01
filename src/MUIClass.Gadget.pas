@@ -462,7 +462,7 @@ end;
 
 procedure TMUIProp.SetFirst(AValue: Integer);
 begin
-  if AValue <> FFirst then
+  if AValue <> First then
   begin
     FFirst := AValue;
     if HasObj then

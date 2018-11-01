@@ -382,7 +382,7 @@ end;
 
 procedure TMUIGroup.SetActivePage(AValue: Integer);
 begin
-  if AValue <> FActivePage then
+  if AValue <> ActivePage then
   begin
     FActivePage := Max(0, Min(Childs.Count - 1, AValue));
     if Assigned(FMUIObj) then
