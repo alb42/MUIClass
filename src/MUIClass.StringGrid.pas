@@ -182,7 +182,7 @@ begin
   if (ARow < 0) or (ARow >= FNumRows) then
     Exit;
   FColumns[ACol].Rows[ARow].Text := AValue;
-  if not Quiet then
+  if not Quiet and HasObj then
     List.Redraw(ARow);
 end;
 
@@ -291,7 +291,8 @@ end;
 procedure TMUIStringGrid.SetQuiet(AValue: Boolean);
 begin
   List.Quiet := AValue;
-  MUI_Redraw(List.MUIObj, MADF_DRAWOBJECT);
+  if HasObj and not AValue then
+    MUI_Redraw(List.MUIObj, MADF_DRAWOBJECT);
 end;
 
 end.
