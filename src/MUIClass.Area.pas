@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Window;
+  tagsparamshelper, MUIClass.Base, MUIClass.Window, MUIClass.Menu;
 {$M+}
 type
   TSpecDesc = class;
@@ -29,6 +29,7 @@ type
     FOnClick: TNotifyEvent;
     FOnSelected: TNotifyEvent;
 
+    FContextMenu: TMUIMenuStrip;
     FControlChar: Char;
     FCycleChain: Integer;
     FDisabled: Boolean;
@@ -106,6 +107,7 @@ type
     function GetWindowObject: TMUIWindow;
     procedure SetObjectID(AValue: LongWord);
     procedure SetShowMe(AValue: Boolean);
+    procedure SetContextMenu(AValue: TMUIMenuStrip);
   protected
     procedure AfterCreateObject; override;
     procedure BeforeCloseWindow; override;
@@ -134,6 +136,7 @@ type
     property WindowObject: TMUIWindow read GetWindowObject;
   published
     property Background: TSpecDesc read FBackground;
+    property ContextMenu: TMUIMenuStrip read FContextMenu write SetContextMenu;
     // ContextMenu/ContextMenuTrigger (need some special care, destroying?)
     property ControlChar: Char read FControlChar write SetControlChar default #0;
     property CycleChain: Integer read GetCycleChain write SetCycleChain default 0;
@@ -528,6 +531,13 @@ begin
     ATagList.AddTag(MUIA_Weight, AsTag(FWeight));
   if FObjectID <> 0 then
     ATagList.AddTag(MUIA_ObjectID, AsTag(FObjectID));
+  //
+  if Assigned(FContextMenu) then
+  begin
+    if not FContextMenu.HasObj then
+      FContextMenu.CreateObject;
+    ATagList.AddTag(MUIA_ContextMenu, AsTag(FContextMenu.MUIObj));
+  end;
 end;
 
 procedure TMUIArea.CreateObject;
@@ -961,6 +971,22 @@ begin
   Result := FSelected;
   if HasObj then
     Result := GetBoolValue(MUIA_Selected);
+end;
+
+procedure TMUIArea.SetContextMenu(AValue: TMUIMenuStrip);
+begin
+  FContextMenu := AValue;
+  if Assigned(FMUIObj) then
+  begin
+    if Assigned(FContextMenu) then
+    begin
+      if not FContextMenu.HasObj then
+        FContextMenu.CreateObject;
+      SetValue(MUIA_ContextMenu, AsTag(FContextMenu.MUIObj));
+    end
+    else
+      SetValue(MUIA_ContextMenu, 0);
+  end;
 end;
 
 procedure TMUIArea.SetSelected(AValue: Boolean);
