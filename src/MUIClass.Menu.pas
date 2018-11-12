@@ -260,7 +260,7 @@ end;
 
 procedure TMUIMenuItem.SetChecked(AValue: Boolean);
 begin
-  if AValue <> FChecked then
+  if AValue <> Checked then
   begin
     FChecked := AValue;
     if Assigned(FMUIObj) then
