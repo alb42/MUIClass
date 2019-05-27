@@ -25,7 +25,7 @@ type
     DirList: TMUIDirList;
     Pages: TMUIRegister;
     Colors: array[0..10] of TMUI_Palette_Entry;
-    Names: array[0..10] of string;
+    Names: TStringArray;
     Pop: TMUIPopList;
     DB: TDrawBuffer;
     Down: Boolean;
@@ -312,6 +312,7 @@ begin
     Parent := Pages;
   end;
   //
+  SetLength(Names, Length(Colors));
   for i := 0 to High(Colors) - 1 do
   begin
     with Colors[i] do
