@@ -85,6 +85,7 @@ type
     MouseMode: TMouseMode;
     StartPos: Types.TPoint;
     MousePos: Types.TPoint;
+    MouseDist: Types.TPoint;
     ShiftMode: Boolean;
     FUpdating: Boolean;
     FOnDblClick: TNotifyEvent;
@@ -290,6 +291,7 @@ var
   l,t,x,y: Integer;
   DB: TDrawBuffer;
 begin
+  DB := nil;
   T := 0;
   for y := 0 to FNumRows - 1 do
   begin
@@ -300,53 +302,61 @@ begin
       begin
         //
         CellRect := Rect(0, 0, FCellWidth[x] - 1, FCellHeight[y] - 1);
-        DB := TDrawBuffer.Create(FCellWidth[x], FCellHeight[y], Rp^.Bitmap^.Depth, RP^.Bitmap);
-        try
-          if (y < FFixedRows) or (x < FFixedCols) then
-          begin
-            SetRast(DB.RP, 0);
-            SetAPen(DB.RP, 2);
-            GFXMove(DB.RP, 1, FCellHeight[y] - 1);
-            AGraphics.Draw(DB.RP, 1, 1);
-            AGraphics.Draw(DB.RP, FCellWidth[x] - 1, 1);
-            SetAPen(DB.RP, 1);
-            AGraphics.Draw(DB.RP, FCellWidth[x] - 1, FCellHeight[y] - 1);
-            AGraphics.Draw(DB.RP, 1, FCellHeight[y] - 1);
-            CellRect.Inflate(-1,-1);
-          end
-          else
-            SetRast(DB.RP, 2);
-
-          DoDrawCell(Self, x, y, DB.RP, CellRect);
-          ClipBlit(DB.RP, 0,0, IDB.Rp, L, T, FCellWidth[x], FCellHeight[y], $00C0);
-          //ClipBlit(DB.RP, 0,0, Rp, DrawRect.Left + L, DrawRect.Top + T, FCellWidth[x], FCellHeight[y], $00C0);
-        finally
+        if not Assigned(DB) or (DB.Width < FCellWidth[x]) or (DB.Width < FCellHeight[x]) then
+        begin
           DB.Free;
+          DB := TDrawBuffer.Create(FCellWidth[x] * 2, FCellHeight[y] * 2, Rp^.Bitmap^.Depth, RP^.Bitmap);
         end;
+        if (y < FFixedRows) or (x < FFixedCols) then
+        begin
+          SetBPen(DB.RP, 0);
+          SetAPen(DB.RP, 0);
+          RectFill(DB.RP, CellRect.Left, CellRect.Top, CellRect.Right, CellRect.Bottom);
+          SetAPen(DB.RP, 2);
+          GFXMove(DB.RP, CellRect.Left + 1, CellRect.Bottom);
+          AGraphics.Draw(DB.RP, CellRect.Left + 1, CellRect.Top + 1);
+          AGraphics.Draw(DB.RP, CellRect.Right, CellRect.Top + 1);
+          SetAPen(DB.RP, 1);
+          AGraphics.Draw(DB.RP, CellRect.Right, CellRect.Bottom);
+          AGraphics.Draw(DB.RP, CellRect.Left + 1, CellRect.Bottom);
+          CellRect.Inflate(-1,-1);
+        end
+        else
+        begin
+          SetBPen(DB.RP, 2);
+          SetAPen(DB.RP, 2);
+          RectFill(DB.RP, CellRect.Left, CellRect.Top, CellRect.Right, CellRect.Bottom);
+        end;
+
+        DoDrawCell(Self, x, y, DB.RP, CellRect);
+        ClipBlit(DB.RP, 0,0, Rp, DrawRect.Left + L, DrawRect.Top + T, FCellWidth[x], FCellHeight[y], $00C0);
       end;
       L := L + FCellWidth[x];
     end;
     T := T + FCellHeight[y];
   end;
-  SetAPen(IDB.RP, 0);
+  SetAPen(RP, 0);
   T := 0;
   for y := 0 to FNumRows - 1 do
   begin
-    GfxMove(IDB.RP, 0, T);
+    GfxMove(RP, 0, T);
     AGraphics.Draw(IDB.RP, DrawRect.Width, T);
     T := T + FCellHeight[y];
   end;
   L := 0;
   for x := 0 to FNumCols - 1 do
   begin
-    GfxMove(IDB.RP, L, 0);
-    AGraphics.Draw(IDB.RP, L, DrawRect.Height);
+    GfxMove(RP, L, 0);
+    AGraphics.Draw(RP, L, DrawRect.Height);
     L := L + FCellWidth[x];
   end;
   ToRedraw.Clear;
+  DB.Free;
 end;
 
 procedure TMUIGrid.DoDrawObject(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
+var
+  ARect: TRect;
 begin
   if not Assigned(IDB) or (IDB.Width <> DrawRect.Width) or (IDB.Height <> DrawRect.Height) then
   begin
@@ -355,7 +365,10 @@ begin
     AllToRedraw := True;
   end;
   if AllToRedraw or (ToRedraw.Count > 0) then
-    InternalDrawCells(RP, DrawRect, AllToRedraw);
+  begin
+    ARect := Rect(0, 0, DrawRect.Width - 1, DrawRect.Height - 1);
+    InternalDrawCells(IDB.RP, ARect, AllToRedraw);
+  end;
   AllToRedraw := False;
   ClipBlit(IDB.RP, 0,0, Rp, DrawRect.Left, DrawRect.Top, DrawRect.Width, DrawRect.Height, $00C0);
 end;
@@ -559,32 +572,38 @@ begin
     CC := CoordToCell(Point(X,Y));
     CR := CellToRect(CC.X, CC.Y);
     // Click to one of the border on the top
-    if (CC.Y = 0) and ((Abs(CR.Left - x) < 10) or (Abs(CR.Right - x) < 10)) then
+    if (CC.Y = 0) and ((Abs(CR.Left - x) < 5) or (Abs(CR.Right - x) < 5)) then
     begin
-      if (Abs(CR.Left - x) < 10) and (CC.X > 0) then
+      MouseDist.X := Min(CR.Left - x, CR.Right - x);
+      MouseDist.Y := 0;
+      if (Abs(CR.Left - x) < 5) and (CC.X > 0) then
         CC.X := CC.X - 1;
       StartPos := CC;
       CR := CellToRect(CC.X, CC.Y);
       StartPos.Y := CR.Left; // Minimum
-      MousePos := Point(x,y);
+      MousePos := Point(x + MouseDist.X,y);
       MouseMode := mmMoveCol;
       DA.RedrawObject;
       Exit;
     end;
-    if (CC.X = 0) and ((Abs(CR.Top - y) < 10) or (Abs(CR.Bottom - y) < 10)) then
+    if (CC.X = 0) and ((Abs(CR.Top - y) < 5) or (Abs(CR.Bottom - y) < 5)) then
     begin
-      if (Abs(CR.Top - y) < 10) and (CC.Y > 0) then
+      MouseDist.Y := Min(CR.Top - y, CR.Bottom - y);
+      MouseDist.X := 0;
+      if (Abs(CR.Top - y) < 5) and (CC.Y > 0) then
         CC.Y := CC.Y - 1;
       StartPos := CC;
       CR := CellToRect(CC.X, CC.Y);
       StartPos.X := CR.Top; // Minimum
-      MousePos := Point(x,y);
+      MousePos := Point(x,y + MouseDist.Y);
       MouseMode := mmMoveRow;
       DA.RedrawObject;
       Exit;
     end;
     if (CC.X = 0) and (Abs(CR.Top - y) < 5) then
     begin
+      MouseDist.y := CR.Top - y;
+      MouseDist.X := 0;
       StartPos := CC;
       MouseMode := mmMoveRow;
       DA.RedrawObject;
@@ -635,12 +654,12 @@ begin
     end;
     mmMoveCol:
     begin
-      MousePos := Point(Max(X, StartPos.Y), Y);
+      MousePos := Point(Max(X, StartPos.Y) + MouseDist.X, Y);
       DA.RedrawObject;
     end;
     mmMoveRow:
     begin
-      MousePos := Point(X, Max(Y, StartPos.X));
+      MousePos := Point(X, Max(Y, StartPos.X)  + MouseDist.Y);
       DA.RedrawObject;
     end;
   end;
@@ -672,14 +691,14 @@ begin
       mmMoveCol:
       begin
         MouseMode := mmIdle;
-        MousePos := Point(Max(X, StartPos.Y), Y);
+        MousePos := Point(Max(X, StartPos.Y) + MouseDist.X, Y);
         CellWidth[StartPos.X] := MousePos.X - StartPos.Y;
         EatEvent := True;
       end;
       mmMoveRow:
       begin
         MouseMode := mmIdle;
-        MousePos := Point(X, Max(Y, StartPos.Y));
+        MousePos := Point(X, Max(Y, StartPos.Y) + MouseDist.Y);
         CellHeight[StartPos.Y] := MousePos.Y - StartPos.X;
         EatEvent := True;
       end;
