@@ -572,7 +572,7 @@ begin
     CC := CoordToCell(Point(X,Y));
     CR := CellToRect(CC.X, CC.Y);
     // Click to one of the border on the top
-    if (CC.Y = 0) and ((Abs(CR.Left - x) < 5) or (Abs(CR.Right - x) < 5)) then
+    if (CC.Y = 0) and (Abs(CR.Left - x) < 5)then
     begin
       MouseDist.X := Min(CR.Left - x, CR.Right - x);
       MouseDist.Y := 0;
@@ -586,7 +586,7 @@ begin
       DA.RedrawObject;
       Exit;
     end;
-    if (CC.X = 0) and ((Abs(CR.Top - y) < 5) or (Abs(CR.Bottom - y) < 5)) then
+    if (CC.X = 0) and (Abs(CR.Top - y) < 5) then
     begin
       MouseDist.Y := Min(CR.Top - y, CR.Bottom - y);
       MouseDist.X := 0;
@@ -596,15 +596,6 @@ begin
       CR := CellToRect(CC.X, CC.Y);
       StartPos.X := CR.Top; // Minimum
       MousePos := Point(x,y + MouseDist.Y);
-      MouseMode := mmMoveRow;
-      DA.RedrawObject;
-      Exit;
-    end;
-    if (CC.X = 0) and (Abs(CR.Top - y) < 5) then
-    begin
-      MouseDist.y := CR.Top - y;
-      MouseDist.X := 0;
-      StartPos := CC;
       MouseMode := mmMoveRow;
       DA.RedrawObject;
       Exit;
@@ -668,6 +659,7 @@ end;
 procedure TMUIStrGrid.DoMouseUp(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
 var
   CC: Types.TPoint;
+  NVal: Integer;
 begin
   if (MouseBtn = mmbLeft) then
   begin
@@ -692,14 +684,24 @@ begin
       begin
         MouseMode := mmIdle;
         MousePos := Point(Max(X, StartPos.Y) + MouseDist.X, Y);
-        CellWidth[StartPos.X] := MousePos.X - StartPos.Y;
+        NVal := MousePos.X - StartPos.Y;
+        writeln('  Do move col, new width: ', NVal);
+        if Abs(NVal - CellWidth[StartPos.X]) > 2 then
+          CellWidth[StartPos.X] := NVal
+        else
+          DA.RedrawObject;
         EatEvent := True;
       end;
       mmMoveRow:
       begin
         MouseMode := mmIdle;
         MousePos := Point(X, Max(Y, StartPos.Y) + MouseDist.Y);
-        CellHeight[StartPos.Y] := MousePos.Y - StartPos.X;
+        NVal := MousePos.Y - StartPos.X;
+        writeln('  Do move col, new height: ', NVal);
+        if Abs(NVal - CellHeight[StartPos.Y]) > 2 then
+          CellHeight[StartPos.Y] := NVal
+        else
+          DA.RedrawObject;
         EatEvent := True;
       end;
     end;
