@@ -9,6 +9,7 @@ uses
   mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Area;
 {$M+}
+
 type
   TMUIMouseBtn = (mmbLeft, mmbMiddle, mmbRight);
   TMUIShiftState = set of (mssShift, mssCtrl, mssLShift, mssRShift, mssLAlt, mssRAlt);
@@ -176,13 +177,15 @@ begin
   if HasObj then
     MUI_Redraw(FMUIObj, MADF_DRAWOBJECT);
 end;
+const
+  MUI_EHF_GUIMODE = 1 shl 1;
 
 // OM_SETUP
 function TMUIDrawPanel.DoSetup(cl: PIClass; Obj: PObject_; Msg: PMUIP_Setup): PtrUInt;
 begin
   Result := DoSuperMethodA(cl, obj, msg);
   EHNode.ehn_Priority := 0;
-  EHNode.ehn_Flags := 0;
+  EHNode.ehn_Flags := MUI_EHF_GUIMODE;
   EHNode.ehn_Object := obj;
   EHNode.ehn_Class := cl;
   EHNode.ehn_Events := IDCMP_MOUSEBUTTONS or IDCMP_MOUSEMOVE or IDCMP_RAWKEY;
