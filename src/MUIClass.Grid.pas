@@ -309,46 +309,26 @@ begin
         end;
         if (y < FFixedRows) or (x < FFixedCols) then
         begin
-          SetBPen(DB.RP, 0);
-          SetAPen(DB.RP, 0);
-          RectFill(DB.RP, CellRect.Left, CellRect.Top, CellRect.Right, CellRect.Bottom);
-          SetAPen(DB.RP, 2);
-          GFXMove(DB.RP, CellRect.Left + 1, CellRect.Bottom);
-          AGraphics.Draw(DB.RP, CellRect.Left + 1, CellRect.Top + 1);
-          AGraphics.Draw(DB.RP, CellRect.Right, CellRect.Top + 1);
-          SetAPen(DB.RP, 1);
-          AGraphics.Draw(DB.RP, CellRect.Right, CellRect.Bottom);
-          AGraphics.Draw(DB.RP, CellRect.Left + 1, CellRect.Bottom);
+          DB.APen := 0;
+          DB.FillRect(CellRect);
+          DB.Draw3DBox(Rect(CellRect.Left + 1, CellRect.Top + 1, CellRect.Right, CellRect.Bottom));
           CellRect.Inflate(-1,-1);
         end
         else
         begin
-          SetBPen(DB.RP, 2);
-          SetAPen(DB.RP, 2);
-          RectFill(DB.RP, CellRect.Left, CellRect.Top, CellRect.Right, CellRect.Bottom);
+          DB.APen := 2;
+          DB.FillRect(CellRect);
+          DB.APen := 0;
+          DB.Line(CellRect.Left, CellRect.Bottom, CellRect.Left, CellRect.Top);
+          DB.Line(CellRect.Left, CellRect.Top, CellRect.Right, CellRect.Top);
         end;
 
         DoDrawCell(Self, x, y, DB.RP, CellRect);
-        ClipBlit(DB.RP, 0,0, Rp, DrawRect.Left + L, DrawRect.Top + T, FCellWidth[x], FCellHeight[y], $00C0);
+        DB.DrawToRastPort(DrawRect.Left + L, DrawRect.Top + T, FCellWidth[x], FCellHeight[y], RP);
       end;
       L := L + FCellWidth[x];
     end;
     T := T + FCellHeight[y];
-  end;
-  SetAPen(RP, 0);
-  T := 0;
-  for y := 0 to FNumRows - 1 do
-  begin
-    GfxMove(RP, 0, T);
-    AGraphics.Draw(IDB.RP, DrawRect.Width, T);
-    T := T + FCellHeight[y];
-  end;
-  L := 0;
-  for x := 0 to FNumCols - 1 do
-  begin
-    GfxMove(RP, L, 0);
-    AGraphics.Draw(RP, L, DrawRect.Height);
-    L := L + FCellWidth[x];
   end;
   ToRedraw.Clear;
   DB.Free;
@@ -509,10 +489,14 @@ begin
   CS := CellStatus[ACol, ARow];
 
   SetDrMd(RP, JAM1);
-  if (CS = csSelected) or (CS = csFocussed) then
+  if (CS = csSelected) then
   begin
     SetAPen(RP, 3);
     RectFill(RP, ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
+    SetAPen(RP, 0);
+    GfxMove(RP, ARect.Left, ARect.Bottom);
+    AGraphics.Draw(RP, ARect.Left, ARect.Top);
+    AGraphics.Draw(RP, ARect.Right, ARect.Top);
     SetAPen(RP, 2);
   end
   else
@@ -608,6 +592,7 @@ begin
         AddToRedraw(CC.Y, CC.Y);
         FStrings[CC.X, CC.Y].Selected := True;
         StartPos := CC;
+        DoSetFocus(CC.X, CC.Y);
         DA.RedrawObject;
         MouseMode := mmSelectCells;
         Exit;
@@ -668,7 +653,7 @@ begin
       begin
         MouseMode := mmIdle;
         EatEvent := True;
-        CC := CoordToCell(Point(X,Y));
+        {CC := CoordToCell(Point(X,Y));
         if (CC.X >= FixedCols) and (CC.Y >= FixedRows) then
         begin
           DoSetFocus(CC.X, CC.Y);
@@ -677,7 +662,7 @@ begin
         begin
           FRow := -1;
           FCol := -1;
-        end;
+        end;}
         DA.RedrawObject;
       end;
       mmMoveCol:
@@ -685,7 +670,6 @@ begin
         MouseMode := mmIdle;
         MousePos := Point(Max(X, StartPos.Y) + MouseDist.X, Y);
         NVal := MousePos.X - StartPos.Y;
-        writeln('  Do move col, new width: ', NVal);
         if Abs(NVal - CellWidth[StartPos.X]) > 2 then
           CellWidth[StartPos.X] := NVal
         else
@@ -697,7 +681,6 @@ begin
         MouseMode := mmIdle;
         MousePos := Point(X, Max(Y, StartPos.Y) + MouseDist.Y);
         NVal := MousePos.Y - StartPos.X;
-        writeln('  Do move col, new height: ', NVal);
         if Abs(NVal - CellHeight[StartPos.Y]) > 2 then
           CellHeight[StartPos.Y] := NVal
         else

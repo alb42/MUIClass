@@ -3,7 +3,7 @@ unit MUIClass.DrawPanel;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
+  Classes, SysUtils, fgl, Math, Types,
   Exec, Utility, AmigaDOS, Intuition, icon, AGraphics, inputevent,
   keymap, layers,
   mui, muihelper,
@@ -34,12 +34,46 @@ type
     FRP: PRastPort;
     FWidth: Integer;
     FHeight: Integer;
+    OwnsRP: Boolean;
+  private
+    procedure SetPenA(Pen: LongInt);
+    function GetPenA: LongInt;
+    procedure SetPenB(Pen: LongInt);
+    function GetPenB: LongInt;
+
+    procedure SetPenPos(APenPos: TPoint);
+    function GetPenPos: TPoint;
   public
-    constructor Create(AWidth, AHeight, ADepth: Integer; AFriend: PBitmap = nil); virtual;
+    constructor Create(AWidth, AHeight, ADepth: Integer; AFriend: PBitmap = nil); virtual; overload;
+    constructor Create(ARP: PRastPort); virtual; overload;
     destructor Destroy; override;
+
+    procedure Clear(Pen: Integer = 0);
+    procedure Line(const x1, y1, x2, y2: Integer);
+    procedure DrawRect(const x1, y1, x2, y2: Integer); overload;
+    procedure DrawRect(const ARect: Types.TRect); overload;
+    procedure Draw3DBox(const ARect: Types.TRect; IsUp: Boolean = True);
+    procedure FillRect(const x1, y1, x2, y2: Integer); overload;
+    procedure FillRect(const ARect: Types.TRect); overload;
+
+    procedure DrawText(x, y: Integer; AText: string); overload;
+    procedure DrawText(AText: string); overload;
+
+    procedure DrawImage(x, y: Integer; Src: TDrawBuffer); overload;
+    procedure DrawImage(x, y: Integer; SrcRP: PRastPort); overload;
+
+    procedure DrawToRastPort(x, y: Integer; DestRP: PRastPort); overload;
+    procedure DrawToRastPort(x, y, SrcWidth, SrcHeight: Integer; DestRP: PRastPort); overload;
+
+
     property RP: PRastPort read FRP;
     property Width: Integer read FWidth;
     property Height: Integer read FHeight;
+
+
+    property APen: Integer read GetPenA write SetPenA;
+    property BPen: Integer read GetPenB write SetPenB;
+    property PenPos: TPoint read GetPenPos write SetPenPos;
   end;
 
   TMUIDrawPanel = class(TMUIArea)
@@ -111,6 +145,7 @@ implementation
 
 constructor TDrawBuffer.Create(AWidth, AHeight, ADepth: Integer; AFriend: PBitmap);
 begin
+  OwnsRP := True;
   FWidth := AWidth;
   FHeight := AHeight;
   li := NewLayerInfo(); // Layerinfo we also need
@@ -120,15 +155,149 @@ begin
     Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_MINPLANES, nil);
   Layer := CreateUpFrontLayer(li, Bitmap, 0, 0, AWidth - 1, AHeight - 1, LAYERSIMPLE, nil);
   FRP := Layer^.RP;
+  APen := 0;
+  BPen := 0;
+end;
+
+constructor TDrawBuffer.Create(ARP: PRastPort);
+begin
+  OwnsRP := False;
+  FRP := ARP;
+  FWidth := ARP^.Bitmap^.BytesPerRow div 8 * ARP^.Bitmap^.Depth;
+  FHeight := ARP^.Bitmap^.Rows;
 end;
 
 destructor TDrawBuffer.Destroy;
 begin
-  DeleteLayer(0, Layer);
-  DisposeLayerInfo(li);
-  FreeBitMap(Bitmap);
+  if OwnsRP then
+  begin
+    DeleteLayer(0, Layer);
+    DisposeLayerInfo(li);
+    FreeBitMap(Bitmap);
+  end;
   inherited;
 end;
+
+procedure TDrawBuffer.SetPenA(Pen: LongInt);
+begin
+  SetAPen(FRP, Pen);
+end;
+
+function TDrawBuffer.GetPenA: LongInt;
+begin
+  Result := GetAPen(FRP);
+end;
+
+procedure TDrawBuffer.SetPenB(Pen: LongInt);
+begin
+  SetBPen(FRP, Pen);
+end;
+
+function TDrawBuffer.GetPenB: LongInt;
+begin
+  Result := GetBPen(FRP);
+end;
+
+procedure TDrawBuffer.Line(const x1, y1, x2, y2: Integer);
+begin
+  AGraphics.GfxMove(FRP, x1, y1);
+  AGraphics.Draw(FRP, X2, y2);
+end;
+
+procedure TDrawBuffer.DrawRect(const x1, y1, x2, y2: Integer);
+begin
+  AGraphics.GfxMove(FRP, x1, y1);
+  AGraphics.Draw(FRP, x2, y1);
+  AGraphics.Draw(FRP, x2, y2);
+  AGraphics.Draw(FRP, x1, y2);
+  AGraphics.Draw(FRP, x1, y1);
+end;
+
+procedure TDrawBuffer.DrawRect(const ARect: Types.TRect);
+begin
+  DrawRect(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
+end;
+
+procedure TDrawBuffer.Draw3DBox(const ARect: Types.TRect; IsUp: Boolean = True);
+var
+  SPen: LongInt;
+begin
+  SPen := APen;
+  if IsUp then
+    APen := 2
+  else
+    APen := 1;
+  GFXMove(FRP, ARect.Left, ARect.Bottom);
+  AGraphics.Draw(FRP, ARect.Left, ARect.Top);
+  AGraphics.Draw(FRP, ARect.Right, ARect.Top);
+  if IsUp then
+    APen := 1
+  else
+    APen := 2;
+  AGraphics.Draw(FRP, ARect.Right, ARect.Bottom);
+  AGraphics.Draw(FRP, ARect.Left, ARect.Bottom);
+  APen := SPen;
+end;
+
+procedure TDrawBuffer.Clear(Pen: Integer = 0);
+begin
+  SetRast(FRP, Pen);
+end;
+
+procedure TDrawBuffer.FillRect(const x1, y1, x2, y2: Integer);
+begin
+  RectFill(FRP, x1, y1, x2, y2);
+end;
+
+procedure TDrawBuffer.FillRect(const ARect: Types.TRect);
+begin
+  RectFill(FRP, ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
+end;
+
+procedure TDrawBuffer.DrawText(x, y: Integer; AText: string);
+begin
+  GfxMove(FRP, x, y);
+  AGraphics.GFXText(FRP, PChar(AText + #0), Length(AText));
+end;
+
+procedure TDrawBuffer.DrawText(AText: string); overload;
+begin
+  AGraphics.GFXText(FRP, PChar(AText + #0), Length(AText));
+end;
+
+procedure TDrawBuffer.SetPenPos(APenPos: TPoint);
+begin
+  GFXMove(FRP, APenPos.X, APenPos.Y);
+end;
+
+function TDrawBuffer.GetPenPos: TPoint;
+begin
+  Result.X := FRP^.cp_x;
+  Result.Y := FRP^.cp_y;
+end;
+
+procedure TDrawBuffer.DrawImage(x,y: Integer; Src: TDrawBuffer);
+begin
+  ClipBlit(Src.RP, 0, 0, FRP, x, y, Src.Width, Src.Height, $00C0);
+end;
+
+procedure TDrawBuffer.DrawImage(x,y: Integer; SrcRP: PRastPort);
+begin
+  ClipBlit(SrcRP, 0, 0, FRP, x, y, SrcRP^.Bitmap^.BytesPerRow div 8 * SrcRP^.Bitmap^.Depth , SrcRP^.Bitmap^.Rows, $00C0);
+end;
+
+procedure TDrawBuffer.DrawToRastPort(x, y: Integer; DestRP: PRastPort);
+begin
+  ClipBlit(FRP, 0, 0, DestRP, x, y, Width, Height, $00C0);
+end;
+
+procedure TDrawBuffer.DrawToRastPort(x, y, SrcWidth, SrcHeight: Integer; DestRP: PRastPort);
+begin
+  ClipBlit(FRP, 0, 0, DestRP, x, y, SrcWidth, SrcHeight, $00C0);
+end;
+
+
+//############################# DrawPanel ##############################
 
 // Constructor
 constructor TMUIDrawPanel.Create;
