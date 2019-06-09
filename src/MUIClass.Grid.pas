@@ -6,6 +6,9 @@ uses
   Exec, Utility, AGraphics, Intuition, Layers, fgl,
   MUIClass.Base, MUIClass.Group, MUIClass.DrawPanel;
 
+const
+  GRABDISTANCE = 10;
+
 type
   TCellStatus = (csNormal, csFixed, csFocussed, csSelected);
 
@@ -39,10 +42,10 @@ type
     procedure SetGridHeight(AHeight: Integer);
     function GetGridWidth: Integer;
     function GetGridHeight: Integer;
-    function GetCellWidth(ACol: Integer): Integer;
-    procedure SetCellWidth(ACol: Integer; AWidth: Integer);
-    function GetCellHeight(ARow: Integer): Integer;
-    procedure SetCellHeight(ARow: Integer; AHeight: Integer);
+    function GetCellWidth(ACol: Integer): Integer; virtual;
+    procedure SetCellWidth(ACol: Integer; AWidth: Integer); virtual;
+    function GetCellHeight(ARow: Integer): Integer; virtual;
+    procedure SetCellHeight(ARow: Integer; AHeight: Integer); virtual;
 
 
     property GridWidth: Integer read GetGridWidth write SetGridWidth;
@@ -193,11 +196,11 @@ begin
   if BlockRecalcSize then
     Exit;
   W := 0;
-  for i := 0 to High(FCellWidth) do
-    W := W + FCellWidth[i];
+  for i := 0 to FNumCols - 1 do
+    W := W + CellWidth[i];
   H := 0;
-  for i := 0 to High(FCellHeight) do
-    H := H + FCellHeight[i];
+  for i := 0 to FNumRows - 1 do
+    H := H + CellHeight[i];
   Contents.InitChange;
   GridWidth := W;
   GridHeight := H;
@@ -290,22 +293,28 @@ var
   CellRect: TRect;
   l,t,x,y: Integer;
   DB: TDrawBuffer;
+  cw, ch: Integer;
 begin
   DB := nil;
   T := 0;
   for y := 0 to FNumRows - 1 do
   begin
     L := 0;
+    ch := CellHeight[y];
+    if ch = 0 then
+      Continue;
     for x := 0 to FNumCols - 1 do
     begin
+      cw := CellWidth[x];
+      if cw = 0 then
+        Continue;
       if DoAll or (ToRedraw.IndexOf(ColRowToNum(x,y)) >= 0) then
       begin
-        //
-        CellRect := Rect(0, 0, FCellWidth[x] - 1, FCellHeight[y] - 1);
-        if not Assigned(DB) or (DB.Width < FCellWidth[x]) or (DB.Width < FCellHeight[x]) then
+        CellRect := Rect(0, 0, cw - 1, ch - 1);
+        if not Assigned(DB) or (DB.Width < cw) or (DB.Height < ch) then
         begin
           DB.Free;
-          DB := TDrawBuffer.Create(FCellWidth[x] * 2, FCellHeight[y] * 2, Rp^.Bitmap^.Depth, RP^.Bitmap);
+          DB := TDrawBuffer.Create(cw * 2, ch * 2, Rp^.Bitmap^.Depth, RP^.Bitmap);
         end;
         if (y < FFixedRows) or (x < FFixedCols) then
         begin
@@ -324,11 +333,11 @@ begin
         end;
 
         DoDrawCell(Self, x, y, DB.RP, CellRect);
-        DB.DrawToRastPort(DrawRect.Left + L, DrawRect.Top + T, FCellWidth[x], FCellHeight[y], RP);
+        DB.DrawToRastPort(DrawRect.Left + L, DrawRect.Top + T, cw, ch, RP);
       end;
-      L := L + FCellWidth[x];
+      L := L + cw;
     end;
-    T := T + FCellHeight[y];
+    T := T + ch;
   end;
   ToRedraw.Clear;
   DB.Free;
@@ -362,12 +371,12 @@ begin
   i := 0;
   for x := 0 to FNumCols - 1 do
   begin
-    if InRange(PT.X, i, i + FCellWidth[x]) then
+    if InRange(PT.X, i, i + CellWidth[x]) then
     begin
       Result.X := x;
       Break;
     end;
-    i := i + FCellWidth[x];
+    i := i + CellWidth[x];
   end;
   if Result.X < 0 then
     Exit;
@@ -375,12 +384,12 @@ begin
   i := 0;
   for y := 0 to FNumRows - 1 do
   begin
-    if InRange(PT.Y, i, i + FCellHeight[y]) then
+    if InRange(PT.Y, i, i + CellHeight[y]) then
     begin
       Result.Y := y;
       Break;
     end;
-    i := i + FCellHeight[y];
+    i := i + CellHeight[y];
   end;
 end;
 
@@ -395,12 +404,12 @@ begin
   Result.Left := 0;
   Result.Top := 0;
   for x := 0 to ACol - 1 do
-    Result.Left := Result.Left + FCellWidth[x];
-  Result.Width := FCellWidth[ACol];
+    Result.Left := Result.Left + CellWidth[x];
+  Result.Width := CellWidth[ACol];
   //
   for y := 0 to ARow - 1 do
-    Result.Top := Result.Top + FCellHeight[y];
-  Result.Height := FCellHeight[ACol];
+    Result.Top := Result.Top + CellHeight[y];
+  Result.Height := CellHeight[ARow];
 end;
 
 function TMUIGrid.CellsToRect(ACol, ARow, BCol, BRow: Integer): Types.TRect;
@@ -556,30 +565,34 @@ begin
     CC := CoordToCell(Point(X,Y));
     CR := CellToRect(CC.X, CC.Y);
     // Click to one of the border on the top
-    if (CC.Y = 0) and (Abs(CR.Left - x) < 5)then
+    if (CC.Y = 0) and ((x - CR.Left < GRABDISTANCE) or (CR.Right - x < GRABDISTANCE)) then
     begin
-      MouseDist.X := Min(CR.Left - x, CR.Right - x);
-      MouseDist.Y := 0;
-      if (Abs(CR.Left - x) < 5) and (CC.X > 0) then
+      if (x - CR.Left < GRABDISTANCE) and (CC.X > 0) then
         CC.X := CC.X - 1;
       StartPos := CC;
       CR := CellToRect(CC.X, CC.Y);
+      //
+      MouseDist.X := CR.Right - x;
+      MouseDist.Y := 0;
+      //
       StartPos.Y := CR.Left; // Minimum
       MousePos := Point(x + MouseDist.X,y);
       MouseMode := mmMoveCol;
       DA.RedrawObject;
       Exit;
     end;
-    if (CC.X = 0) and (Abs(CR.Top - y) < 5) then
+    if (CC.X = 0) and ((y - CR.Top < GRABDISTANCE) or (CR.Bottom - y < GRABDISTANCE)) then
     begin
-      MouseDist.Y := Min(CR.Top - y, CR.Bottom - y);
-      MouseDist.X := 0;
-      if (Abs(CR.Top - y) < 5) and (CC.Y > 0) then
+      if (y - CR.Top < GRABDISTANCE) and (CC.Y > 0) then
         CC.Y := CC.Y - 1;
       StartPos := CC;
       CR := CellToRect(CC.X, CC.Y);
+      //
+      MouseDist.X := 0;
+      MouseDist.Y := CR.Bottom - y;
+      //
       StartPos.X := CR.Top; // Minimum
-      MousePos := Point(x,y + MouseDist.Y);
+      MousePos := Point(x, y + MouseDist.Y);
       MouseMode := mmMoveRow;
       DA.RedrawObject;
       Exit;
@@ -643,7 +656,6 @@ end;
 
 procedure TMUIStrGrid.DoMouseUp(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
 var
-  CC: Types.TPoint;
   NVal: Integer;
 begin
   if (MouseBtn = mmbLeft) then
@@ -653,16 +665,6 @@ begin
       begin
         MouseMode := mmIdle;
         EatEvent := True;
-        {CC := CoordToCell(Point(X,Y));
-        if (CC.X >= FixedCols) and (CC.Y >= FixedRows) then
-        begin
-          DoSetFocus(CC.X, CC.Y);
-        end
-        else
-        begin
-          FRow := -1;
-          FCol := -1;
-        end;}
         DA.RedrawObject;
       end;
       mmMoveCol:
