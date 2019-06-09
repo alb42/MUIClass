@@ -12,7 +12,7 @@ uses
 
 type
   TMUIMouseBtn = (mmbLeft, mmbMiddle, mmbRight);
-  TMUIShiftState = set of (mssShift, mssCtrl, mssLShift, mssRShift, mssLAlt, mssRAlt);
+  TMUIShiftState = set of (mssShift, mssCtrl, mssLShift, mssRShift, mssLAlt, mssRAlt, mssLAmiga, mssRAmiga);
 
   TMUIDrawEvent = procedure(Sender: TObject; Rp: PRastPort; DrawRect: TRect) of object;
   TMUIMouseEvent = procedure(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean) of object;
@@ -586,6 +586,10 @@ begin
           Mss := Mss + [mssLAlt];
         if (Qual and IEQUALIFIER_RALT) <> 0 then
           Mss := Mss + [mssRAlt];
+        if (Qual and IEQUALIFIER_LCOMMAND) <> 0 then
+          Mss := Mss + [mssLAmiga];
+        if (Qual and IEQUALIFIER_RCOMMAND) <> 0 then
+          Mss := Mss + [mssRAmiga];
         // Get the actual char for it
         Buff[0] := #0;
         ie.ie_Class := IECLASS_RAWKEY;
