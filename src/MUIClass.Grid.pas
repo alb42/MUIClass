@@ -93,6 +93,8 @@ type
     FUpdating: Boolean;
     FOnDblClick: TNotifyEvent;
     FStrings: array of array of TCellStat;
+    FEditMode: Boolean;
+    FEditText: string;
   protected
     procedure SetNumRows(ARows: Integer); override;
     procedure SetNumCols(ACols: Integer); override;
@@ -114,6 +116,9 @@ type
     procedure DoKeyDown(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean);
     procedure DoKeyUp(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean);
     procedure DoDblClick(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: Integer; var EatEvent: Boolean);
+
+    property EditMode: boolean read FEditMode;
+    property EditText: string read FEditText;
   public
     constructor Create; override;
 
@@ -437,6 +442,7 @@ begin
   DA.OnKeyDown := @DoKeyDown;
   DA.OnKeyUp := @DoKeyUp;
   DA.OnDblClick := @DoDblClick;
+  FEditMode := False;
 end;
 
 
@@ -493,9 +499,14 @@ procedure TMUIStrGrid.DoDrawCell(Sender: TObject; ACol, ARow: Integer; RP: PRast
 var
   s: string;
   CS: TCellStatus;
+  TE: TTextExtent;
 begin
-  s := Cells[ACol, ARow];
+
   CS := CellStatus[ACol, ARow];
+  if EditMode and (CS = csFocussed) then
+    s := EditText
+  else
+    s := Cells[ACol, ARow];
 
   SetDrMd(RP, JAM1);
   if (CS = csSelected) then
@@ -512,12 +523,24 @@ begin
   begin
     SetAPen(RP, 1);
   end;
-  GfxMove(RP, ARect.Left + 1, ARect.Top + ARect.Height div 2 + RP^.Font^.tf_Baseline div 2);
+  if EditMode then
+  begin
+    TextExtent(RP, PChar(s), Length(s), @TE);
+    GfxMove(RP, ARect.Right - 3 - TE.te_Width, ARect.Top + ARect.Height div 2 + RP^.Font^.tf_Baseline div 2);
+  end
+  else
+    GfxMove(RP, ARect.Left + 1, ARect.Top + ARect.Height div 2 + RP^.Font^.tf_Baseline div 2);
   GfxText(RP, PChar(s), Length(s));
 
   if CS = csFocussed then
   begin
     SetAPen(RP, 1);
+    // Draw cursor line
+    if EditMode then
+    begin
+      GfxMove(RP, ARect.Right - 3, ARect.Top + ARect.Height div 2 + RP^.Font^.tf_Baseline div 2 - TE.te_Height);
+      AGraphics.Draw(RP, ARect.Right - 3, ARect.Top + ARect.Height div 2 + RP^.Font^.tf_Baseline div 2 + TE.te_Height div 2);
+    end;
     GfxMove(RP, ARect.Left + 1, ARect.Top + 1);
     AGraphics.Draw(RP, ARect.Right, ARect.Top + 1);
     AGraphics.Draw(RP, ARect.Right, ARect.Bottom);
@@ -791,12 +814,46 @@ begin
       end;
     end;
   end;
+  //
+  if ((Trim(key) <> '') or (Key = ' ')) and (Code <> 70) and  (not (mssCtrl in Shift)) and (not (mssLAmiga in Shift)) and (not (mssRAmiga in Shift)) and (not (mssLAlt in Shift))  then
+  begin
+    if not EditMode then
+    begin
+      FEditMode := True;
+      FEditText := '';
+    end;
+    FEditText := FEditText + Key;
+    AddToRedraw(Col, Row);
+    DA.RedrawObject;
+  end;
   case Code of
     CursorDown: begin if not (mssShift in Shift) then SelectAll(False); DoSetFocus(FCol, FRow + 1); end;
     CursorUp: begin if not (mssShift in Shift) then SelectAll(False); DoSetFocus(FCol, FRow - 1); end;
     CursorRight: begin if not (mssShift in Shift) then SelectAll(False); DoSetFocus(FCol + 1, FRow); end;
     CursorLeft: begin if not (mssShift in Shift) then SelectAll(False); DoSetFocus(FCol - 1, FRow); end;
-    70: DeleteSelection; // Delete
+    65: if EditMode then
+      begin // Backspace
+        Delete(FEditText, Length(FEditText), 1);
+        AddToRedraw(Col, Row);
+        DA.RedrawObject;
+      end
+      else
+        DeleteSelection;
+    66, 67, 68:begin
+      if EditMode then // tab, return, enter
+      begin // enter
+        FEditMode := False;
+        Cells[FCol, FRow] := FEditText;
+      end;
+      if Code = 66 then // tab
+        DoSetFocus(FCol + 1, FRow)
+      else
+        DoSetFocus(FCol, FRow + 1);
+    end;
+    70: begin
+      if not EditMode then
+        DeleteSelection; // Delete
+    end;
     96, 97: begin
       StartPos.X := FCol;
       StartPos.Y := FRow;
@@ -804,8 +861,6 @@ begin
     end;
   end;
   EatEvent := True;
-  if InRange(Col, 0, FNumCols - 1) and InRange(Row, 0, FNumRows - 1) then
-    FStrings[Col,Row].Selected := True;
 end;
 
 procedure TMUIStrGrid.DoKeyUp(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean);
@@ -822,6 +877,11 @@ procedure TMUIStrGrid.DoSetFocus(ACol, ARow: Integer);
 begin
   if (ACol < FNumCols) and (ACol >= FFixedCols) and (ARow < FNumRows) and (ARow >= FFixedRows) and ((ACol <> FCol) or (ARow <> FRow))then
   begin
+    if FEditMode then
+    begin
+      FEditMode := False;
+      Cells[FCol, FRow] := FEditText;
+    end;
     AddToRedraw(FCol, FRow);
     FRow := ARow;
     FCol := ACol;
