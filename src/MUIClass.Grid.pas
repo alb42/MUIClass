@@ -63,6 +63,8 @@ type
     function CellToRect(ACol, ARow: Integer): Types.TRect;
     function CellsToRect(ACol, ARow, BCol, BRow: Integer): Types.TRect;
 
+    procedure RedrawCell(ACol, ARow: Integer);
+
     property NumRows: Integer read FNumRows write SetNumRows;
     property NumCols: Integer read FNumCols write SetNumCols;
     property FixedCols: Integer read FFixedCols write FFixedCols;
@@ -190,6 +192,8 @@ begin
   SetLength(FCellWidth, ACols);
   for i := FNumCols to ACols - 1 do
     FCellWidth[i] := FDefCellWidth;
+  if (FNumCols = 0) and (ACols > 0) then
+    FCellWidth[0] := 50;
   FNumCols := ACols;
   RecalcSize;
 end;
@@ -291,6 +295,12 @@ begin
   Value := ColRowToNum(ACol, ARow);
   if ToRedraw.IndexOf(Value) < 0 then
     ToRedraw.Add(Value);
+end;
+
+procedure TMUIGrid.RedrawCell(ACol, ARow: Integer);
+begin
+  AddToRedraw(ACol, ARow);
+  DA.RedrawObject;
 end;
 
 procedure TMUIGrid.InternalDrawCells(Rp: PRastPort; DrawRect: TRect; DoAll: Boolean);
@@ -845,10 +855,19 @@ begin
         FEditMode := False;
         Cells[FCol, FRow] := FEditText;
       end;
+      SelectAll(False);
       if Code = 66 then // tab
-        DoSetFocus(FCol + 1, FRow)
+      begin
+        if mssShift in Shift then
+          DoSetFocus(FCol - 1, FRow)
+        else
+          DoSetFocus(FCol + 1, FRow)
+      end
       else
-        DoSetFocus(FCol, FRow + 1);
+        if mssShift in Shift then
+          DoSetFocus(FCol, FRow - 1)
+        else
+          DoSetFocus(FCol, FRow + 1);
     end;
     70: begin
       if not EditMode then
