@@ -27,7 +27,6 @@ type
     FCellHeight: array of Integer;
     FOnDrawCell: TDrawCellEvent;
 
-    function ColRowToNum(ACol, ARow: Integer): Integer;
   protected
     BlockRecalcSize: Boolean;
     IDB: TDrawBuffer;
@@ -55,6 +54,9 @@ type
 
     procedure DoDrawObject(Sender: TObject; Rp: PRastPort; DrawRect: TRect); virtual;
     procedure DoDrawCell(Sender: TObject; ACol, ARow: Integer; RP: PRastPort; ARect: TRect); virtual;
+
+    function ColRowToNum(ACol, ARow: Integer): Integer;
+    function NumToColRow(Num: Integer): Types.TPoint;
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -81,6 +83,8 @@ type
     Selected: Boolean;
   end;
 
+  TSelectionList = specialize TFPGList<LongWord>;
+
   TMouseMode = (mmIdle, mmMoveCol, mmMoveRow, mmSelectCells);
 
   TMUIStrGrid = class(TMUIGrid)
@@ -97,6 +101,7 @@ type
     FStrings: array of array of TCellStat;
     FEditMode: Boolean;
     FEditText: string;
+    FSelectionList: TSelectionList;
   protected
     procedure SetNumRows(ARows: Integer); override;
     procedure SetNumCols(ACols: Integer); override;
@@ -108,6 +113,9 @@ type
     procedure SetCell(ACol, ARow: Integer; AValue: string); virtual;
     function GetCellStatus(ACol, ARow: Integer): TCellStatus;
     procedure DoSetFocus(ACol, ARow: Integer);
+
+    function GetSelCount: Integer; virtual;
+    function GetSelection(AIdx: Integer): Types.TPoint; virtual;
 
 
     procedure DoDrawObject(Sender: TObject; Rp: PRastPort; DrawRect: TRect); override;
@@ -123,6 +131,7 @@ type
     property EditText: string read FEditText;
   public
     constructor Create; override;
+    destructor Destroy; override;
 
     procedure BeginUpdate;
     procedure EndUpdate;
@@ -130,6 +139,9 @@ type
     procedure SelectAll(Select: Boolean);
     property Cells[ACol, ARow: Integer]: string read GetCell write SetCell;
     property CellStatus[ACol, ARow: Integer]: TCellStatus read GetCellStatus;
+
+    property SelectionCount: Integer read GetSelCount;
+    property Selection[AIdx: Integer]: Types.TPoint read GetSelection;
 
     property Row: Integer read FRow write SetRow;
     property Col: Integer read FCol write SetCol;
@@ -286,6 +298,12 @@ end;
 function TMUIGrid.ColRowToNum(ACol, ARow: Integer): Integer;
 begin
   Result := ACol + ARow * FNumCols;
+end;
+
+function TMUIGrid.NumToColRow(Num: Integer): Types.TPoint;
+begin
+  Result.Y := Num div FNumCols;
+  Result.X := Num mod FNumCols;
 end;
 
 procedure TMUIGrid.AddToRedraw(ACol, ARow: Integer);
@@ -446,6 +464,7 @@ begin
   MouseMode := mmIdle;
   FRow := -1;
   FCol := -1;
+  FSelectionList := TSelectionList.Create;
   DA.OnMouseDown := @DoMouseDown;
   DA.OnMouseMove := @DoMouseMove;
   DA.OnMouseUp := @DoMouseUp;
@@ -453,6 +472,12 @@ begin
   DA.OnKeyUp := @DoKeyUp;
   DA.OnDblClick := @DoDblClick;
   FEditMode := False;
+end;
+
+destructor TMUIStrGrid.Destroy;
+begin
+  FSelectionList.Free;
+  inherited;
 end;
 
 
@@ -637,6 +662,7 @@ begin
         SelectAll(False);
         AddToRedraw(CC.Y, CC.Y);
         FStrings[CC.X, CC.Y].Selected := True;
+        FSelectionList.Add(ColRowToNum(CC.x,CC.y));
         StartPos := CC;
         DoSetFocus(CC.X, CC.Y);
         DA.RedrawObject;
@@ -669,6 +695,7 @@ begin
           begin
             AddToRedraw(X, Y);
             FStrings[X, Y].Selected := True;
+            FSelectionList.Add(ColRowToNum(x,y));
           end;
         end;
         DA.RedrawObject;
@@ -753,6 +780,8 @@ procedure TMUIStrGrid.SelectAll(Select: Boolean);
 var
   x,y: Integer;
 begin
+  if not Select then
+    FSelectionList.Clear;
   for x := 0 to FNumCols - 1 do
   begin
     for y := 0 to FNumRows - 1 do
@@ -760,6 +789,8 @@ begin
       if FStrings[x,y].Selected <> Select then
         AddToRedraw(x, y);
       FStrings[x,y].Selected := Select;
+      if Select then
+        FSelectionList.Add(ColRowToNum(x,y));
     end;
   end;
 end;
@@ -821,6 +852,7 @@ begin
       begin
         AddToRedraw(X, Y);
         FStrings[X, Y].Selected := True;
+        FSelectionList.Add(ColRowToNum(x,y));
       end;
     end;
   end;
@@ -909,6 +941,18 @@ begin
       FOnCellFocus(Self);
     DA.RedrawObject;
   end;
+end;
+
+function TMUIStrGrid.GetSelCount: Integer;
+begin
+  Result := FSelectionList.Count;
+end;
+
+function TMUIStrGrid.GetSelection(AIdx: Integer): Types.TPoint;
+begin
+  Result := Point(-1,-1);
+  if InRange(AIdx, 0, FSelectionList.Count - 1) then
+    Result := NumToColRow(FSelectionList[AIdx]);
 end;
 
 end.
