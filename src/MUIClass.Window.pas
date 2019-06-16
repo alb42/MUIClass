@@ -20,6 +20,7 @@ type
     FHoriz: Boolean;
     FOpen: Boolean;
     FOnActivate: TNotifyEvent;
+    FOnDeactivate: TNotifyEvent;
     FAltLeftEdge: Integer;
     FAltTopEdge: Integer;
     FAltHeight: Integer;
@@ -159,6 +160,7 @@ type
     // EVents
     property OnShow: TNotifyEvent read FOnShow write FOnShow;                           // Event when the Window is opened
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;               // Event when the Window gets activated
+    property OnDeactivate: TNotifyEvent read FOnDeactivate write FOnDeactivate;         // Event when the Window gets activated
     property OnCloseRequest: TCloseReqEvent read FOnCloseRequest write FOnCloseRequest; // Ask the user what to do on Close button click
   end;
 
@@ -341,6 +343,21 @@ begin
   end;
 end;
 
+function DeactivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PasObj: TMUIWindow;
+begin
+  try
+    Result := 0;
+    PasObj := TMUIWindow(Hook^.h_Data);
+    if Assigned(PasObj.FOnDeactivate) then
+      PasObj.FOnDeactivate(PasObj);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
+end;
+
 function CloseReqFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIWindow;
@@ -373,6 +390,7 @@ begin
   inherited;
   // Connect Events
   ConnectHook(MUIA_Window_Activate, MUI_TRUE, @ActivateFunc);
+  ConnectHook(MUIA_Window_Activate, MUI_FALSE, @DeactivateFunc);
   ConnectHook(MUIA_Window_CloseRequest, MUI_TRUE, @CloseReqFunc);
 end;
 
