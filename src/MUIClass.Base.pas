@@ -1238,6 +1238,8 @@ end;
 
 
 procedure TMUIWithParent.SetParent(AParent: TMUINotify);
+var
+  i: Integer;
 begin
   if Assigned(FParent) then
     FParent.RemoveChild(Self);
@@ -1249,7 +1251,11 @@ begin
     FParent.AddChild(self);
   end;
   if (FParent = nil) and HasObj then
+  begin
+    for i := 0 to FChilds.Count - 1 do
+      FChilds[i].ClearObject;
     DestroyObject;
+  end;
 end;
 
 { TMUIFamily }
