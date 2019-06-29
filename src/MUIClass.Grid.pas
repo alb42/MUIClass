@@ -226,6 +226,7 @@ begin
   GridWidth := W;
   GridHeight := H;
   Contents.ExitChange;
+  DA.RedrawObject;
 end;
 
 procedure TMUIGrid.SetGridWidth(AWidth: Integer);
@@ -505,7 +506,6 @@ begin
   if InRange(ARow, 0, FNumRows - 1) and InRange(ACol, 0, FNumCols - 1) then
   begin
     FStrings[ACol, ARow].Text := AValue;
-    AllToRedraw := True;
     if not FUpdating then
       DA.RedrawObject;
   end;
