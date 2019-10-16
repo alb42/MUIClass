@@ -7,7 +7,7 @@ uses
   MUIClass.Base, MUIClass.Group, MUIClass.DrawPanel;
 
 const
-  GRABDISTANCE = 10;
+  GRABDISTANCE = 5;
 
 type
   TCellStatus = (csNormal, csFixed, csFocussed, csSelected);
@@ -66,6 +66,7 @@ type
     function CellsToRect(ACol, ARow, BCol, BRow: Integer): Types.TRect;
 
     procedure RedrawCell(ACol, ARow: Integer);
+    procedure SetSize(ACols, ARows: Integer);
 
     property NumRows: Integer read FNumRows write SetNumRows;
     property NumCols: Integer read FNumCols write SetNumCols;
@@ -113,10 +114,14 @@ type
     procedure SetCell(ACol, ARow: Integer; AValue: string); virtual;
     function GetCellStatus(ACol, ARow: Integer): TCellStatus;
     procedure DoSetFocus(ACol, ARow: Integer);
+    procedure DoDeleteCell(ACol, ARow: Integer); virtual;
 
     function GetSelCount: Integer; virtual;
     function GetSelection(AIdx: Integer): Types.TPoint; virtual;
 
+    procedure CopyToClip; virtual;
+    procedure CutToClip; virtual;
+    procedure PasteFromClip; virtual;
 
     procedure DoDrawObject(Sender: TObject; Rp: PRastPort; DrawRect: TRect); override;
     procedure DoDrawCell(Sender: TObject; ACol, ARow: Integer; RP: PRastPort; ARect: TRect); override;
@@ -142,6 +147,8 @@ type
 
     property SelectionCount: Integer read GetSelCount;
     property Selection[AIdx: Integer]: Types.TPoint read GetSelection;
+
+    procedure DeleteSelectedCells;
 
     property Row: Integer read FRow write SetRow;
     property Col: Integer read FCol write SetCol;
@@ -227,6 +234,18 @@ begin
   GridHeight := H;
   Contents.ExitChange;
   DA.RedrawObject;
+end;
+
+procedure TMUIGrid.SetSize(ACols, ARows: Integer);
+begin
+  BlockRecalcSize := True;
+  try
+    NumCols := ACols;
+    NumRows := ARows;
+  finally
+    BlockRecalcSize := False;
+  end;
+  RecalcSize;
 end;
 
 procedure TMUIGrid.SetGridWidth(AWidth: Integer);
@@ -616,6 +635,7 @@ procedure TMUIStrGrid.DoMouseDown(Sender: TObject; MouseBtn: TMUIMouseBtn; X,Y: 
 var
   CC: Types.TPoint;
   CR: Types.TRect;
+  i: Integer;
 begin
   if MouseBtn = mmbLeft then
   begin
@@ -660,13 +680,42 @@ begin
       if InRange(CC.Y, 0, FNumRows - 1) and InRange(CC.X, 0, FNumCols - 1) then
       begin
         SelectAll(False);
-        AddToRedraw(CC.Y, CC.Y);
         FStrings[CC.X, CC.Y].Selected := True;
         FSelectionList.Add(ColRowToNum(CC.x,CC.y));
         StartPos := CC;
         DoSetFocus(CC.X, CC.Y);
         DA.RedrawObject;
         MouseMode := mmSelectCells;
+        Exit;
+      end;
+    end
+    else
+    begin
+      if (CC.X >= FixedCols) and (CC.Y < FixedRows) then
+      begin
+        SelectAll(False);
+        for i := FixedRows to FNumRows - 1 do
+        begin
+          FStrings[CC.X, i].Selected := True;
+          FSelectionList.Add(ColRowToNum(CC.X, i));
+          AddToRedraw(CC.X, i);
+        end;
+        DoSetFocus(CC.X, FixedRows);
+        DA.RedrawObject;
+        Exit;
+      end
+      else
+      if (CC.Y >= FixedRows) and (CC.X < FixedCols) then
+      begin
+        SelectAll(False);
+        for i := FixedCols to FNumCols - 1 do
+        begin
+          FStrings[i, CC.Y].Selected := True;
+          FSelectionList.Add(ColRowToNum(i, CC.Y));
+          AddToRedraw(i, CC.Y);
+        end;
+        DoSetFocus(FixedCols, CC.Y);
+        DA.RedrawObject;
         Exit;
       end;
     end;
@@ -805,27 +854,23 @@ begin
   DoSetFocus(FCol, ARow);
 end;
 
+procedure TMUIStrGrid.DoDeleteCell(ACol, ARow: Integer);
+begin
+  if InRange(ACol, 0, NumCols - 1) and InRange(ARow, 0, NumRows - 1) then
+    Cells[ACol, ARow] := '';
+end;
 
+procedure TMUIStrGrid.DeleteSelectedCells;
+var
+  i: Integer;
+begin
+  BeginUpdate;
+  for i := 0 to SelectionCount - 1 do
+    DoDeleteCell(Selection[i].X, Selection[i].y);
+  EndUpdate;
+end;
 
 procedure TMUIStrGrid.DoKeyDown(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean);
-  procedure DeleteSelection;
-  var
-    y,x: Integer;
-  begin
-    BeginUpdate;
-    for y := 0 to FNumRows - 1 do
-    begin
-      for x := 0 to FNumCols - 1 do
-      begin
-        if CellStatus[x,y] in [csSelected, csFocussed] then
-        begin
-          Cells[x,y] := '';
-        end;
-      end;
-    end;
-    EndUpdate;
-  end;
-
 var
   x,y: Integer;
   CC, ST, En: Types.TPoint;
@@ -880,35 +925,52 @@ begin
         DA.RedrawObject;
       end
       else
-        DeleteSelection;
+        DeleteSelectedCells;
     66, 67, 68:begin
-      if EditMode then // tab, return, enter
-      begin // enter
-        FEditMode := False;
-        Cells[FCol, FRow] := FEditText;
-      end;
-      SelectAll(False);
-      if Code = 66 then // tab
+      if (mssCtrl in Shift) and EditMode and (Code in [67,68]) then
       begin
-        if mssShift in Shift then
-          DoSetFocus(FCol - 1, FRow)
-        else
-          DoSetFocus(FCol + 1, FRow)
+        FEditText := FEditText + #10;
+        AddToRedraw(Col, Row);
+        DA.RedrawObject;
       end
       else
-        if mssShift in Shift then
-          DoSetFocus(FCol, FRow - 1)
+      begin
+        if EditMode then // tab, return, enter
+        begin // enter
+          FEditMode := False;
+          Cells[FCol, FRow] := FEditText;
+        end;
+        SelectAll(False);
+        if Code = 66 then // tab
+        begin
+          if mssShift in Shift then
+            DoSetFocus(FCol - 1, FRow)
+          else
+            DoSetFocus(FCol + 1, FRow)
+        end
         else
-          DoSetFocus(FCol, FRow + 1);
+          if mssShift in Shift then
+            DoSetFocus(FCol, FRow - 1)
+          else
+            DoSetFocus(FCol, FRow + 1);
+      end;
     end;
     70: begin
       if not EditMode then
-        DeleteSelection; // Delete
+        DeleteSelectedCells; // Delete
     end;
     96, 97: begin
       StartPos.X := FCol;
       StartPos.Y := FRow;
       ShiftMode := True; //Shift
+    end;
+  end;
+  if (mssRAmiga in Shift) or (mssCtrl in Shift) then
+  begin
+    case Key of
+      'c': CopyToClip;
+      'x': CutToClip;
+      'v': PasteFromClip;
     end;
   end;
   EatEvent := True;
@@ -924,6 +986,47 @@ begin
   end;
 end;
 
+procedure TMUIStrGrid.CopyToClip;
+var
+  s: string;
+  i,x,y: Integer;
+  t, MinP, MaxP: Types.TPoint;
+begin
+  s := '';
+  MinP := Point(MaxInt, MaxInt);
+  MaxP := Point(-1, -1);
+  for i := 0 to SelectionCount - 1 do
+  begin
+    t := Selection[i];
+    MinP.X := Min(MinP.X, t.X);
+    MinP.Y := Min(MinP.Y, t.y);
+    MaxP.X := Max(MaxP.X, t.x);
+    MaxP.Y := Max(MaxP.Y, t.y);
+  end;
+  s := '';
+  for y := MinP.Y to MaxP.Y do
+  begin
+    for x := MinP.X to MaxP.Y do
+    begin
+      if x = MinP.X then
+        s := s + Cells[x,y]
+      else
+        s := s + #9 + Cells[x,y];
+    end;
+    s := s + #13#10;
+  end;
+  //PutTextToClip(0, s);
+end;
+
+procedure TMUIStrGrid.CutToClip;
+begin
+end;
+
+procedure TMUIStrGrid.PasteFromClip;
+begin
+end;
+
+
 procedure TMUIStrGrid.DoSetFocus(ACol, ARow: Integer);
 begin
   if (ACol < FNumCols) and (ACol >= FFixedCols) and (ARow < FNumRows) and (ARow >= FFixedRows) and ((ACol <> FCol) or (ARow <> FRow))then
@@ -937,6 +1040,9 @@ begin
     FRow := ARow;
     FCol := ACol;
     AddToRedraw(FCol, FRow);
+    FStrings[FCol, FRow].Selected := True;
+    if FSelectionList.IndexOf(ColRowToNum(FCol, FRow)) < 0 then
+      FSelectionList.Add(ColRowToNum(FCol, FRow));
     if Assigned(FOnCellFocus) then
       FOnCellFocus(Self);
     DA.RedrawObject;
