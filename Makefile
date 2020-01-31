@@ -52,7 +52,7 @@ MUIIDE:
 .PHONY: clean distclean docs
 
 clean:
-	rm -rf html $(ODIR)/*.o $(ODIR)/*.ppu examples/*.o examples/*.ppu ide/*.o ide/*.ppu MUIIDE $(EXAMPLES) *.tar.gz *.tar
+	rm -rf html $(ODIR)/*.o $(ODIR)/*.ppu examples/*.o examples/*.ppu ide/*.o ide/*.ppu src/*.o src/*.ppu MUIIDE $(EXAMPLES) *.tar.gz *.tar
 distclean: clean
 	rm -rf $(BDIR)
 	
