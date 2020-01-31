@@ -28,6 +28,7 @@ type
     FOnDrawCell: TDrawCellEvent;
 
   protected
+    FCol, FRow: Integer; // currently selected cell
     BlockRecalcSize: Boolean;
     IDB: TDrawBuffer;
     ToRedraw: TRedrawList;
@@ -91,7 +92,6 @@ type
   TMUIStrGrid = class(TMUIGrid)
   private
     FOnCellFocus: TNotifyEvent;
-    FCol, FRow: Integer;
     MouseMode: TMouseMode;
     StartPos: Types.TPoint;
     MousePos: Types.TPoint;
@@ -174,6 +174,8 @@ begin
   SetLength(FCellWidth, 0);
   SetLength(FCellHeight, 0);
 
+  FCol := -1;
+  FRow := -1;
   FFixedCols := 1;
   FFixedRows := 1;
   FDefCellHeight := 20;
@@ -371,9 +373,18 @@ begin
         end;
         if (y < FFixedRows) or (x < FFixedCols) then
         begin
-          DB.APen := 0;
-          DB.FillRect(CellRect);
-          DB.Draw3DBox(Rect(CellRect.Left + 1, CellRect.Top + 1, CellRect.Right, CellRect.Bottom));
+          if ((y < FFixedRows) and (x = FCol)) or ((x < FFixedCols) and (y = FRow)) then
+          begin
+            DB.APen := 3;
+            DB.FillRect(CellRect);
+            DB.Draw3DBox(Rect(CellRect.Left + 1, CellRect.Top + 1, CellRect.Right, CellRect.Bottom), False);
+          end
+          else
+          begin
+            DB.APen := 0;
+            DB.FillRect(CellRect);
+            DB.Draw3DBox(Rect(CellRect.Left + 1, CellRect.Top + 1, CellRect.Right, CellRect.Bottom), True);
+          end;
           CellRect.Inflate(-1,-1);
         end
         else
@@ -1037,9 +1048,17 @@ begin
       Cells[FCol, FRow] := FEditText;
     end;
     AddToRedraw(FCol, FRow);
+    if FFixedCols > 0 then
+      AddToRedraw(0, FRow);
+    if FFixedRows > 0 then
+      AddToRedraw(FCol, 0);
     FRow := ARow;
     FCol := ACol;
     AddToRedraw(FCol, FRow);
+    if FFixedCols > 0 then
+      AddToRedraw(0, FRow);
+    if FFixedRows > 0 then
+      AddToRedraw(FCol, 0);
     FStrings[FCol, FRow].Selected := True;
     if FSelectionList.IndexOf(ColRowToNum(FCol, FRow)) < 0 then
       FSelectionList.Add(ColRowToNum(FCol, FRow));
