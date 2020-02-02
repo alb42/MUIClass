@@ -67,6 +67,7 @@ type
     function CellsToRect(ACol, ARow, BCol, BRow: Integer): Types.TRect;
 
     procedure RedrawCell(ACol, ARow: Integer);
+    procedure RedrawAllCells;
     procedure SetSize(ACols, ARows: Integer);
 
     property NumRows: Integer read FNumRows write SetNumRows;
@@ -342,6 +343,13 @@ begin
   AddToRedraw(ACol, ARow);
   DA.RedrawObject;
 end;
+
+procedure TMUIGrid.RedrawAllCells;
+begin
+  AllToRedraw := True;
+  DA.RedrawObject;  
+end;
+
 
 procedure TMUIGrid.InternalDrawCells(Rp: PRastPort; DrawRect: TRect; DoAll: Boolean);
 var
