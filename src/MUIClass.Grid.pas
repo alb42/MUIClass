@@ -143,6 +143,7 @@ type
     procedure EndUpdate;
 
     procedure SelectAll(Select: Boolean);
+    procedure SetFocus(ACol, ARow: Integer);
     property Cells[ACol, ARow: Integer]: string read GetCell write SetCell;
     property CellStatus[ACol, ARow: Integer]: TCellStatus read GetCellStatus;
 
@@ -347,7 +348,7 @@ end;
 procedure TMUIGrid.RedrawAllCells;
 begin
   AllToRedraw := True;
-  DA.RedrawObject;  
+  DA.RedrawObject;
 end;
 
 
@@ -427,6 +428,8 @@ begin
   end;
   if AllToRedraw or (ToRedraw.Count > 0) then
   begin
+    if AllToRedraw then
+      IDB.Clear(2);
     ARect := Rect(0, 0, DrawRect.Width - 1, DrawRect.Height - 1);
     InternalDrawCells(IDB.RP, ARect, AllToRedraw);
   end;
@@ -871,6 +874,11 @@ end;
 procedure TMUIStrGrid.SetRow(ARow: Integer);
 begin
   DoSetFocus(FCol, ARow);
+end;
+
+procedure TMUIStrGrid.SetFocus(ACol, ARow: Integer);
+begin
+  DoSetFocus(ACol, ARow);
 end;
 
 procedure TMUIStrGrid.DoDeleteCell(ACol, ARow: Integer);
