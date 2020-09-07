@@ -876,6 +876,7 @@ begin
           Break;
       end;
     end;
+    CheckSynchronize(1);
     //
     if (FToDestroy.Count > 0) then
     begin

@@ -3,8 +3,8 @@ unit MUIClass.DrawPanel;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math, Types,
-  Exec, Utility, AmigaDOS, Intuition, icon, AGraphics, inputevent,
+  Classes, SysUtils, Math, Types,
+  Utility, Intuition, icon, AGraphics, inputevent,
   keymap, layers,
   mui, muihelper,
   tagsparamshelper, MUIClass.Base, MUIClass.Area;

@@ -208,9 +208,9 @@ end;
 procedure TMUIStringGrid.DisplayEvent(Sender: TObject; ToPrint: PPChar; Entry: PChar);
 var
   Idx, i: Integer;
-  p: PLongInt;
+  p: PPtrInt;
 begin
-  P := PLongInt(ToPrint);
+  P := PPtrInt(ToPrint);
   Dec(P);
   Idx := P^;
   if Idx >= 0 then

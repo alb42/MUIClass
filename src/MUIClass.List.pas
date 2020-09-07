@@ -609,7 +609,7 @@ end;
 function TMUIList.TestPos(x, y: Integer): TMUI_List_TestPos_Result;
 begin
   Result.Entry := -1;
-  Result.Column := -1;
+  Result.column := 0;
   Result.flags := 0;
   Result.xOffset := 0;
   Result.yOffset := 0;
