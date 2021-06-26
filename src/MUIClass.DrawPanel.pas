@@ -150,9 +150,9 @@ begin
   FHeight := AHeight;
   li := NewLayerInfo(); // Layerinfo we also need
   if Assigned(AFriend) then
-    Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_MINPLANES or BMF_DISPLAYABLE, AFriend)
+    Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_DISPLAYABLE or BMF_MINPLANES, AFriend)
   else
-    Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_MINPLANES, nil);
+    Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_DISPLAYABLE or BMF_MINPLANES, nil);
   Layer := CreateUpFrontLayer(li, Bitmap, 0, 0, AWidth - 1, AHeight - 1, LAYERSIMPLE, nil);
   FRP := Layer^.RP;
   APen := 0;
@@ -455,6 +455,7 @@ var
   Mss: TMUIShiftState;
   Buff: array[0..10] of char;
   ie: TInputEvent;
+  IAddr: Pointer;
   {$ifdef AmigaOS4}
   WheelData: PIntuiWheelData;
   {$endif}
@@ -566,6 +567,7 @@ begin
       IsKeyUp := (Msg^.iMsg^.Code and IECODE_UP_PREFIX) <> 0;
       Code := Msg^.iMsg^.Code and not IECODE_UP_PREFIX;
       Qual := Msg^.iMsg^.Qualifier;
+      IAddr := Msg^.iMsg^.IAddress; 
       // Mouse Wheel
       if (Code = $7A) or (Code = $7B) then
       begin
@@ -596,6 +598,7 @@ begin
         ie.ie_SubClass := 0;
         ie.ie_Code := Code;
         ie.ie_Qualifier := Qual and (not (IEQUALIFIER_CONTROL or IEQUALIFIER_LALT));
+        ie.ie_position.ie_addr := PPointer(IAddr)^;
         ie.ie_NextEvent := nil;
         MapRawKey(@ie, @Buff[0], 1, nil);
         // send message
