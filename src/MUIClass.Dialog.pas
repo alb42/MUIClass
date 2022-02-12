@@ -182,7 +182,7 @@ begin
     ASLFR_UserData, AsTag(MUIApp.MUIObj),
     ASLFR_IntuiMsgFunc, AsTag(@IntuiHook)
     ]);
-  FR := MUI_AllocAslRequest(ASL_FileRequest, TagList);
+  FR := AllocAslRequest(ASL_FileRequest, TagList);
   try
     //
     TagList.Clear;
@@ -208,7 +208,7 @@ begin
 
     if not FSaveMode then
       TagList.AddTag(ASLFR_DoMultiSelect, AsTag(FMultiSelect));
-    Result :=  MUI_AslRequest(FR, TagList);
+    Result :=  AslRequest(FR, TagList);
     if Result then
     begin
       FFilename :=  IncludeTrailingPathDelimiter(string(FR^.fr_Drawer)) + string(FR^.fr_File);
@@ -222,7 +222,7 @@ begin
         FFilenames.Add(FFilename);
     end;
   finally
-    MUI_FreeAslRequest(FR);
+    FreeAslRequest(FR);
   end;
 end;
 

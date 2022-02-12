@@ -68,4 +68,24 @@ __recovery/
 lib/*
 examples/TestApp
 examples/HelloWorld
+ide/lib
+*.miprj
+*.bak
+*.ppu
+*.uaem
 
+test.txt
+
+examples/DialogTest
+
+examples/DrawPanel
+
+examples/GridTest
+
+examples/HelloWorld2
+
+examples/StringGridTest
+
+ide/MUIIDE
+
+ide/MUIIDE.ini

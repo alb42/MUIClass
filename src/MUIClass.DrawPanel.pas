@@ -149,10 +149,7 @@ begin
   FWidth := AWidth;
   FHeight := AHeight;
   li := NewLayerInfo(); // Layerinfo we also need
-  if Assigned(AFriend) then
-    Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_DISPLAYABLE or BMF_MINPLANES, AFriend)
-  else
-    Bitmap := AllocBitMap(AWidth, AHeight, ADepth, BMF_DISPLAYABLE or BMF_MINPLANES, nil);
+  Bitmap := AllocBitMap(AWidth, AHeight, ADepth, {$ifdef AROS}0{$else}BMF_DISPLAYABLE or BMF_MINPLANES{$endif}, AFriend);
   Layer := CreateUpFrontLayer(li, Bitmap, 0, 0, AWidth - 1, AHeight - 1, LAYERSIMPLE, nil);
   FRP := Layer^.RP;
   APen := 0;
@@ -567,7 +564,7 @@ begin
       IsKeyUp := (Msg^.iMsg^.Code and IECODE_UP_PREFIX) <> 0;
       Code := Msg^.iMsg^.Code and not IECODE_UP_PREFIX;
       Qual := Msg^.iMsg^.Qualifier;
-      IAddr := Msg^.iMsg^.IAddress; 
+      IAddr := Msg^.iMsg^.IAddress;
       // Mouse Wheel
       if (Code = $7A) or (Code = $7B) then
       begin

@@ -1108,6 +1108,8 @@ begin
     PCs[High(PCs)] := nil;
     ATagList.AddTag(MUIA_Cycle_Entries, AsTag(@(PCs[0])));
   end;
+  if FActive > 0 then
+    ATagList.AddTag(MUIA_Cycle_Active, AsTag(Min(Integer(FActive), Integer(High(FEntries)))));
 end;
 
 procedure TMUICycle.CreateObject;

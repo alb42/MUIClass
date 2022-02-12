@@ -164,9 +164,13 @@ type
     property OnCloseRequest: TCloseReqEvent read FOnCloseRequest write FOnCloseRequest; // Ask the user what to do on Close button click
   end;
 
+  { TMUIAboutMUI }
+
   TMUIAboutMUI = class(TMUIWindow)
   protected
     procedure GetCreateTags(var ATagList: TATagList); override;
+  public
+    procedure CreateObject; override;
   end;
 
 
@@ -916,8 +920,28 @@ end;
 
 procedure TMUIAboutMUI.GetCreateTags(var ATagList: TATagList);
 begin
-  inherited;
-  ATagList.AddTag(MUIA_Aboutmui_Application, AsTag(MUIApp));
+  //inherited; // do not add the standard window stuff
+  //ATagList.AddTag(MUIA_Aboutmui_Application, AsTag(MUIApp.MUIObj)); // do not finish properly! removed for now!
+  if Assigned(FRefWindow) then
+  begin
+    FRefWindow.CreateObject;
+    ATagList.AddTag(MUIA_Window_RefWindow, AsTag(FRefWindow.MUIObj));
+  end;
+end;
+
+procedure TMUIAboutMUI.CreateObject;
+var
+  TagList: TATagList;
+begin
+  if not Assigned(FMUIObj) then
+  begin
+    BeforeCreateObject;
+    //
+    TagList.Clear;
+    GetCreateTags(TagList);
+    FMUIObj := MUI_NewObjectA(MUIC_AboutMUI, TagList.GetTagPointer);
+    AfterCreateObject;
+  end;
 end;
 
 
