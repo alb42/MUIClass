@@ -3,8 +3,8 @@ unit MUIClass.Window;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
+  Classes, SysUtils, fgl,
+  Utility, Intuition, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base;
 {$M+}
 type
@@ -380,6 +380,8 @@ begin
   end;
   // User has no objection, close the Window
   case CloseAction of
+    caNone: begin
+    end;
     caClose: PasObj.Close;
     caFree:
     begin

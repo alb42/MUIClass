@@ -13,7 +13,7 @@ unit TagsParamsHelper;
 interface
 
 uses
-  Exec, Utility,
+  Utility,
   Classes, SysUtils, Math;
 
 const

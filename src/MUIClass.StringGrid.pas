@@ -2,9 +2,9 @@ unit MUIClass.StringGrid;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Area, MUIClass.List, MUIClass.Group;
+  Classes, SysUtils,
+  Exec, Utility, Intuition, icon, mui,
+  MUIClass.Base, MUIClass.List, MUIClass.Group;
 type
   {$M+}
 
