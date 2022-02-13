@@ -103,10 +103,7 @@ end;
 
 procedure TMUIStringGrid.DestEvent(Sender: TObject; Pool: Pointer; Entry: PChar);
 begin
-  {$ifndef AROS}
   FreePooled(Pool, Entry, 2);
-  {$endif}
-  //
 end;
 
 procedure TMUIStringGrid.UpdateFormat;
@@ -124,7 +121,7 @@ begin
   end;
   List.Format := NF;
   if not Quiet then
-    List.Redraw(-1);
+    List.Redraw(MUIV_List_Redraw_All);
 end;
 
 function TMUIStringGrid.GetNumColumns: Integer;
@@ -290,9 +287,9 @@ end;
 
 procedure TMUIStringGrid.SetQuiet(AValue: Boolean);
 begin
+  if not AValue then
+    List.Redraw(MUIV_List_Redraw_All);
   List.Quiet := AValue;
-  if HasObj and not AValue then
-    MUI_Redraw(List.MUIObj, MADF_DRAWOBJECT);
 end;
 
 end.
