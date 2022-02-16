@@ -3,7 +3,7 @@ unit MUIClass.Window;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl,
+  Classes, SysUtils, fgl, Exec,
   Utility, Intuition, icon, mui, muihelper,
   tagsparamshelper, MUIClass.Base;
 {$M+}

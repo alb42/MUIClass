@@ -144,12 +144,16 @@ end;
 procedure TMUIStringGrid.SetNumRows(AValue: Integer);
 var
   i: Integer;
+  OldQuiet: Boolean;
 begin
+  if FNumRows = AValue then
+    Exit;
   FNumRows := AValue;
   for i := 0 to High(FColumns) do
     SetLength(FColumns[i].Rows, FNumRows);
   if HasObj then
   begin
+    OldQuiet := List.Quiet;
     List.Quiet := True;
     List.Clear;
     SetLength(TempRows, AValue);
@@ -158,7 +162,7 @@ begin
       TempRows[i] := IntToStr(i);
       List.InsertSingle(PChar(TempRows[i]), MUIV_List_Insert_Bottom);
     end;
-    List.Quiet := Quiet;
+    List.Quiet := OldQuiet;
   end;
 end;
 

@@ -182,7 +182,7 @@ begin
     ASLFR_UserData, AsTag(MUIApp.MUIObj),
     ASLFR_IntuiMsgFunc, AsTag(@IntuiHook)
     ]);
-  FR := AllocAslRequest(ASL_FileRequest, TagList);
+  FR := AllocAslRequest(ASL_FileRequest, TagList.GetTagPointer);
   try
     //
     TagList.Clear;
@@ -208,7 +208,7 @@ begin
 
     if not FSaveMode then
       TagList.AddTag(ASLFR_DoMultiSelect, AsTag(FMultiSelect));
-    Result :=  AslRequest(FR, TagList);
+    Result :=  AslRequest(FR, TagList.GetTagPointer);
     if Result then
     begin
       FFilename :=  IncludeTrailingPathDelimiter(string(FR^.fr_Drawer)) + string(FR^.fr_File);
@@ -255,7 +255,7 @@ begin
     ASLFO_IntuiMsgFunc, AsTag(@IntuiHook),
     ASLFO_TitleText, AsTag(PChar(FTitleText))
     ]);
-  FR := MUI_AllocAslRequest(ASL_FontRequest, TagList);
+  FR := MUI_AllocAslRequest(ASL_FontRequest, TagList.GetTagPointer);
   try
     //
     TagList.Clear;
@@ -287,7 +287,7 @@ begin
     if FDrawMode >= 0 then
       TagList.AddTag(ASLFO_InitialDrawMode, FDrawMode);
     //
-    Result :=  MUI_AslRequest(FR, TagList);
+    Result :=  MUI_AslRequest(FR, TagList.GetTagPointer);
     if Result then
     begin
       FName := FR^.fo_Attr.ta_Name;
@@ -337,7 +337,7 @@ begin
     ASLSM_IntuiMsgFunc, AsTag(@IntuiHook),
     ASLSM_TitleText, AsTag(PChar(FTitleText))
     ]);
-  FR := MUI_AllocAslRequest(ASL_ScreenModeRequest, TagList);
+  FR := MUI_AllocAslRequest(ASL_ScreenModeRequest, TagList.GetTagPointer);
   try
     //
     TagList.Clear;
@@ -381,7 +381,7 @@ begin
     if FMaxDepth <> 0 then
       TagList.AddTag(ASLSM_MaxDepth, AsTag(FMaxDepth));
     //
-    Result :=  MUI_AslRequest(FR, TagList);
+    Result :=  MUI_AslRequest(FR, TagList.GetTagPointer);
     if Result then
     begin
       FDisplayID := FR^.sm_DisplayID;
