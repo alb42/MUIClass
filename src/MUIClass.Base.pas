@@ -20,6 +20,7 @@ type
 
   TIOnlyEvent = procedure(AClass: TObject; Field, Value: string) of object;
   TExceptionEvent = procedure(Sender: TObject; E: Exception) of object;
+  TRexxMsgEvent = function(Sender: TObject; Msg: string; out ReturnMessage: string): LongInt of object;
 
   TMUITimer = class;
 
@@ -109,6 +110,8 @@ type
 
   TTimerList = specialize TFPGObjectList<TMUITimer>;
 
+  { TMUIApplication }
+
   TMUIApplication = class(TMUINotify)
   private
     FToDestroy: TChildList;
@@ -135,8 +138,10 @@ type
     FUseCommodities: Boolean; //* True
     FTitle: string;           //* ''
     FVersion: string;         //* ''
+    FUseRexx: Boolean;        //* True
     FMenuStrip: TMUINotify; //
     FOnException: TExceptionEvent;
+    FOnRexxMsg: TRexxMsgEvent;
     procedure SetActive(AValue: Boolean);
     function GetActive: Boolean;
     procedure SetAuthor(AValue: string);
@@ -158,6 +163,7 @@ type
     procedure SetTitle(AValue: string);
     procedure SetVersion(AValue: string);
     procedure SetMenuStrip(AValue: TMUINotify);
+    procedure SetUseRexx(AValue: Boolean);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -217,6 +223,7 @@ type
     property UseCommodities: Boolean read FUseCommodities write SetUseCommodities;
     // Usedclasses
     // UseRexx (No REXX in AROS)
+    property UseRexx: boolean read FUseRexx write SetUseRexx default True ;
     property Version: string read FVersion write SetVersion;
 
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
@@ -226,6 +233,7 @@ type
     property OnIconify: TNotifyEvent read FOnIconify write FOnIconify;
     property OnRestore: TNotifyEvent read FOnRestore write FOnRestore;
     property OnException: TExceptionEvent read FOnException write FOnException;
+    property OnRexxMsg: TRexxMsgEvent read FOnRexxMsg write FOnRexxMsg;
   end;
 
   TMUIWithParent = class(TMUINotify)
@@ -663,6 +671,7 @@ begin
   FTitle := ExtractFilename(ParamStr(0));
   FVersion := '';
   FMenuStrip := nil;
+  FUseRexx := True;
 end;
 
 destructor TMUIApplication.Destroy;
@@ -681,9 +690,53 @@ begin
   inherited;
 end;
 
+type
+  TRexxMsg = record
+    rm_Node: TMessage;
+    rm_TaskBlock: APTR;
+    rm_LibBase: APTR;
+    rm_Action: LongInt;
+    rm_Result1: LongInt;
+    rm_Result2: PtrInt;
+    rm_Args: array[0..15] of STRPTR;
+    rm_MsgPort: PMsgPort;
+    rm_CommAddr: STRPTR;
+    rm_FileExt: STRPTR;
+    rm_Stdin: BPTR;
+    rm_Stdout: BPTR;
+    rm_Avail: LongInt;
+  end;
+  PRexxMsg = ^TRexxMsg;
+
+function RexxFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  RexxMsg: PRexxMsg;
+  PasObj: TMUIApplication;
+  Txt: String;
+begin
+  try
+    Result := 0;
+    PasObj := TMUIApplication(Hook^.h_Data);
+    if Assigned(PasObj.FOnRexxMsg) and Assigned(Msg) then
+    begin
+      RexxMsg := Msg;
+      Result := PasObj.FOnRexxMsg(PasObj, RexxMsg^.rm_Args[0], Txt);
+      if Txt <> '' then
+      begin
+        Txt := Txt + #13#10;
+        DosWrite(RexxMsg^.rm_Stdout, PChar(Txt), Length(Txt));
+      end;
+    end;
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
+end;
+
 procedure TMUIApplication.GetCreateTags(var ATagList: TATagList);
 var
   i: Integer;
+  Hook: PHook;
 begin
   inherited;
   for i := 0 to FChilds.Count - 1 do
@@ -716,6 +769,12 @@ begin
     FMenuStrip.CreateObject;
     ATagList.AddTag(MUIA_Application_MenuStrip, AsTag(FMenuStrip.MuiObj));
   end;
+  if not FUseRexx then
+    ATagList.AddTag(MUIA_Application_UseRexx, AsTag(FUseRexx));
+  // rexx hook
+  Hook := HookList.GetNewHook;
+  MH_SetHook(Hook^, @RexxFunc, Self);
+  ATagList.AddTag(MUIA_Application_RexxHook, AsTag(Hook));
 end;
 
 procedure TMUIApplication.CreateObject;
@@ -1217,6 +1276,17 @@ begin
       ComplainIOnly(Self, 'MUIA_Application_MenuStrip', HexStr(AValue))
     else
       FMenuStrip := AValue;
+  end;
+end;
+
+procedure TMUIApplication.SetUseRexx(AValue: Boolean);
+begin
+  if AValue <> FUseRexx then
+  begin
+    if Assigned(FMUIObj) then
+      ComplainIOnly(Self, 'MUIA_Application_UseRexx', BoolToStr(AValue, True))
+    else
+      FUseRexx := AValue;
   end;
 end;
 
