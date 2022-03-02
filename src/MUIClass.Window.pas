@@ -336,6 +336,8 @@ function ActivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIWindow;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIWindow(Hook^.h_Data);
@@ -351,6 +353,8 @@ function DeactivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIWindow;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIWindow(Hook^.h_Data);
@@ -367,6 +371,8 @@ var
   PasObj: TMUIWindow;
   CloseAction: TCloseAction;
 begin
+  Unused(Obj);
+  Unused(Msg);
   CloseAction := caClose;
   Result := 0;
   PasObj := TMUIWindow(Hook^.h_Data);

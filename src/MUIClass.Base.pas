@@ -304,6 +304,8 @@ type
 
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 
+procedure Unused(var a);
+
 var
   MUIApp: TMUIApplication = nil;
   OnIOnlyWarning: TIOnlyEvent = nil;
@@ -313,6 +315,12 @@ implementation
 
 uses
   MUIClass.Window, MUIClass.Dialog;
+
+{$HINTS OFF}
+procedure Unused(var a);
+begin
+end;
+{$HINTS ON}
 
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 begin
