@@ -4,7 +4,7 @@ unit MUIClass.Base;
 interface
 
 uses
-  Classes, SysUtils, fgl, Math,
+  Classes, SysUtils, fgl, Math, AGraphics,
   Exec, Utility, AmigaDOS, Intuition, icon,
   {$ifndef AmigaOS4} // OS4 still no commodities unit
   Commodities,
@@ -75,6 +75,8 @@ type
 
   TChildList = specialize TFPGObjectList<TMUIRootclass>;
 
+  { TMUINotify }
+
   TMUINotify = class(TMUIRootClass)
   private
     FHelpLine: Integer;
@@ -98,6 +100,8 @@ type
 
     procedure DestroyObject; override;
     procedure ClearObject; override;
+
+    function GetConfigData(Id: LongWord): PtrUInt;
 
     procedure AddChild(AChild: TMUINotify); virtual;
     procedure RemoveChild(AChild: TMUINotify); virtual;
@@ -301,6 +305,12 @@ type
     property Interval: Integer read FInterVal write FInterval;
     property OnTimer: TNotifyEvent read FOnTimer write FOnTimer;
   end;
+
+type
+  TMUIFontKind = (fkNormal, fkFixed, fkTiny, fkBig, fkButton, fkKnob, fkList, fkTitle);
+
+function OpenMUIFont(FontKind: TMUIFontKind): PTextFont;
+procedure CloseMUIFont(var Font: PTextFont);
 
 procedure ComplainIOnly(AClass: TObject; Field, Value: string);
 
@@ -546,6 +556,13 @@ begin
   inherited;
 end;
 
+function TMUINotify.GetConfigData(Id: LongWord): PtrUInt;
+begin
+  Result := 0;
+  if Assigned(MUIObj) then
+    DoMethod(MUIObj, [MUIM_GetConfigItem, Id, AsTag(@Result)]);
+end;
+
 procedure TMUINotify.DoFirstOpen;
 var
   i: Integer;
@@ -652,6 +669,62 @@ begin
     if HasObj then
       SetValue(MUIA_HelpNode, AsTag(PChar(FHelpNode)));
   end;
+end;
+
+
+const
+  MUICFG_Font_Normal = $1e;
+  MUICFG_Font_List   = $1f;
+  MUICFG_Font_Tiny   = $20;
+  MUICFG_Font_Fixed  = $21;
+  MUICFG_Font_Title  = $22;
+  MUICFG_Font_Big    = $23;
+  MUICFG_Font_Button = $80;
+  MUICFG_Font_Knob   = $88;
+
+function OpenMUIFont(FontKind: TMUIFontKind): PTextFont;
+var
+  d: PChar;
+  TextAttr: TTextAttr;
+  Typ: LongWord;
+  s, FontName: String;
+  n: SizeInt;
+begin
+  Result := nil;
+  if not Assigned(MUIApp) then
+    Exit;
+  case FontKind of
+    fkNormal: Typ := MUICFG_Font_Normal;
+    fkFixed: Typ := MUICFG_Font_Fixed;
+    fkTiny: Typ := MUICFG_Font_Tiny;
+    fkBig: Typ := MUICFG_Font_Big;
+    fkButton: Typ := MUICFG_Font_Button;
+    fkKnob: Typ := MUICFG_Font_Knob;
+    fkList: Typ := MUICFG_Font_List;
+    fkTitle: Typ := MUICFG_Font_Title;
+  end;
+  d := PChar(MUIApp.GetConfigData(Typ));
+  if Assigned(d) then
+  begin
+    s := string(d);
+    n := Pos('/', s);
+    if n > 1 then
+    begin
+      FontName := Copy(s, 1, n - 1) + '.font';
+      TextAttr.ta_YSize := StrToIntDef(Copy(s, n + 1, Length(s)), 8);
+      TextAttr.ta_Name := PChar(FontName);
+      TextAttr.ta_Flags := FPF_ROMFONT or FPF_DISKFONT;
+      TextAttr.ta_Style := FS_NORMAL;
+      Result := OpenFont(@TextAttr);
+    end;
+  end;
+end;
+
+procedure CloseMUIFont(var Font: PTextFont);
+begin
+  if Assigned(Font) then
+    CloseFont(Font);
+  Font := nil;
 end;
 
 { TMUIApplication }
