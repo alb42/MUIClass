@@ -1015,14 +1015,9 @@ end;
 
 procedure TMUIArea.SetShowMe(AValue: Boolean);
 begin
-  if AValue <> FShowMe then
-  begin
-    FShowMe := AValue;
-    if HasObj then
-    begin
-      SetValue(MUIA_ShowMe, AsTag(FShowMe));
-    end;
-  end;
+  FShowMe := AValue;
+  if HasObj then
+    SetValue(MUIA_ShowMe, AsTag(FShowMe));
 end;
 
 procedure TMUIArea.SetShowSelState(AValue: Boolean);
