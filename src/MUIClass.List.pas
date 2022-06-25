@@ -543,7 +543,7 @@ function TMUIList.GetEntry(Pos: Integer): Pointer;
 begin
   Result := nil;
   if HasObj then
-    Result := Pointer(DoMethod(MuiObj, [MUIM_List_GetEntry, Pos, AsTag(@Result)]));
+    DoMethod(MuiObj, [MUIM_List_GetEntry, Pos, AsTag(@Result)]);
 end;
 
 procedure TMUIList.Insert(Entries: PPChar; Count: Integer; Pos: Integer);
