@@ -24,6 +24,7 @@ type
     FFileName: string;
     FDirectory: string;
     FPattern: string;
+    FDrawersOnly: Boolean;
     FFilenames: TStringList;
   public
     constructor Create; virtual;
@@ -34,6 +35,7 @@ type
     property Directory: string read FDirectory write FDirectory; // Initial and result Directory
     property FileName: string read FFileName write FFileName; // inital and result filename
     property FileNames: TStringList read FFileNames;
+    property DrawersOnly: Boolean read FDrawersOnly write FDrawersOnly;
   end;
 
   TFontDialogOptions = set of (foFrontPen, foBackPen, foStyle, foDrawMode, foFixedOnly);
@@ -137,6 +139,7 @@ begin
   FDirectory := '';
   FPattern := '';
   FMultiSelect := False;
+  FDrawersOnly := False;
   FSaveMode := False;
 end;
 
@@ -187,6 +190,7 @@ begin
     //
     TagList.Clear;
     TagList.AddTags([
+      ASLFR_DrawersOnly, AsTag(FDrawersOnly),
       ASLFR_DoSaveMode, AsTag(FSaveMode),
       ASLFR_TitleText, AsTag(PChar(FTitleText))
       ]);
