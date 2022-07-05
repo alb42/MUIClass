@@ -98,17 +98,17 @@ type
     property AutoScroll: Boolean read FAutoScroll write FAutoScroll;
   end;
 
-procedure ShowMessage(Text: string; HeadText: string = 'Message');
+procedure ShowMessage(Text: string; HeadText: string = 'Message'; OKText: string = '_OK');
 function MessageBox(HeadText, Text: string; Buttons: TStringArray): Integer;
 
 implementation
 
-procedure ShowMessage(Text: string; HeadText: string = 'Message');
+procedure ShowMessage(Text: string; HeadText: string = 'Message'; OKText: string = '_OK');
 begin
   if Assigned(MUIApp.MainWindow) then
-    MUI_RequestA(MuiApp.MUIObj, MuiApp.MainWindow.MUIObj, 0, PChar(HeadText), PChar('OK'), PChar(Text), nil)
+    MUI_RequestA(MuiApp.MUIObj, MuiApp.MainWindow.MUIObj, 0, PChar(HeadText), PChar(OKText), PChar(Text), nil)
   else
-    MUI_RequestA(nil, nil, 0, PChar(HeadText), PChar('OK'), PChar(Text), nil);
+    MUI_RequestA(nil, nil, 0, PChar(HeadText), PChar(OKText), PChar(Text), nil);
 end;
 
 function MessageBox(HeadText, Text: string; Buttons: TStringArray): Integer;
