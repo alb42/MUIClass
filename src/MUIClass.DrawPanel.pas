@@ -536,7 +536,7 @@ begin
         WheelData := PIntuiWheelData(Msg^.imsg^.IAddress);
         // Mouse wheel with Value 120 (from the other interfaces)
         if Assigned(FOnMUIMouseWheel) then
-          FOnMUIMouseWheel(Self, WheelData^.WheelY > 0, EatMe);
+          FOnMUIMouseWheel(Self, WheelData^.WheelY < 0, EatMe);
       end;
     end;
     {$endif}
