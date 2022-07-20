@@ -89,3 +89,9 @@ examples/StringGridTest
 ide/MUIIDE
 
 ide/MUIIDE.ini
+
+examples/backup/
+
+*.compiled
+
+examples/ImageTest
