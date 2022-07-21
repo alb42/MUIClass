@@ -26,6 +26,7 @@ SOURCES=$(wildcard src/*.pas)
 OBJECTS=$(patsubst src/%.pas, $(ODIR)/%.o, $(SOURCES))
 EXSRC=$(wildcard examples/*.pas)
 EXAMPLES=$(patsubst examples/%.pas, examples/%, $(EXSRC))
+IMAGES=$(wildcard examples/*.png)
 
 all: $(ODIR) $(OBJECTS)
 
@@ -34,7 +35,7 @@ ide: all MUIIDE
 examples: all $(EXAMPLES)
 
 zip: all MUIIDE examples
-	-tar cvf MUIClass.$(CPU)-$(OS).tar --warning=no-file-changed $(ODIR) ide/MUIIDE $(EXSRC) $(EXAMPLES)
+	-tar cvf MUIClass.$(CPU)-$(OS).tar --warning=no-file-changed $(ODIR) ide/MUIIDE $(EXSRC) $(EXAMPLES) $(IMAGES)
 	gzip -f MUIClass.$(CPU)-$(OS).tar
 
 $(ODIR)/%.o: src/%.pas
