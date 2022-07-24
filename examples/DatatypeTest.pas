@@ -1,5 +1,5 @@
 program DatatypeTest;
-
+{$mode objfpc}{$H+}
 uses
   Types, MUIClass.Base, MUIClass.Window, MUIClass.DrawPanel, AGraphics, MUIClass.Datatypes, Intuition;
 type
