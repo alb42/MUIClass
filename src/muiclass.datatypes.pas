@@ -197,7 +197,7 @@ begin
   FName := AFilename;
   fh := DosOpen(PChar(fName), MODE_NEWFILE);
   Msg.dtw_FileHandle := fh;
-  Msg.dtw_Mode := DTWM_RAW;
+  Msg.dtw_Mode := DTWM_IFF;
   Msg.dtw_AttrList := nil;
   //
   if fh = BPTR(0) then

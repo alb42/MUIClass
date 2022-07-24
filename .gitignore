@@ -87,3 +87,5 @@ examples/ImageTest
 *.lpi
 *.lps
 examples/DatatypeTest
+
+src/backup/

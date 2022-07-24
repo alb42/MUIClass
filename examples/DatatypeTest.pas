@@ -63,7 +63,7 @@ begin
   DT[False].LoadFile('test2.png');
 
   DT[true].SaveFile('Ram:test');
-  DT[False].SaveFile('Ram:test');
+  DT[False].SaveFile('Ram:test2');
 
 
   MUIApp.Run;        // lets go
