@@ -86,3 +86,4 @@ examples/backup/
 examples/ImageTest
 *.lpi
 *.lps
+examples/DatatypeTest

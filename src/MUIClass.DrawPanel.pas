@@ -26,6 +26,8 @@ type
     RSecs, RMicros: LongWord;
   end;
 
+  { TDrawBuffer }
+
   TDrawBuffer = class
   private
     li: PLayer_Info;
@@ -36,10 +38,12 @@ type
     FHeight: Integer;
     OwnsRP: Boolean;
   private
-    procedure SetPenA(Pen: LongInt);
+    function GetDrawMode: Integer;
+    procedure SetDrawMode(AValue: Integer);
     function GetPenA: LongInt;
-    procedure SetPenB(Pen: LongInt);
+    procedure SetPenA(AValue: Integer);
     function GetPenB: LongInt;
+    procedure SetPenB(AValue: Integer);
 
     procedure SetPenPos(APenPos: TPoint);
     function GetPenPos: TPoint;
@@ -53,6 +57,13 @@ type
     procedure DrawRect(const x1, y1, x2, y2: Integer); overload;
     procedure DrawRect(const ARect: Types.TRect); overload;
     procedure Draw3DBox(const ARect: Types.TRect; IsUp: Boolean = True);
+    procedure DrawCircle(const x,y, r: Integer); overload;
+    procedure DrawCircle(const Pt: TPoint; const r: Integer); overload;
+    procedure DrawCircle(const ARect: Types.TRect); overload;
+    procedure DrawEllipse(const x,y, a,b: Integer); overload;
+    procedure DrawEllipse(const Pt: TPoint; const a, b: Integer); overload;
+    procedure DrawEllipse(const ARect: Types.TRect); overload;
+
     procedure FillRect(const x1, y1, x2, y2: Integer); overload;
     procedure FillRect(const ARect: Types.TRect); overload;
 
@@ -64,7 +75,9 @@ type
 
     procedure DrawToRastPort(x, y: Integer; DestRP: PRastPort); overload;
     procedure DrawToRastPort(x, y, SrcWidth, SrcHeight: Integer; DestRP: PRastPort); overload;
+    procedure StretchDrawToRastPort(x, y, DestWidth, DestHeight: Integer; DestRP: PRastPort);
 
+    procedure Resize(NewWidth, NewHeight: Integer; ScaleImage: Boolean = False);
 
     property RP: PRastPort read FRP;
     property Width: Integer read FWidth;
@@ -73,6 +86,7 @@ type
 
     property APen: Integer read GetPenA write SetPenA;
     property BPen: Integer read GetPenB write SetPenB;
+    property DrawMode: Integer read GetDrawMode write SetDrawMode;
     property PenPos: TPoint read GetPenPos write SetPenPos;
   end;
 
@@ -159,9 +173,12 @@ end;
 constructor TDrawBuffer.Create(ARP: PRastPort);
 begin
   OwnsRP := False;
+  Li := nil;
   FRP := ARP;
-  FWidth := ARP^.Bitmap^.BytesPerRow div 8 * ARP^.Bitmap^.Depth;
-  FHeight := ARP^.Bitmap^.Rows;
+  FWidth := GetBitMapAttr(ARP^.Bitmap, BMA_WIDTH);
+  FHeight := GetBitMapAttr(ARP^.Bitmap, BMA_HEIGHT);
+  Bitmap := ARP^.BitMap;
+  Layer := ARP^.Layer;
 end;
 
 destructor TDrawBuffer.Destroy;
@@ -169,15 +186,26 @@ begin
   if OwnsRP then
   begin
     DeleteLayer(0, Layer);
-    DisposeLayerInfo(li);
+    if Assigned(li) then
+      DisposeLayerInfo(li);
     FreeBitMap(Bitmap);
   end;
   inherited;
 end;
 
-procedure TDrawBuffer.SetPenA(Pen: LongInt);
+function TDrawBuffer.GetDrawMode: Integer;
 begin
-  SetAPen(FRP, Pen);
+  Result := GetDrMd(FRP);
+end;
+
+procedure TDrawBuffer.SetDrawMode(AValue: Integer);
+begin
+  SetDrMd(FRP, AValue);
+end;
+
+procedure TDrawBuffer.SetPenA(AValue: Integer);
+begin
+  SetAPen(FRP, AValue);
 end;
 
 function TDrawBuffer.GetPenA: LongInt;
@@ -185,9 +213,9 @@ begin
   Result := GetAPen(FRP);
 end;
 
-procedure TDrawBuffer.SetPenB(Pen: LongInt);
+procedure TDrawBuffer.SetPenB(AValue: Integer);
 begin
-  SetBPen(FRP, Pen);
+  SetBPen(FRP, AValue);
 end;
 
 function TDrawBuffer.GetPenB: LongInt;
@@ -234,6 +262,38 @@ begin
   AGraphics.Draw(FRP, ARect.Right, ARect.Bottom);
   AGraphics.Draw(FRP, ARect.Left, ARect.Bottom);
   APen := SPen;
+end;
+
+procedure TDrawBuffer.DrawCircle(const x, y, r: Integer);
+begin
+  if r <= 0 then
+    Exit;
+  AGraphics.DrawEllipse(FRP, x, y, r, r);
+end;
+
+procedure TDrawBuffer.DrawCircle(const Pt: TPoint; const r: Integer);
+begin
+  Self.DrawCircle(Pt.X, Pt.Y, r);
+end;
+
+procedure TDrawBuffer.DrawCircle(const ARect: Types.TRect);
+begin
+  Self.DrawCircle(ARect.CenterPoint.X, ARect.CenterPoint.Y, Min(ARect.Width, ARect.Height) div 2);
+end;
+
+procedure TDrawBuffer.DrawEllipse(const x, y, a, b: Integer);
+begin
+  AGraphics.DrawEllipse(FRP, x, y, a, b);
+end;
+
+procedure TDrawBuffer.DrawEllipse(const Pt: TPoint; const a, b: Integer);
+begin
+  Self.DrawEllipse(Pt.x, Pt.Y, a ,b);
+end;
+
+procedure TDrawBuffer.DrawEllipse(const ARect: Types.TRect);
+begin
+  Self.DrawEllipse(ARect.CenterPoint.X, ARect.CenterPoint.Y, ARect.Width div 2, ARect.Height div 2);
 end;
 
 procedure TDrawBuffer.Clear(Pen: Integer = 0);
@@ -291,6 +351,93 @@ end;
 procedure TDrawBuffer.DrawToRastPort(x, y, SrcWidth, SrcHeight: Integer; DestRP: PRastPort);
 begin
   ClipBlit(FRP, 0, 0, DestRP, x, y, SrcWidth, SrcHeight, $00C0);
+end;
+
+procedure TDrawBuffer.StretchDrawToRastPort(x, y, DestWidth, DestHeight: Integer; DestRP: PRastPort);
+var
+  NewBitmap: PBitMap;
+  BSA: TBitScaleArgs;
+begin
+  NewBitmap := AllocBitMap(DestWidth, DestHeight, Bitmap^.Depth, (*{$ifdef AROS}0{$else}BMF_DISPLAYABLE or BMF_MINPLANES{$endif}*)0, Bitmap);
+  try
+    BSA.bsa_Reserved1 := 0; // to prevent not initialized for FillChar
+    FillChar(BSA, SizeOf(BSA), 0);
+    BSA.bsa_DestBitMap := NewBitmap;
+    BSA.bsa_DestHeight := DestHeight;
+    BSA.bsa_DestWidth := DestWidth;
+    BSA.bsa_XDestFactor := DestWidth;
+    BSA.bsa_YDestFactor := DestHeight;
+    BSA.bsa_DestX := 0;
+    BSA.bsa_DestY := 0;
+    BSA.bsa_SrcBitMap := Bitmap;
+    BSA.bsa_SrcHeight := Height;
+    BSA.bsa_SrcWidth := Width;
+    BSA.bsa_XSrcFactor := Width;
+    BSA.bsa_YSrcFactor := Height;
+    BSA.bsa_SrcX := 0;
+    BSA.bsa_SrcY := 0;
+    BitmapScale(@BSA);
+
+    BltBitMapRastPort(NewBitmap, 0, 0, DestRP, x, y, DestWidth, DestHeight, $00c0);
+  finally
+    FreeBitMap(Bitmap);
+  end;
+end;
+
+procedure TDrawBuffer.Resize(NewWidth, NewHeight: Integer; ScaleImage: Boolean);
+var
+  NewBitmap: PBitMap;
+  NewLayer: PLayer;
+  NewRP: PRastPort;
+  BSA: TBitScaleArgs;
+begin
+  if (NewWidth = Width) and (NewHeight = Height) then
+    Exit;
+  if not Assigned(li) then
+    li := NewLayerInfo();
+  NewBitmap := AllocBitMap(NewWidth, NewHeight, Bitmap^.Depth, (*{$ifdef AROS}0{$else}BMF_DISPLAYABLE or BMF_MINPLANES{$endif}*)0, Bitmap);
+  NewLayer := CreateUpFrontLayer(li, NewBitmap, 0, 0, NewWidth - 1, NewHeight - 1, LAYERSIMPLE, nil);
+  NewRP := NewLayer^.RP;
+
+  SetAPen(NewRP, GetPenA);
+  SetBPen(NewRP, GetPenB);
+  SetRast(NewRP, GetPenA);
+
+  if not ScaleImage then
+  begin
+    BltBitMapRastPort(Bitmap, 0, 0, NewRP, 0, 0, Width, Height, $00c0);
+  end
+  else
+  begin
+    BSA.bsa_Reserved1 := 0; // to prevent not initialized for FillChar
+    FillChar(BSA, SizeOf(BSA), 0);
+    BSA.bsa_DestBitMap := NewBitmap;
+    BSA.bsa_DestHeight := NewHeight;
+    BSA.bsa_DestWidth := NewWidth;
+    BSA.bsa_XDestFactor := NewWidth;
+    BSA.bsa_YDestFactor := NewHeight;
+    BSA.bsa_DestX := 0;
+    BSA.bsa_DestY := 0;
+    BSA.bsa_SrcBitMap := Bitmap;
+    BSA.bsa_SrcHeight := Height;
+    BSA.bsa_SrcWidth := Width;
+    BSA.bsa_XSrcFactor := Width;
+    BSA.bsa_YSrcFactor := Height;
+    BSA.bsa_SrcX := 0;
+    BSA.bsa_SrcY := 0;
+    BitmapScale(@BSA)
+  end;
+  if OwnsRP then
+  begin
+    DeleteLayer(0, Layer);
+    FreeBitMap(Bitmap);
+  end;
+  FWidth := NewWidth;
+  FHeight := NewHeight;
+  Layer := NewLayer;
+  Bitmap := NewBitmap;
+  FRP := NewRP;
+  OwnsRP := True;
 end;
 
 
