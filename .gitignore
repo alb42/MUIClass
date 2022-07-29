@@ -89,3 +89,5 @@ examples/ImageTest
 examples/DatatypeTest
 
 src/backup/
+
+examples/CustomTree
