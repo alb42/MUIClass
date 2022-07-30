@@ -86,6 +86,9 @@ var
   TE: TTextExtent;
   y, YStart: Integer;
   OldFont: pTextFont;
+  LocalRP: PRastPort;
+  LocalRect: TRect;
+  DB: TDrawBuffer;
 
   procedure DrawChilds(LocalIndent: Integer; NodeList: TMUITreeNodeList);
   var
@@ -100,20 +103,20 @@ var
     begin
       Node := NodeList[i];
       if LastHadChild then
-        GFXMove(RP, DrawRect.Left + LocalIndent - 15, DrawRect.Top + LastY + 3)
+        GFXMove(LocalRP, LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY + 3)
       else
-        GFXMove(RP, DrawRect.Left + LocalIndent - 15, DrawRect.Top + LastY);
+        GFXMove(LocalRP, LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY);
       LastY := y - TH div 4 - 1;
-      Draw(RP,DrawRect.Left + LocalIndent - 15, DrawRect.Top + LastY);
-      Draw(RP,DrawRect.Left + LocalIndent - 5, DrawRect.Top + LastY);
-      GFXMove(RP, DrawRect.Left + LocalIndent, DrawRect.Top + y);
+      Draw(LocalRP,LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY);
+      Draw(LocalRP,LocalRect.Left + LocalIndent - 5, LocalRect.Top + LastY);
+      GFXMove(LocalRP, LocalRect.Left + LocalIndent, LocalRect.Top + y);
       if Node = FSelectedNode then
-        SetABPenDrMd(rp, 2, 3, Jam2)
+        SetABPenDrMd(Localrp, 2, 3, Jam2)
       else
-        SetABPenDrMd(rp, 1, 3, Jam1);
-      GfxText(rp, PChar(Node.Name), Length(Node.Name));
-      SetABPenDrMd(rp, 1, 3, Jam1);
-      Node.TextRect := Rect(LocalIndent, y - TH, LocalIndent + TextLength(rp, PChar(Node.Name), Length(Node.Name)), y);
+        SetABPenDrMd(Localrp, 1, 3, Jam1);
+      GfxText(Localrp, PChar(Node.Name), Length(Node.Name));
+      SetABPenDrMd(Localrp, 1, 3, Jam1);
+      Node.TextRect := Rect(LocalIndent, y - TH, LocalIndent + TextLength(Localrp, PChar(Node.Name), Length(Node.Name)), y);
       y := y + TH;
       Node.ImgRect := TRect.Empty;
       LastHadChild := Node.HasChilds;
@@ -121,40 +124,52 @@ var
       begin
         Node.ImgRect := Node.TextRect;
         Node.ImgRect := Rect(LocalIndent - 19, Node.TextRect.CenterPoint.Y - 2, LocalIndent - 11, Node.TextRect.CenterPoint.Y + 6);
-        SetAPen(RP, 1);
-        RectFill(RP, DrawRect.Left + Node.ImgRect.Left, DrawRect.Top + Node.ImgRect.Top, DrawRect.Left + Node.ImgRect.Right, DrawRect.Top + Node.ImgRect.Bottom);
-        SetAPen(RP, 0);
-        RectFill(RP, DrawRect.Left + Node.ImgRect.Left + 1, DrawRect.Top + Node.ImgRect.Top + 1, DrawRect.Left + Node.ImgRect.Right - 1, DrawRect.Top + Node.ImgRect.Bottom - 1);
-        SetAPen(RP, 1);
-        GfxMove(RP, DrawRect.Left + Node.ImgRect.Left + 2, DrawRect.Top + Node.ImgRect.CenterPoint.Y);
-        Draw(RP, DrawRect.Left + Node.ImgRect.Right - 2, DrawRect.Top + Node.ImgRect.CenterPoint.Y);
+        SetAPen(LocalRP, 1);
+        RectFill(LocalRP, LocalRect.Left + Node.ImgRect.Left, LocalRect.Top + Node.ImgRect.Top, LocalRect.Left + Node.ImgRect.Right, LocalRect.Top + Node.ImgRect.Bottom);
+        SetAPen(LocalRP, 0);
+        RectFill(LocalRP, LocalRect.Left + Node.ImgRect.Left + 1, LocalRect.Top + Node.ImgRect.Top + 1, LocalRect.Left + Node.ImgRect.Right - 1, LocalRect.Top + Node.ImgRect.Bottom - 1);
+        SetAPen(LocalRP, 1);
+        GfxMove(LocalRP, LocalRect.Left + Node.ImgRect.Left + 2, LocalRect.Top + Node.ImgRect.CenterPoint.Y);
+        Draw(LocalRP, LocalRect.Left + Node.ImgRect.Right - 2, LocalRect.Top + Node.ImgRect.CenterPoint.Y);
         if Node.Expanded then
         begin
           DrawChilds(LocalIndent + 20, Node.Childs);
         end
         else
         begin
-          GfxMove(RP, DrawRect.Left + Node.ImgRect.CenterPoint.X, DrawRect.Top + Node.ImgRect.Top + 2);
-          Draw(RP, DrawRect.Left + Node.ImgRect.CenterPoint.X, DrawRect.Top + Node.ImgRect.Bottom - 2);
+          GfxMove(LocalRP, LocalRect.Left + Node.ImgRect.CenterPoint.X, LocalRect.Top + Node.ImgRect.Top + 2);
+          Draw(LocalRP, LocalRect.Left + Node.ImgRect.CenterPoint.X, LocalRect.Top + Node.ImgRect.Bottom - 2);
         end;
       end;
     end;
   end;
 
 begin
-  if not Assigned(FNormFont) then
-    FNormFont := OpenMUIFont(fkNormal);
-  OldFont := RP^.Font;
-  RP^.Font := FNormFont;
-  SetABPenDrMd(rp, 1, 3, Jam1);
-  TextExtent(RP, 'Wp', 2, @TE);
-  TH := Round(TE.te_Height * 1.2);
-  YStart := FScroller.First;
-  Y := TH - YStart;
-  DrawChilds(20, Nodes);
-  FScroller.Entries := y + YStart;
-  FScroller.Visible := DrawRect.Height;
-  RP^.Font := OldFont;
+  DB := TDrawBuffer.Create(DrawRect.Width, DrawRect.Height, RP^.Bitmap^.Depth);
+  try
+    LocalRP := DB.RP;
+    DB.Clear(0);
+    LocalRect := DrawRect;
+    LocalRect.Left := 0;
+    LocalRect.Top := 0;
+    if not Assigned(FNormFont) then
+      FNormFont := OpenMUIFont(fkNormal);
+    OldFont := LocalRP^.Font;
+    LocalRP^.Font := FNormFont;
+    SetABPenDrMd(Localrp, 1, 3, Jam1);
+    TextExtent(LocalRP, 'Wp', 2, @TE);
+    TH := Round(TE.te_Height * 1.2);
+    YStart := FScroller.First;
+    Y := TH - YStart;
+    DrawChilds(20, Nodes);
+    FScroller.Entries := y + YStart;
+    FScroller.Visible := LocalRect.Height;
+    LocalRP^.Font := OldFont;
+
+    DB.DrawToRastPort(DrawRect.Left, DrawRect.Top,RP)
+  finally
+    DB.Free;
+  end;
 end;
 
 procedure TMUICustomTree.FirstChange(Sender: TObject);
@@ -333,7 +348,7 @@ begin
     DefWidth := 200;
     MaxHeight := MUI_MAXMAX;
     MaxWidth := MUI_MAXMAX;
-    FillArea := True;
+    FillArea := False;
     OnDrawObject  := @DrawMe;
     OnMouseDown  := @MouseDownEvent;
     OnDblClick  := @MouseDblEvent;
