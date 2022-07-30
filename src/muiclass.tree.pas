@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, mui, AGraphics, Math,
-  MUIClass.Group, MUIClass.Gadget, MUIClass.DrawPanel;
+  MUIClass.Base, MUIClass.Group, MUIClass.Gadget, MUIClass.DrawPanel;
 
 type
   TMUITreeNode = class;
@@ -16,19 +16,22 @@ type
   TMUITreeNode = class
   private
     FExpanded: Boolean;
+    FParentNode: TMUITreeNode;
     TextRect: TRect;
     ImgRect: TRect;
+    FUpdating: Boolean;
     function GetHasChilds: Boolean;
     procedure SetExpanded(AValue: Boolean);
   public
     Name: string;
     Data: Pointer;
     Childs: TMUITreeNodeList;
-    constructor Create; virtual;
+    constructor Create(AParentNode: TMUITreeNode); virtual;
     destructor Destroy; override;
 
     property HasChilds: Boolean read GetHasChilds;
     property Expanded: Boolean read FExpanded write SetExpanded;
+    property ParentNode: TMUITreeNode read FParentNode;
   end;
 
 
@@ -37,13 +40,19 @@ type
 
   TMUICustomTree = class(TMUIGroup)
   private
+    FNormFont: PTextFont;
+    FOnNodeClick: TNotifyEvent;
+    FOnNodeDblClick: TNotifyEvent;
+    FOnSelectedNode: TNotifyEvent;
     FSelectedNode: TMUITreeNode;
     TH: LongWord;
     FDrawPanel: TMUIDrawPanel;
     FScroller: TMUIScrollbar;
+    FUpdating: Boolean;
     procedure DrawMe(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
     procedure FirstChange(Sender: TObject);
     procedure KeyDown(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean);
+    procedure MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
     procedure MouseDownEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
     procedure SetSelectedNode(AValue: TMUITreeNode);
   public
@@ -51,11 +60,20 @@ type
     Nodes: TMUITreeNodeList;
 
     function AddNode(ParentNode: TMUITreeNode; AName: string; Data: Pointer = nil): TMUITreeNode;
+    function DeleteNode(ANode: TMUITreeNode): Boolean;
 
     constructor Create; override;
     destructor Destroy; override;
 
+    procedure Redraw;
+
+    procedure BeginUpdate;
+    procedure EndUpdate;
+
     property SelectedNode: TMUITreeNode read FSelectedNode write SetSelectedNode;
+    property OnSelectedNode: TNotifyEvent read FOnSelectedNode write FOnSelectedNode;
+    property OnNodeClick: TNotifyEvent read FOnNodeClick write FOnNodeClick;
+    property OnNodeDblClick: TNotifyEvent read FOnNodeDblClick write FOnNodeDblClick;
   end;
 
 
@@ -67,35 +85,42 @@ procedure TMUICustomTree.DrawMe(Sender: TObject; Rp: PRastPort; DrawRect: TRect)
 var
   TE: TTextExtent;
   y, YStart: Integer;
+  OldFont: pTextFont;
 
-  procedure DrawChilds(Ident: Integer; NodeList: TMUITreeNodeList);
+  procedure DrawChilds(LocalIndent: Integer; NodeList: TMUITreeNodeList);
   var
     i: Integer;
     LastY: Integer;
     Node: TMUITreeNode;
+    LastHadChild: Boolean;
   begin
+    LastHadChild := False;
     LastY := (y - TH) + 2;
     for i := 0 to NodeList.Count - 1 do
     begin
       Node := NodeList[i];
-      GFXMove(RP, DrawRect.Left + Ident - 15, DrawRect.Top + LastY);
-      LastY := y - TH div 4;
-      Draw(RP,DrawRect.Left + Ident - 15, DrawRect.Top + LastY);
-      Draw(RP,DrawRect.Left + Ident - 5, DrawRect.Top + LastY);
-      GFXMove(RP, DrawRect.Left + Ident, DrawRect.Top + y);
+      if LastHadChild then
+        GFXMove(RP, DrawRect.Left + LocalIndent - 15, DrawRect.Top + LastY + 3)
+      else
+        GFXMove(RP, DrawRect.Left + LocalIndent - 15, DrawRect.Top + LastY);
+      LastY := y - TH div 4 - 1;
+      Draw(RP,DrawRect.Left + LocalIndent - 15, DrawRect.Top + LastY);
+      Draw(RP,DrawRect.Left + LocalIndent - 5, DrawRect.Top + LastY);
+      GFXMove(RP, DrawRect.Left + LocalIndent, DrawRect.Top + y);
       if Node = FSelectedNode then
         SetABPenDrMd(rp, 2, 3, Jam2)
       else
         SetABPenDrMd(rp, 1, 3, Jam1);
       GfxText(rp, PChar(Node.Name), Length(Node.Name));
       SetABPenDrMd(rp, 1, 3, Jam1);
-      Node.TextRect := Rect(Ident, y - TH, Ident + TextLength(rp, PChar(Node.Name), Length(Node.Name)), y);
+      Node.TextRect := Rect(LocalIndent, y - TH, LocalIndent + TextLength(rp, PChar(Node.Name), Length(Node.Name)), y);
       y := y + TH;
       Node.ImgRect := TRect.Empty;
+      LastHadChild := Node.HasChilds;
       if Node.HasChilds then
       begin
         Node.ImgRect := Node.TextRect;
-        Node.ImgRect := Rect(Ident - 19, Node.TextRect.CenterPoint.Y - 2, Ident - 11, Node.TextRect.CenterPoint.Y + 6);
+        Node.ImgRect := Rect(LocalIndent - 19, Node.TextRect.CenterPoint.Y - 2, LocalIndent - 11, Node.TextRect.CenterPoint.Y + 6);
         SetAPen(RP, 1);
         RectFill(RP, DrawRect.Left + Node.ImgRect.Left, DrawRect.Top + Node.ImgRect.Top, DrawRect.Left + Node.ImgRect.Right, DrawRect.Top + Node.ImgRect.Bottom);
         SetAPen(RP, 0);
@@ -105,7 +130,7 @@ var
         Draw(RP, DrawRect.Left + Node.ImgRect.Right - 2, DrawRect.Top + Node.ImgRect.CenterPoint.Y);
         if Node.Expanded then
         begin
-          DrawChilds(Ident + 20, Node.Childs);
+          DrawChilds(LocalIndent + 20, Node.Childs);
         end
         else
         begin
@@ -117,6 +142,10 @@ var
   end;
 
 begin
+  if not Assigned(FNormFont) then
+    FNormFont := OpenMUIFont(fkNormal);
+  OldFont := RP^.Font;
+  RP^.Font := FNormFont;
   SetABPenDrMd(rp, 1, 3, Jam1);
   TextExtent(RP, 'Wp', 2, @TE);
   TH := Round(TE.te_Height * 1.2);
@@ -125,12 +154,12 @@ begin
   DrawChilds(20, Nodes);
   FScroller.Entries := y + YStart;
   FScroller.Visible := DrawRect.Height;
-
+  RP^.Font := OldFont;
 end;
 
 procedure TMUICustomTree.FirstChange(Sender: TObject);
 begin
-  Self.FDrawPanel.RedrawObject;
+  Redraw;
 end;
 
 procedure TMUICustomTree.KeyDown(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean);
@@ -154,18 +183,27 @@ begin
       if Assigned(FSelectedNode) and FSelectedNode.HasChilds and not FSelectedNode.Expanded then
       begin
         FSelectedNode.Expanded := True;
-        Self.FDrawPanel.RedrawObject;
+        Redraw;
       end;
     end;
     79: begin // left
       if Assigned(FSelectedNode) and FSelectedNode.HasChilds and FSelectedNode.Expanded then
       begin
         FSelectedNode.Expanded := False;
-        Self.FDrawPanel.RedrawObject;
+        Redraw;
       end;
     end;
   end;
   //if Code =
+end;
+
+procedure TMUICustomTree.MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
+begin
+  if Assigned(FSelectedNode) and Assigned(FOnNodeDblClick) then
+  begin
+    if FSelectedNode.TextRect.Contains(Point(x,y)) then
+      FOnNodeDblClick(Self);
+  end;
 end;
 
 procedure TMUICustomTree.MouseDownEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
@@ -190,6 +228,8 @@ var
       if Node.TextRect.Contains(Point(x,y)) then
       begin
         SelectedNode := Node;
+        if Assigned(FOnNodeClick) then
+          FOnNodeClick(Self);
         Found := True;
         Exit;
       end;
@@ -198,13 +238,12 @@ var
         CheckClick(Node.Childs);
       if Found then
         Exit;
-
     end;
   end;
 begin
   Found := False;
   CheckClick(Nodes);
-  Self.FDrawPanel.RedrawObject;
+  Redraw;
 end;
 
 procedure TMUICustomTree.SetSelectedNode(AValue: TMUITreeNode);
@@ -218,20 +257,18 @@ begin
       FScroller.First := FScroller.First + FSelectedNode.TextRect.Top
     else
     if FSelectedNode.TextRect.Bottom > FDrawPanel.Height then
-    begin
       FScroller.First := FScroller.First + FSelectedNode.TextRect.Top - (FDrawPanel.Height - 2 * TH)
-    end;
-
   end;
-
-  Self.FDrawPanel.RedrawObject;
+  if Assigned(FOnSelectedNode) then
+      FOnSelectedNode(Self);
+  Redraw;
 end;
 
 function TMUICustomTree.AddNode(ParentNode: TMUITreeNode; AName: string; Data: Pointer): TMUITreeNode;
 var
   NNode: TMUITreeNode;
 begin
-  NNode := TMUITreeNode.Create;
+  NNode := TMUITreeNode.Create(ParentNode);
   NNode.Name := AName;
   NNode.Data := Data;
   if Assigned(ParentNode) then
@@ -244,11 +281,30 @@ begin
   end;
   AllNodes.Add(NNode);
   Result := NNode;
+  Redraw;
+end;
+
+function TMUICustomTree.DeleteNode(ANode: TMUITreeNode): Boolean;
+var
+  Idx: Integer;
+begin
+  Result := False;
+  Idx := AllNodes.IndexOf(ANode);
+  if Idx < 0 then
+    Exit;
+  if Assigned(ANode.ParentNode) then
+    ANode.ParentNode.Childs.Remove(ANode);
+  if FSelectedNode = ANode then
+    SelectedNode := nil;
+  AllNodes.Delete(Idx);
+  Result := True;
+  Redraw;
 end;
 
 constructor TMUICustomTree.Create;
 begin
   inherited Create;
+  FUpdating := False;
   FSelectedNode := nil;
   Nodes := TMUITreeNodeList.Create(False);
   AllNodes := TMUITreeNodeList.Create(True);
@@ -267,6 +323,7 @@ begin
     FillArea := True;
     OnDrawObject  := @DrawMe;
     OnMouseDown  := @MouseDownEvent;
+    OnDblClick  := @MouseDblEvent;
     OnKeyDown  := @KeyDown;
     Parent := Self;
   end;
@@ -288,6 +345,23 @@ begin
   inherited Destroy;
 end;
 
+procedure TMUICustomTree.Redraw;
+begin
+  if not FUpdating then
+    FDrawPanel.RedrawObject;
+end;
+
+procedure TMUICustomTree.BeginUpdate;
+begin
+  FUpdating := True;
+end;
+
+procedure TMUICustomTree.EndUpdate;
+begin
+  FUpdating := False;
+  Redraw;
+end;
+
 
 { TMUITreeNode }
 
@@ -303,10 +377,11 @@ begin
   FExpanded := AValue;
 end;
 
-constructor TMUITreeNode.Create;
+constructor TMUITreeNode.Create(AParentNode: TMUITreeNode);
 begin
   Childs := TMUITreeNodeList.Create(False);
   FExpanded := True;
+  FParentNode := AParentNode;
 end;
 
 destructor TMUITreeNode.Destroy;
