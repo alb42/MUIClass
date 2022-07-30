@@ -3,7 +3,7 @@ unit MUIClass.Tree;
 interface
 
 uses
-  Classes, SysUtils, fgl, mui, AGraphics, Math,
+  Classes, SysUtils, fgl, mui, AGraphics,
   MUIClass.Base, MUIClass.Group, MUIClass.Gadget, MUIClass.DrawPanel;
 
 type
@@ -19,7 +19,6 @@ type
     FParentNode: TMUITreeNode;
     TextRect: TRect;
     ImgRect: TRect;
-    FUpdating: Boolean;
     function GetHasChilds: Boolean;
     procedure SetExpanded(AValue: Boolean);
   public
@@ -55,6 +54,7 @@ type
     procedure MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
     procedure MouseDownEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
     procedure SetSelectedNode(AValue: TMUITreeNode);
+    procedure WheelEvent(Sender: TObject; ScrollUp: Boolean; var EatEvent: Boolean);
   public
     AllNodes: TMUITreeNodeList;
     Nodes: TMUITreeNodeList;
@@ -197,6 +197,19 @@ begin
   //if Code =
 end;
 
+procedure TMUICustomTree.WheelEvent(Sender: TObject; ScrollUp: Boolean; var EatEvent: Boolean);
+begin
+  EatEvent := True;
+  if ScrollUp then
+  begin
+    FScroller.First := FScroller.First - TH;
+  end
+  else
+  begin
+    FScroller.First := FScroller.First + TH;
+  end;
+end;
+
 procedure TMUICustomTree.MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
 begin
   if Assigned(FSelectedNode) and Assigned(FOnNodeDblClick) then
@@ -325,6 +338,7 @@ begin
     OnMouseDown  := @MouseDownEvent;
     OnDblClick  := @MouseDblEvent;
     OnKeyDown  := @KeyDown;
+    OnMouseWheel := @WheelEvent;
     Parent := Self;
   end;
   FScroller := TMUIScrollbar.Create;

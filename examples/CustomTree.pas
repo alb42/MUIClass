@@ -64,7 +64,6 @@ begin
 
   TMUIRectangle.Create.Parent := Grp2;
 
-
   Tree.BeginUpdate;
   Node := Tree.AddNode(nil, 'testnode');
   Tree.AddNode(Node, 'child1');
