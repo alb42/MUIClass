@@ -16,6 +16,10 @@ Binaries (IDE, examples, units) for all Amiga systems: <a href="http://build.alb
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.popstring/index.html">MUIClass.Popstring</a></td><td>Popstring, PopObject, PopList, PopASL</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.menu/index.html">MUIClass.Menu</a></td><td>Menustrip, Menu, Menuitem</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.numeric/index.html">MUIClass.Numeric</a></td><td>Numeric, Knop, Levelmeter, NumericButton, Slider</td></tr>
+<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.tree/index.html">MUIClass.Tree</a></td><td>CustomTree</td></tr>
+<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.stringgrid/index.html">MUIClass.StringGrid</a></td><td>StringGrid</td></tr>
+<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.dialog/index.html">MUIClass.Dialog</a></td><td>FileDialog, FontDialog, ScreenModeDialog</td></tr>
+<tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.datatypes/index.html">MUIClass.Datytypes</a></td><td>DatatypesObject</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.drawpanel/index.html">MUIClass.DrawPanel</a></td><td>DrawPanel</td></tr>
 <tr><td><a href="http://www.alb42.de/muiclass-docu/muiclass.dialog/index.html">MUIClass.Dialog</a></td><td>FileDialog, FontDialog, ScreenModeDialog</td></tr>
 </table>
