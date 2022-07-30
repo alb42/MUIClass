@@ -1,5 +1,5 @@
 program CustomTree;
-
+{$mode objfpc}{$H+}
 uses
   SysUtils,
   MUIClass.Base, MUIClass.Window, MUIClass.Tree,
