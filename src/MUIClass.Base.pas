@@ -768,6 +768,7 @@ begin
   begin
     FTimerList[0].Free;
   end;
+  FTimerList.Free;
   inherited;
 end;
 
@@ -971,8 +972,9 @@ begin
   if Assigned(FOnException) then
     FOnException(Self, E)
   else
-    if MessageBox('Exception', 'Exception: ' + E.Message + #10 + 'To prevent Data corruption you should close the program.', ['Ignore', 'Close Program']) = 0 then
-      Terminate;
+    writeln(E.Message);
+    //if MessageBox('Exception', 'Exception: ' + E.Message + #10 + 'To prevent Data corruption you should close the program.', ['Ignore', 'Close Program']) = 0 then
+    //  Terminate;
 end;
 
 procedure TMUIApplication.Run;
