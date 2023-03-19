@@ -36,13 +36,12 @@ type
   end;
 
   TMUIRootClass = class
-  private
-    function GetHasObj: Boolean;
   protected
     HookList: THookList;
     FFirstOpen: Boolean;
     FMUIObj: PObject_;
     FTag: PtrInt;
+    function GetHasObj: Boolean; virtual;
     procedure GetCreateTags(var ATagList: TATagList); virtual;
     //
     procedure DoFirstOpen; virtual;
@@ -146,6 +145,11 @@ type
     FMenuStrip: TMUINotify; //
     FOnException: TExceptionEvent;
     FOnRexxMsg: TRexxMsgEvent;
+
+    FAREXXPort: PMsgPort;
+    RexxHook: PHook;
+    BaseName: string;
+
     procedure SetActive(AValue: Boolean);
     function GetActive: Boolean;
     procedure SetAuthor(AValue: string);
@@ -227,7 +231,7 @@ type
     property UseCommodities: Boolean read FUseCommodities write SetUseCommodities;
     // Usedclasses
     // UseRexx (No REXX in AROS)
-    property UseRexx: boolean read FUseRexx write SetUseRexx default True ;
+    property UseRexx: boolean read FUseRexx write SetUseRexx default True;
     property Version: string read FVersion write SetVersion;
 
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
@@ -753,6 +757,7 @@ begin
   FVersion := '';
   FMenuStrip := nil;
   FUseRexx := True;
+  FAREXXPort := nil;
 end;
 
 destructor TMUIApplication.Destroy;
@@ -769,6 +774,13 @@ begin
     FTimerList[0].Free;
   end;
   FTimerList.Free;
+
+  if Assigned(FAREXXPort) then
+  begin
+    RemPort(FAREXXPort);
+    DeleteMsgPort(FAREXXPort);
+    FAREXXPort := nil;
+  end;
   inherited;
 end;
 
@@ -789,6 +801,8 @@ type
     rm_Avail: LongInt;
   end;
   PRexxMsg = ^TRexxMsg;
+const
+  RXCOMM = $01000000;
 
 function RexxFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
@@ -808,6 +822,7 @@ begin
         Txt := Txt + #13#10;
         DosWrite(RexxMsg^.rm_Stdout, PChar(Txt), Length(Txt));
       end;
+      RexxMsg^.rm_Result1 := Result;
     end;
   except
     on E: Exception do
@@ -818,7 +833,6 @@ end;
 procedure TMUIApplication.GetCreateTags(var ATagList: TATagList);
 var
   i: Integer;
-  Hook: PHook;
 begin
   inherited;
   for i := 0 to FChilds.Count - 1 do
@@ -854,9 +868,9 @@ begin
   if not FUseRexx then
     ATagList.AddTag(MUIA_Application_UseRexx, AsTag(FUseRexx));
   // rexx hook
-  Hook := HookList.GetNewHook;
-  MH_SetHook(Hook^, @RexxFunc, Self);
-  ATagList.AddTag(MUIA_Application_RexxHook, AsTag(Hook));
+  RexxHook := HookList.GetNewHook;
+  MH_SetHook(RexxHook^, @RexxFunc, Self);
+  ATagList.AddTag(MUIA_Application_RexxHook, AsTag(RexxHook));
 end;
 
 procedure TMUIApplication.CreateObject;
@@ -957,6 +971,8 @@ end;
 
 
 procedure TMUIApplication.AfterCreateObject;
+var
+  MsgPort: PMsgPort;
 begin
   inherited;
   ConnectHook(MUIA_Application_Active, MUI_TRUE, @ActivateFunc);
@@ -964,6 +980,18 @@ begin
   ConnectHook(MUIA_Application_DoubleStart, MUI_TRUE, @DoubleStartFunc);
   ConnectHook(MUIA_Application_Iconified, MUI_TRUE, @IconifyFunc);
   ConnectHook(MUIA_Application_Iconified, MUI_FALSE, @RestoreFunc);
+
+  if (Self.Base <> '') and (FUseRexx) then
+  begin
+    MsgPort := FindPort(PChar(Base));
+    if not Assigned(MsgPort) then
+    begin
+      FAREXXPort := CreateMsgPort;
+      BaseName := Base  + #0;
+      FAREXXPort^.mp_Node.ln_Name := @BaseName[1];
+      AddPort(FAREXXPort);
+    end;
+  end;
 end;
 
 
@@ -982,6 +1010,7 @@ var
   Sigs: LongInt;
   i: Integer;
   t1: Int64;
+  Msg: PMessage;
 begin
   if Childs.Count = 0 then
   begin
@@ -1019,6 +1048,17 @@ begin
       end;
     end;
     CheckSynchronize(1);
+    //
+    if Assigned(FAREXXPort) then
+    begin
+      Msg := GetMsg(FAREXXPort);
+      if Assigned(Msg) then
+      begin
+        if PRexxMsg(Msg)^.rm_Action = RXCOMM then
+          RexxFunc(RexxHook, Self.FMUIObj, Msg);
+        ReplyMsg(Msg);
+      end;
+    end;
     //
     if (FToDestroy.Count > 0) then
     begin
