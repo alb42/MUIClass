@@ -233,13 +233,13 @@ begin
   inherited;
   if FOpen then
     ATagList.AddTag(MUIA_Window_Open, AsTag(True));
-  if FAltLeftEdge >= 0 then
+  if FAltLeftEdge <> -1 then
     ATagList.AddTag(MUIA_Window_AltLeftEdge, AsTag(FAltLeftEdge));
-  if FAltTopEdge >= 0 then
+  if FAltTopEdge <> -1 then
     ATagList.AddTag(MUIA_Window_AltTopEdge, AsTag(FAltTopEdge));
-  if FAltHeight >= 0 then
+  if FAltHeight <> -1 then
     ATagList.AddTag(MUIA_Window_AltHeight, AsTag(FAltHeight));
-  if FAltWidth >= 0 then
+  if FAltWidth <> -1 then
     ATagList.AddTag(MUIA_Window_AltWidth, AsTag(FAltWidth));
   if FAppWindow then
     ATagList.AddTag(MUIA_Window_AppWindow, AsTag(FAppWindow));
