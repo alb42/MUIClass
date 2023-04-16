@@ -21,6 +21,7 @@ type
   TIOnlyEvent = procedure(AClass: TObject; Field, Value: string) of object;
   TExceptionEvent = procedure(Sender: TObject; E: Exception) of object;
   TRexxMsgEvent = function(Sender: TObject; Msg: string; out ReturnMessage: string): LongInt of object;
+  TRexxCmdEvent = function(Sender: TObject; Params: PPtrInt): LongInt;
 
   TMUITimer = class;
 
@@ -113,10 +114,21 @@ type
 
   TTimerList = specialize TFPGObjectList<TMUITimer>;
 
+  TAREXXCommand = record
+    ac_Name: string;
+    ac_Template: string;
+    ac_NumParams: Integer;
+    ac_Event: TRexxCmdEvent;
+  end;
+  PAREXXCommand = ^TAREXXCommand;
+
+  TAREXXCommands = array of TAREXXCommand;
+
   { TMUIApplication }
 
   TMUIApplication = class(TMUINotify)
   private
+    FAREXXCommands: TAREXXCommands;
     FToDestroy: TChildList;
     FTimerList: TTimerList;
     FActiveTimer: Boolean;
@@ -146,12 +158,17 @@ type
     FOnException: TExceptionEvent;
     FOnRexxMsg: TRexxMsgEvent;
 
+    FMUICmd: array of TMUI_Command;
+
     FAREXXPort: PMsgPort;
     RexxHook: PHook;
     BaseName: string;
 
+    procedure CreateMUICmd;
+
     procedure SetActive(AValue: Boolean);
     function GetActive: Boolean;
+    procedure SetAREXXCommands(AValue: TAREXXCommands);
     procedure SetAuthor(AValue: string);
     procedure SetBase(AValue: string);
     function GetBase: string;
@@ -205,6 +222,8 @@ type
     procedure ShowHelp(Window: TMUINotify; HelpFileName: string; Node: string; LineNum: Integer); overload; // TMUIWindow
     procedure ShowHelp(Node: string; LineNum: Integer); overload;
 
+    procedure SetREXXString(Msg: string);
+
     // MUI Fields
     property Broker: PCxObj read GetBroker;
     property DiskObject: Pointer read FDiskObject write SetDiskObject;
@@ -219,7 +238,7 @@ type
     // Broker Hook
     // BrokerPort
     property BrokerPri: Integer read FBrokerPri write SetBrokerPri;
-        // Commands
+    property Commands: TAREXXCommands read FAREXXCommands write SetAREXXCommands;
     property Copyright: string read FCopyright write SetCopyright;
     property Description: string read FDescription write SetDescription;
     // Drop object
@@ -230,7 +249,6 @@ type
     property Title: string read FTitle write SetTitle;
     property UseCommodities: Boolean read FUseCommodities write SetUseCommodities;
     // Usedclasses
-    // UseRexx (No REXX in AROS)
     property UseRexx: boolean read FUseRexx write SetUseRexx default True;
     property Version: string read FVersion write SetVersion;
 
@@ -1119,6 +1137,41 @@ begin
     FToDestroy.Add(AObj);
 end;
 
+function MUICmdHook(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  CmdEntry: PAREXXCommand;
+begin
+  Unused(Obj);
+  CmdEntry := PAREXXCommand(Hook^.h_Data);
+  Result := -1;
+  try
+    if Assigned(CmdEntry) and Assigned(CmdEntry^.ac_Event) then
+      Result := CmdEntry^.ac_Event(MUIApp, Msg);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
+end;
+
+procedure TMUIApplication.CreateMUICmd;
+var
+  i: Integer;
+begin
+  for i := 0 to High(FMUICmd) do
+    Dispose(FMUICmd[i].mc_Hook);
+  SetLength(FMUICmd, Length(FAREXXCommands) + 1);
+  FillChar(FMUICmd[0], Length(FMUICmd) * SizeOf(TMUI_Command), #0);
+  for i := 0 to High(FAREXXCommands) do
+  begin
+    FMUICmd[i].mc_Name := PChar(FAREXXCommands[i].ac_Name);
+    FMUICmd[i].mc_Template := PChar(FAREXXCommands[i].ac_Template);
+    FMUICmd[i].mc_Parameters := FAREXXCommands[i].ac_NumParams;
+    New(FMUICmd[i].mc_Hook);
+    MH_SetHook(FMUICmd[i].mc_Hook^, @MUICmdHook, @(FAREXXCommands[i]));
+  end;
+  SetValue(MUIA_Application_Commands, @(FMUICmd[0]));
+end;
+
 procedure TMUIApplication.SetActive(AValue: Boolean);
 begin
   if HasObj then
@@ -1130,6 +1183,12 @@ begin
   Result := True;
   if HasObj then
     Result := GetBoolValue(MUIA_Application_Active);
+end;
+
+procedure TMUIApplication.SetAREXXCommands(AValue: TAREXXCommands);
+begin
+  FAREXXCommands := AValue;
+  CreateMUICmd;
 end;
 
 procedure TMUIApplication.SetAuthor(AValue: string);
@@ -1389,6 +1448,11 @@ end;
 procedure TMUIApplication.ShowHelp(Node: string; LineNum: Integer);
 begin
   ShowHelp(nil, '', Node, LineNum);
+end;
+
+procedure TMUIApplication.SetREXXString(Msg: string);
+begin
+  SetValue(MUIA_Application_RexxString, PChar(Msg));
 end;
 
 procedure TMUIApplication.SetMenuStrip(AValue: TMUINotify);
