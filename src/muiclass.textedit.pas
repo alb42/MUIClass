@@ -6,7 +6,7 @@ interface
 
 uses
   intuition, TagsParamsHelper, mui, utility, muihelper, Exec,
-  MUIClass.Base, MUIClass.Group;
+  MUIClass.Base, MUIClass.Group, clipboard, iffparse;
 
 type
 
@@ -29,6 +29,9 @@ type
   public
     constructor Create; override;
     procedure Clear;
+    procedure Copy;
+    procedure Cut;
+    procedure Paste;
     property Text: string read GetText write SetText;
     property TabsToSpaces: Boolean read GetTabsToSpaces write SetTabsToSpaces;
   end;
@@ -52,6 +55,99 @@ const
   MUIV_TextEditor_InsertText_Bottom = 2;
 
   MUIC_TextEdit = 'TextEditor.mcc';
+
+  // special function copied from AROS clipboard
+
+const
+  ID_FTXT = 1179932756;
+  ID_CHRS = 1128813139;
+
+// get text from Clipboard
+function GetTextFromClip(ClipUnit: Byte): AnsiString;
+var
+  Iff: PIffHandle;
+  Error: LongInt;
+  Cn: PContextNode;
+  Buf: PChar;
+  Len: Integer;
+  Cu: LongInt;
+begin
+  GetTextFromClip := '';
+  Cu := ClipUnit;
+  Iff := AllocIff;
+  if Assigned(Iff) then
+  begin
+    Iff^.iff_Stream := NativeUInt(OpenClipboard(Cu));
+    if Iff^.iff_Stream<>0 then
+    begin
+      InitIffAsClip(iff);
+      if OpenIff(Iff, IFFF_READ) = 0 then
+      begin
+        if StopChunk(iff, ID_FTXT, ID_CHRS) = 0 then
+        begin
+          while True do
+          begin
+            Error := ParseIff(iff, IFFPARSE_SCAN);
+            if (Error <> 0) and (Error <> IFFERR_EOC) then
+              Break;
+            Cn := CurrentChunk(Iff);
+            if not Assigned(Cn) then
+            begin
+              Continue;
+            end;
+            Len := Cn^.cn_Size;
+            if (Cn^.cn_Type = ID_FTXT) and (Cn^.cn_ID = ID_CHRS) and (Len > 0) then
+            begin
+              GetMem(Buf, Len + 1);
+              FillChar(Buf^, Len + 1, #0);
+              ReadChunkBytes(Iff, Buf, Len);
+              GetTextFromClip := GetTextFromClip + AnsiString(Buf);
+              FreeMem(Buf);
+            end;
+          end;
+        end;
+        CloseIff(Iff);
+      end;
+      CloseClipboard(PClipBoardHandle(iff^.iff_Stream));
+    end;
+    FreeIFF(Iff);
+  end;
+end;
+
+function PutTextToClip(ClipUnit: Byte; Text: AnsiString): Boolean;
+var
+  Iff: PIffHandle;
+  TText: AnsiString;
+  Len: Integer;
+begin
+  PutTextToClip := False;
+  Iff := AllocIff;
+  if Assigned(Iff) then
+  begin
+    Iff^.iff_Stream := LongWord(OpenClipboard(ClipUnit));
+    if Iff^.iff_Stream <> 0 then
+    begin
+      InitIffAsClip(iff);
+      if OpenIff(Iff, IFFF_WRITE) = 0 then
+      begin
+        if PushChunk(iff, ID_FTXT, ID_FORM, IFFSIZE_UNKNOWN) = 0 then
+        begin
+          if PushChunk(iff, 0, ID_CHRS, IFFSIZE_UNKNOWN) = 0 then
+          begin
+            Len := Length(Text);
+            TText := Text + #0;
+            PutTextToClip := WriteChunkBytes(iff, @(TText[1]), Len) = len;
+            PopChunk(iff);
+          end;
+          PopChunk(iff);
+        end;
+        CloseIff(iff);
+      end;
+      CloseClipboard(PClipBoardHandle(iff^.iff_Stream));
+    end;
+    FreeIFF(Iff);
+  end;
+end;
 
 { TMUITextEdit }
 
@@ -103,17 +199,18 @@ var
 begin
   Horiz := True;
   Tags.Clear;
+  ATagList.AddTag(MUIA_Group_Spacing, 0);
   //
   Tags.AddTag(MUIA_TextEditor_ConvertTabs, AsTag(FTabsToSpaces));
   FTextObj := MUI_NewObjectA(MUIC_TextEdit, Tags.GetTagPointer);
   //
   Tags.Clear;
   FScrollObj := MUI_NewObjectA(MUIC_ScrollBar, Tags.GetTagPointer);
-
-  ATagList.AddTag(MUIA_Group_Child, AsTag(FTextObj));
+  if Assigned(FTextObj) then
+    ATagList.AddTag(MUIA_Group_Child, AsTag(FTextObj));
   ATagList.AddTag(MUIA_Group_Child, AsTag(FScrollObj));
   inherited GetCreateTags(ATagList);
-  if HasObj then
+  if Assigned(FTextObj) and Assigned(FScrollObj) then
     MH_Set(FTextObj, MUIA_TextEditor_Slider, NativeUInt(FScrollObj));
 end;
 
@@ -127,6 +224,22 @@ begin
   FText := '';
   if HasObj then
     DoMethod(FTextObj, [NativeUInt(MUIM_TextEditor_ClearText)]);
+end;
+
+procedure TMUITextEdit.Copy;
+begin
+  PutTextToClip(0, Text);
+end;
+
+procedure TMUITextEdit.Cut;
+begin
+  PutTextToClip(0, Text);
+  Clear;
+end;
+
+procedure TMUITextEdit.Paste;
+begin
+  Text := GetTextFromClip(0);
 end;
 
 
