@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, fgl, Exec,
   Utility, Intuition, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base;
+  MUIClass.Base;
 {$M+}
 type
   TCloseAction = (caNone, caClose, caFree); // return values for OnCloseRequest, default is caClose

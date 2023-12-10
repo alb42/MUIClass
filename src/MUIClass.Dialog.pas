@@ -6,7 +6,7 @@ interface
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, asl, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Window;
+  MUIClass.Base, MUIClass.Window;
 {$M+}
 type
   TBaseDialog = class

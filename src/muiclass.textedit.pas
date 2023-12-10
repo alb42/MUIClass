@@ -5,7 +5,7 @@ unit MUIClass.TextEdit;
 interface
 
 uses
-  intuition, TagsParamsHelper, mui, utility, muihelper, Exec,
+  intuition, mui, utility, muihelper, Exec,
   MUIClass.Base, MUIClass.Group, clipboard, iffparse;
 
 type

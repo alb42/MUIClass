@@ -7,7 +7,7 @@ uses
   Utility, Intuition, icon, AGraphics, inputevent,
   keymap, layers,
   mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Area;
+  MUIClass.Base, MUIClass.Area;
 {$M+}
 
 type

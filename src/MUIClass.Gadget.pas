@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Area;
+  MUIClass.Base, MUIClass.Area;
 {$M+}
 type
   TMUIGadget = class(TMUIArea)

@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Group, MUIClass.Area, MUIClass.Gadget;
+  MUIClass.Base, MUIClass.Group, MUIClass.Area, MUIClass.Gadget;
 {$M+}
 type
   TOpenPopEvent = function(Sender: TObject): Boolean of object;

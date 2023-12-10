@@ -5,7 +5,7 @@ interface
 uses
   Classes, SysUtils, fgl, Math,
   Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
-  tagsparamshelper, MUIClass.Base, MUIClass.Window, MUIClass.Menu;
+  MUIClass.Base, MUIClass.Window, MUIClass.Menu;
 {$M+}
 type
   TSpecDesc = class;
