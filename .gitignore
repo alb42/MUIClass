@@ -91,3 +91,5 @@ examples/DatatypeTest
 src/backup/
 
 examples/CustomTree
+
+examples/ModalWindow

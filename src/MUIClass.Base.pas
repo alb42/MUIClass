@@ -219,6 +219,8 @@ type
 
     procedure Run;
 
+    procedure ProcessMessages;
+
     procedure Terminate;
 
     property Terminated: Boolean read FTerminated;
@@ -1142,6 +1144,55 @@ begin
   // Free MUI Objects
   DestroyObject;
   ClearObject;
+end;
+
+procedure TMUIApplication.ProcessMessages;
+var
+  Sigs: LongInt;
+  Msg: PMessage;
+  t1: QWord;
+  I: Integer;
+begin
+  // poll message loop
+  try
+    if Integer(DoMethod(MUIApp.MUIObj, [MUIM_Application_NewInput, AsTag(@sigs)])) = MUIV_Application_ReturnID_Quit then
+      Exit;
+  except
+    On E:Exception do
+    begin
+      if FTerminated then
+        Exit;
+    end;
+  end;
+  CheckSynchronize(1);
+  // check for AREXX messages
+  if Assigned(FAREXXPort) then
+  begin
+    Msg := GetMsg(FAREXXPort);
+    if Assigned(Msg) then
+    begin
+      if PRexxMsg(Msg)^.rm_Action = RXCOMM then
+        RexxFunc(RexxHook, Self.FMUIObj, Msg);
+      ReplyMsg(Msg);
+    end;
+  end;
+  if FActiveTimer then
+  begin
+    t1 := GetTickCount64;
+    I := 0;
+    while i < FTimerList.Count do
+    begin
+      if FTimerList[i].Enabled and Assigned(FTimerList[i].OnTimer) then
+      begin
+        if t1 > FTimerList[i].FLastStart + FTimerList[i].InterVal then
+        begin
+          FTimerList[i].FLastStart := t1;
+          FTimerList[i].OnTimer(Self);
+        end;
+      end;
+      Inc(i);
+    end;
+  end;
 end;
 
 procedure TMUIApplication.Terminate;
