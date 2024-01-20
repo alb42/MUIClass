@@ -1,17 +1,16 @@
-program CustomTree;
+program TreeViewTest;
 {$mode objfpc}{$H+}
 uses
   SysUtils,
   MUIClass.Base, MUIClass.Window, MUIClass.Tree,
   MUIClass.Group, MUIClass.Area, MUIClass.Gadget;
 
-
 type
 
   { TTreeTestWin }
 
   TTreeTestWin = class(TMUIWindow)
-    Tree: TMUICustomTree;
+    Tree: TMUITreeView;
     SelText: TMUIText;
     NewText: TMUIString;
     constructor Create; override;
@@ -36,7 +35,7 @@ begin
   Grp.Horiz := True;
   Grp.Parent := Self;
   //
-  Tree := TMUICustomTree.Create;
+  Tree := TMUITreeView.Create;
   Tree.MaxWidth := 1000;
   Tree.MaxHeight := 10000;
   Tree.OnSelectedNode  := @SelectedNodeChanged;
