@@ -52,6 +52,7 @@ type
   TMUITreeView = class(TMUIGroup)
   private
     FNormFont: PTextFont;
+    FDontUseNorm: Boolean;
     FOnNodeClick: TNotifyEvent;
     FOnNodeDblClick: TNotifyEvent;
     FOnSelectedNode: TNotifyEvent;
@@ -173,20 +174,26 @@ begin
     LocalRect := DrawRect;
     LocalRect.Left := 0;
     LocalRect.Top := 0;
-    if not Assigned(FNormFont) then
+    if not FDontUseNorm and not Assigned(FNormFont) then
+    begin
       FNormFont := OpenMUIFont(fkNormal);
+      if not Assigned(FNormFont) then
+        FDontUseNorm := True;
+    end;
     OldFont := LocalRP^.Font;
-    LocalRP^.Font := FNormFont;
+    if Assigned(FNormFont) then
+      LocalRP^.Font := FNormFont
+    else
+      LocalRP^.Font := RP^.Font;
     SetABPenDrMd(Localrp, 1, 3, Jam1);
     TextExtent(LocalRP, 'Wp', 2, @TE);
     FTextHeight := Round(TE.te_Height * 1.2);
     YStart := FScroller.First;
     Y := FTextHeight - YStart;
     DrawChilds(20, FNodes);
-    FScroller.Entries := y + YStart;
+    FScroller.Entries := y + YStart + FTextHeight;
     FScroller.Visible := LocalRect.Height;
     LocalRP^.Font := OldFont;
-
     DB.DrawToRastPort(DrawRect.Left, DrawRect.Top,RP)
   finally
     DB.Free;
@@ -370,7 +377,9 @@ end;
 constructor TMUITreeView.Create;
 begin
   inherited Create;
+  FDontUseNorm := False;
   FUpdating := False;
+  FNormFont := nil;
   FSelectedNode := nil;
   FNodes := TMUITreeNodeList.Create(False);
   FAllNodes := TMUITreeNodeList.Create(True);
