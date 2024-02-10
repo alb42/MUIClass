@@ -55,6 +55,7 @@ type
     FDontUseNorm: Boolean;
     FOnNodeClick: TNotifyEvent;
     FOnNodeDblClick: TNotifyEvent;
+    FOnNodeRightClick: TNotifyEvent;
     FOnSelectedNode: TNotifyEvent;
     FSelectedNode: TMUITreeNode;
     FTextHeight: Integer;
@@ -76,6 +77,7 @@ type
     procedure MouseDownEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
     procedure SetSelectedNode(AValue: TMUITreeNode);
     procedure WheelEvent(Sender: TObject; ScrollUp: Boolean; var EatEvent: Boolean);
+    procedure RemoveNode(ANode: TMUITreeNode);
   public
     constructor Create; override;
     destructor Destroy; override;
@@ -96,6 +98,7 @@ type
 
     property OnSelectedNode: TNotifyEvent read FOnSelectedNode write FOnSelectedNode;
     property OnNodeClick: TNotifyEvent read FOnNodeClick write FOnNodeClick;
+    property OnNodeRightClick: TNotifyEvent read FOnNodeRightClick write FOnNodeRightClick;
     property OnNodeDblClick: TNotifyEvent read FOnNodeDblClick write FOnNodeDblClick;
   end;
 
@@ -111,6 +114,7 @@ var
   LocalRP: PRastPort;
   LocalRect: TRect;
   DB: TDrawBuffer;
+  TextAttr: TTextAttr;
 
   procedure DrawChilds(LocalIndent: Integer; NodeList: TMUITreeNodeList);
   var
@@ -178,7 +182,17 @@ begin
     begin
       FNormFont := OpenMUIFont(fkNormal);
       if not Assigned(FNormFont) then
-        FDontUseNorm := True;
+      begin
+        if Assigned(RP^.Font) then
+        begin
+          TextAttr.ta_YSize := RP^.Font^.tf_YSize;
+          TextAttr.ta_Name := RP^.Font^.tf_Message.mn_Node.ln_Name;
+          TextAttr.ta_Flags := FPF_ROMFONT or FPF_DISKFONT;
+          TextAttr.ta_Style := FS_NORMAL;
+          FNormFont := OpenFont(@TextAttr);
+        end;
+        FDontUseNorm := not Assigned(FNormFont);
+      end;
     end;
     OldFont := LocalRP^.Font;
     if Assigned(FNormFont) then
@@ -271,6 +285,13 @@ begin
     FScroller.First := FScroller.First + FTextHeight;
 end;
 
+procedure TMUITreeView.RemoveNode(ANode: TMUITreeNode);
+begin
+  FAllNodes.Remove(ANode);
+  if FSelectedNode = ANode then
+    SelectedNode := nil;
+end;
+
 procedure TMUITreeView.MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
 begin
   if Assigned(FSelectedNode) and Assigned(FOnNodeDblClick) then
@@ -302,8 +323,16 @@ var
       if Node.FTextRect.Contains(Point(x,y)) then
       begin
         SelectedNode := Node;
-        if Assigned(FOnNodeClick) then
-          FOnNodeClick(Self);
+        if MouseBtn = mmbLeft then
+        begin
+          if Assigned(FOnNodeClick) then
+            FOnNodeClick(Self);
+        end;
+        if MouseBtn = mmbRight then
+        begin
+          if Assigned(FOnNodeRightClick) then
+            FOnNodeRightClick(Self);
+        end;
         Found := True;
         Exit;
       end;
@@ -358,18 +387,9 @@ begin
 end;
 
 function TMUITreeView.DeleteNode(ANode: TMUITreeNode): Boolean;
-var
-  Idx: Integer;
 begin
   Result := False;
-  Idx := FAllNodes.IndexOf(ANode);
-  if Idx < 0 then
-    Exit;
-  if Assigned(ANode.ParentNode) then
-    ANode.ParentNode.FChilds.Remove(ANode);
-  if FSelectedNode = ANode then
-    SelectedNode := nil;
-  FAllNodes.Delete(Idx);
+  FNodes.Remove(ANode);
   Result := True;
   Redraw;
 end;
@@ -381,8 +401,8 @@ begin
   FUpdating := False;
   FNormFont := nil;
   FSelectedNode := nil;
-  FNodes := TMUITreeNodeList.Create(False);
-  FAllNodes := TMUITreeNodeList.Create(True);
+  FNodes := TMUITreeNodeList.Create(True);
+  FAllNodes := TMUITreeNodeList.Create(False);
   HorizSpacing := 0;
   VertSpacing := 0;
   Horiz := True;
@@ -417,6 +437,8 @@ end;
 
 destructor TMUITreeView.Destroy;
 begin
+  CloseMUIFont(FNormFont);
+  FNodes.Clear;
   FNodes.Free;
   FAllNodes.Free;
   inherited Destroy;
@@ -464,6 +486,7 @@ begin
     Exit;
   FExpanded := AValue;
   FTree.Redraw;
+  writeln(name, ' childs ', FChilds.Count);
 end;
 
 procedure TMUITreeNode.SetName(AValue: string);
@@ -477,7 +500,7 @@ end;
 constructor TMUITreeNode.Create(AParentNode: TMUITreeNode; ATree: TMUITreeView);
 begin
   FTree := ATree;
-  FChilds := TMUITreeNodeList.Create(False);
+  FChilds := TMUITreeNodeList.Create(True);
   FExpanded := True;
   FParentNode := AParentNode;
   FLevel := 0;
@@ -485,6 +508,7 @@ end;
 
 destructor TMUITreeNode.Destroy;
 begin
+  FTree.RemoveNode(Self);
   FChilds.Free;
   inherited Destroy;
 end;
