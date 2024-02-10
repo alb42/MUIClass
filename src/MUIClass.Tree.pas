@@ -389,7 +389,12 @@ end;
 function TMUITreeView.DeleteNode(ANode: TMUITreeNode): Boolean;
 begin
   Result := False;
-  FNodes.Remove(ANode);
+  if not Assigned(ANode) then
+    Exit;
+  if Assigned(ANode.FParentNode) then
+    ANode.FParentNode.FChilds.Remove(ANode)
+  else
+    FNodes.Remove(ANode);
   Result := True;
   Redraw;
 end;
