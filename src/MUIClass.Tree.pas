@@ -60,7 +60,8 @@ type
     FSelectedNode: TMUITreeNode;
     FTextHeight: Integer;
     FDrawPanel: TMUIDrawPanel;
-    FScroller: TMUIScrollbar;
+    FVScroller: TMUIScrollbar;
+    FHScroller: TMUIScrollbar;
     FUpdating: Boolean;
 
     FAllNodes: TMUITreeNodeList;
@@ -109,12 +110,13 @@ implementation
 procedure TMUITreeView.DrawMe(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
 var
   TE: TTextExtent;
-  y, YStart: Integer;
+  XStart, y, YStart: Integer;
   OldFont: pTextFont;
   LocalRP: PRastPort;
   LocalRect: TRect;
   DB: TDrawBuffer;
   TextAttr: TTextAttr;
+  MaxX: Integer;
 
   procedure DrawChilds(LocalIndent: Integer; NodeList: TMUITreeNodeList);
   var
@@ -122,6 +124,7 @@ var
     LastY: Integer;
     Node: TMUITreeNode;
     LastHadChild: Boolean;
+    TxtLen: Integer;
   begin
     LastHadChild := False;
     LastY := (y - FTextHeight) + 2;
@@ -129,27 +132,29 @@ var
     begin
       Node := NodeList[i];
       if LastHadChild then
-        GFXMove(LocalRP, LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY + 3)
+        GFXMove(LocalRP, XStart + LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY + 3)
       else
-        GFXMove(LocalRP, LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY);
+        GFXMove(LocalRP, XStart + LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY);
       LastY := y - FTextHeight div 4 - 1;
-      Draw(LocalRP,LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY);
-      Draw(LocalRP,LocalRect.Left + LocalIndent - 5, LocalRect.Top + LastY);
-      GFXMove(LocalRP, LocalRect.Left + LocalIndent, LocalRect.Top + y);
+      Draw(LocalRP,XStart + LocalRect.Left + LocalIndent - 15, LocalRect.Top + LastY);
+      Draw(LocalRP,XStart + LocalRect.Left + LocalIndent - 5, LocalRect.Top + LastY);
+      GFXMove(LocalRP, XStart + LocalRect.Left + LocalIndent, LocalRect.Top + y);
       if Node = FSelectedNode then
         SetABPenDrMd(Localrp, 2, 3, Jam2)
       else
         SetABPenDrMd(Localrp, 1, 3, Jam1);
       GfxText(Localrp, PChar(Node.Name), Length(Node.Name));
       SetABPenDrMd(Localrp, 1, 3, Jam1);
-      Node.FTextRect := Rect(LocalIndent, y - FTextHeight, LocalIndent + TextLength(Localrp, PChar(Node.Name), Length(Node.Name)), y);
+      TxtLen := TextLength(Localrp, PChar(Node.Name), Length(Node.Name));
+      Node.FTextRect := Rect(XStart + LocalIndent, y - FTextHeight, XStart + LocalIndent + TxtLen, y);
+      MaxX := Max(MaxX, LocalIndent + TxtLen);
       y := y + FTextHeight;
       Node.FImgRect := TRect.Empty;
       LastHadChild := Node.HasChilds;
       if Node.HasChilds then
       begin
         Node.FImgRect := Node.FTextRect;
-        Node.FImgRect := Rect(LocalIndent - 19, Node.FTextRect.CenterPoint.Y - 2, LocalIndent - 11, Node.FTextRect.CenterPoint.Y + 6);
+        Node.FImgRect := Rect(XStart + LocalIndent - 19, Node.FTextRect.CenterPoint.Y - 2, XStart + LocalIndent - 11, Node.FTextRect.CenterPoint.Y + 6);
         SetAPen(LocalRP, 1);
         RectFill(LocalRP, LocalRect.Left + Node.FImgRect.Left, LocalRect.Top + Node.FImgRect.Top, LocalRect.Left + Node.FImgRect.Right, LocalRect.Top + Node.FImgRect.Bottom);
         SetAPen(LocalRP, 0);
@@ -202,11 +207,16 @@ begin
     SetABPenDrMd(Localrp, 1, 3, Jam1);
     TextExtent(LocalRP, 'Wp', 2, @TE);
     FTextHeight := Round(TE.te_Height * 1.2);
-    YStart := FScroller.First;
+    YStart := FVScroller.First;
     Y := FTextHeight - YStart;
+    XStart := -FHScroller.First;
+    MaxX := 20;
     DrawChilds(20, FNodes);
-    FScroller.Entries := y + YStart + FTextHeight;
-    FScroller.Visible := LocalRect.Height;
+    FVScroller.Entries := y + YStart + FTextHeight;
+    FVScroller.Visible := LocalRect.Height;
+    //
+    FHScroller.Entries := MaxX + 20;
+    FHScroller.Visible := LocalRect.Width;
     LocalRP^.Font := OldFont;
     DB.DrawToRastPort(DrawRect.Left, DrawRect.Top,RP)
   finally
@@ -250,28 +260,52 @@ begin
   EatEvent := True;
   case code of
     76: begin // up
-      Idx := FAllNodes.IndexOf(FSelectedNode);
-      if Idx > 0 then
-        SelectedNode := FAllNodes[Idx - 1];
+      if mssShift in Shift then
+      begin
+        FVScroller.First := Max(0 , FVScroller.First - 1);
+      end
+      else
+      begin
+        Idx := FAllNodes.IndexOf(FSelectedNode);
+        if Idx > 0 then
+          SelectedNode := FAllNodes[Idx - 1];
+      end;
     end;
     77: begin // down
-      Idx := FAllNodes.IndexOf(FSelectedNode);
-      if (Idx >= 0) and (Idx < FAllNodes.Count - 1) then
-        SelectedNode := FAllNodes[Idx + 1];
+      if mssShift in Shift then
+      begin
+        FVScroller.First := FVScroller.First + 1;
+      end
+      else
+      begin
+        Idx := FAllNodes.IndexOf(FSelectedNode);
+        if (Idx >= 0) and (Idx < FAllNodes.Count - 1) then
+          SelectedNode := FAllNodes[Idx + 1];
+      end;
     end;
     78: begin // Right
-      if Assigned(FSelectedNode) and FSelectedNode.HasChilds and not FSelectedNode.Expanded then
+      if mssShift in Shift then
       begin
-        FSelectedNode.Expanded := True;
-        Redraw;
-      end;
+        FHScroller.First := FHScroller.First + 1;
+      end
+      else
+        if Assigned(FSelectedNode) and FSelectedNode.HasChilds and not FSelectedNode.Expanded then
+        begin
+          FSelectedNode.Expanded := True;
+          Redraw;
+        end;
     end;
     79: begin // left
-      if Assigned(FSelectedNode) and FSelectedNode.HasChilds and FSelectedNode.Expanded then
+      if mssShift in Shift then
       begin
-        FSelectedNode.Expanded := False;
-        Redraw;
-      end;
+        FHScroller.First := Max(0 , FHScroller.First - 1);
+      end
+      else
+        if Assigned(FSelectedNode) and FSelectedNode.HasChilds and FSelectedNode.Expanded then
+        begin
+          FSelectedNode.Expanded := False;
+          Redraw;
+        end;
     end;
   end;
 end;
@@ -280,9 +314,9 @@ procedure TMUITreeView.WheelEvent(Sender: TObject; ScrollUp: Boolean; var EatEve
 begin
   EatEvent := True;
   if ScrollUp then
-    FScroller.First := FScroller.First - FTextHeight
+    FVScroller.First := FVScroller.First - FTextHeight
   else
-    FScroller.First := FScroller.First + FTextHeight;
+    FVScroller.First := FVScroller.First + FTextHeight;
 end;
 
 procedure TMUITreeView.RemoveNode(ANode: TMUITreeNode);
@@ -357,10 +391,10 @@ begin
   if Assigned(FSelectedNode) then
   begin
     if FSelectedNode.FTextRect.Top < 0 then
-      FScroller.First := FScroller.First + FSelectedNode.FTextRect.Top
+      FVScroller.First := FVScroller.First + FSelectedNode.FTextRect.Top
     else
     if FSelectedNode.FTextRect.Bottom > FDrawPanel.Height then
-      FScroller.First := FScroller.First + FSelectedNode.FTextRect.Top - (FDrawPanel.Height - 2 * FTextHeight)
+      FVScroller.First := FVScroller.First + FSelectedNode.FTextRect.Top - (FDrawPanel.Height - 2 * FTextHeight)
   end;
   if Assigned(FOnSelectedNode) then
       FOnSelectedNode(Self);
@@ -400,6 +434,8 @@ begin
 end;
 
 constructor TMUITreeView.Create;
+var
+  Grp: TMUIGroup;
 begin
   inherited Create;
   FDontUseNorm := False;
@@ -410,8 +446,19 @@ begin
   FAllNodes := TMUITreeNodeList.Create(False);
   HorizSpacing := 0;
   VertSpacing := 0;
-  Horiz := True;
+  Horiz := False;
   Frame := MUIV_Frame_None;
+
+  Grp := TMUIGroup.Create;
+  with Grp do
+  begin
+    Frame := MUIV_Frame_None;
+    HorizSpacing := 0;
+    VertSpacing := 0;
+    Horiz := True;
+    Parent := Self;
+  end;
+
   FDrawPanel := TMUIDrawPanel.Create;
   with FDrawPanel do
   begin
@@ -428,13 +475,22 @@ begin
     OnDblClick  := @MouseDblEvent;
     OnKeyDown  := @KeyDown;
     OnMouseWheel := @WheelEvent;
-    Parent := Self;
+    Parent := Grp;
   end;
-  FScroller := TMUIScrollbar.Create;
-  with FScroller do
+  FVScroller := TMUIScrollbar.Create;
+  with FVScroller do
   begin
     Frame := MUIV_Frame_None;
     Horiz := False;
+    Parent := Grp;
+    OnFirstChange  := @FirstChange;
+  end;
+
+  FHScroller := TMUIScrollbar.Create;
+  with FHScroller do
+  begin
+    Frame := MUIV_Frame_None;
+    Horiz := True;
     Parent := Self;
     OnFirstChange  := @FirstChange;
   end;
@@ -491,7 +547,6 @@ begin
     Exit;
   FExpanded := AValue;
   FTree.Redraw;
-  writeln(name, ' childs ', FChilds.Count);
 end;
 
 procedure TMUITreeNode.SetName(AValue: string);
