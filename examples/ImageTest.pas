@@ -10,32 +10,56 @@ type
   // My Window (mainly because we need the Event attached to an Object)
   TMyWindow = class(TMUIWindow)
     Text: TMUIText;     // Text field
-    Button: TMUIButton; // Button
+    Button1: TMUIButton; // Button
+    Button2: TMuiButton;
     Image: TMUIImage;   // Image
     Grp: TMUIGroup;
-    procedure ButtonClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
 
     constructor Create; override;
   end;
 
-//var
-  //Win: TMyWindow;     // Window
-
 // Event called, when Button is pressed
-procedure TMyWindow.ButtonClick(Sender: TObject);
+procedure TMyWindow.Button1Click(Sender: TObject);
 begin
+  InitChange; // Tell the application that we are making updates to it, or it might not update the GUI correctly
+
   // Delete the old image ;)
   Image.Free;
-  //
+
   // create a new image with different picture
   // because the picture you only can change on creation
   Image := TMUIImage.Create;
-  Image.FixWidth := 200;
-  Image.FixHeight := 123;
+  Image.FixWidth := 174; // This matches test.png width
+  Image.FixHeight := 129; // This matches test.png height
+  Image.FreeHoriz := True;
+  Image.FreeVert := True;
+  Image.Spec.SetPicture('test.png');
+  Image.Parent := Grp; // now the element will be created and linked to application
+
+  ExitChange; // We are done with the updates, refresh the application
+end;
+
+// Event called, when Button is pressed
+procedure TMyWindow.Button2Click(Sender: TObject);
+begin
+  InitChange; // Tell the application that we are making updates to it, or it might not update the GUI correctly
+
+  // Delete the old image ;)
+  Image.Free;
+
+  // create a new image with different picture
+  // because the picture you only can change on creation
+  Image := TMUIImage.Create;
+  Image.FixWidth := 200; // This matches test2.png width
+  Image.FixHeight := 123; // This matches test2.png Height
   Image.FreeHoriz := True;
   Image.FreeVert := True;
   Image.Spec.SetPicture('test2.png');
   Image.Parent := Grp; // now the element will be created an linked to application
+
+  ExitChange; // We are done with the updates, refresh the application
 end;
 
 constructor TMyWindow.Create;
@@ -62,11 +86,17 @@ begin
   Grp2 := TMUIGroup.Create;
   Grp2.Parent := Self;
 
-  // Create a Button with some text
-  Button := TMUIButton.Create;
-  Button.Contents := 'Click Me';
-  Button.OnClick := @ButtonClick;       // Connect the Click Event
-  Button.Parent := Grp2;                // Insert Button in the Window
+  // Create Button1 with some text
+  Button1 := TMUIButton.Create;
+  Button1.Contents := 'Click Me';
+  Button1.OnClick := @Button1Click;       // Connect the Click Event
+  Button1.Parent := Grp2;                // Insert Button in the Window
+
+  // Create Button1 with some text
+  Button2 := TMUIButton.Create;
+  Button2.Contents := 'Click Me';
+  Button2.OnClick := @Button2Click;       // Connect the Click Event
+  Button2.Parent := Grp2;                // Insert Button in the Window
 end;
 
 begin
