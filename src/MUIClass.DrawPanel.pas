@@ -20,11 +20,20 @@ type
   TMUIMouseMove = procedure(Sender: TObject; X,Y: Integer; var EatEvent: Boolean) of object;
   TMUIKeyEvent = procedure(Sender: TObject; Shift: TMUIShiftState; Code: Word; Key: Char; var EatEvent: Boolean) of object;
 
+  TMUIAllowedToOpenEvent = procedure(Sender: TObject; x, y: Integer; var AllowedToOpen: Boolean) of object;
+
   TMouseClickTime = record
     LSecs, LMicros: LongWord;
     MSecs, MMicros: LongWord;
     RSecs, RMicros: LongWord;
   end;
+
+  TMUIP_ContextMenuBuild = record
+    MethodID: PtrUInt;
+    mx: PtrUInt;
+    my: PtrUInt;
+  end;
+  PMUIP_ContextMenuBuild = ^TMUIP_ContextMenuBuild;
 
   { TDrawBuffer }
 
@@ -90,6 +99,8 @@ type
     property PenPos: TPoint read GetPenPos write SetPenPos;
   end;
 
+  { TMUIDrawPanel }
+
   TMUIDrawPanel = class(TMUIArea)
   private
     // Min Max
@@ -112,6 +123,7 @@ type
     FOnMUIKeyDown: TMUIKeyEvent;
     FOnMUIKeyUp: TMUIKeyEvent;
     FOnMUIMouseLeave: TNotifyEvent;
+    FOnOpenContextMenu: TMUIAllowedToOpenEvent;
   protected
     function MUIEvent(cl: PIClass; Obj: PObject_; Msg: intuition.PMsg): PtrUInt; virtual;
     //
@@ -120,6 +132,7 @@ type
     function DoAskMinMax(cl: PIClass; Obj: PObject_; Msg: PMUIP_AskMinMax): PtrUInt; virtual;
     function DoDraw(cl: PIClass; Obj: PObject_; Msg: PMUIP_Draw): PtrUInt; virtual;
     function DoHandleEvent(cl: PIClass; Obj: PObject_; Msg: PMUIP_HandleEvent): PtrUInt; virtual;
+    function DoContextMenuBuild(cl: PIClass; Obj: PObject_; Msg: PMUIP_ContextMenuBuild): PtrUInt; virtual;
 
     procedure DoDrawObject(Rp: PRastPort; DrawRect: TRect); virtual;
 
@@ -150,6 +163,7 @@ type
     property OnMouseLeave: TNotifyEvent read FOnMUIMouseLeave write FOnMUIMouseLeave;
     property OnKeyDown: TMUIKeyEvent read FOnMUIKeyDown write FOnMUIKeyDown;
     property OnKeyUp: TMUIKeyEvent read FOnMUIKeyUp write FOnMUIKeyUp;
+    property OnOpenContextMenu: TMUIAllowedToOpenEvent read FOnOpenContextMenu write FOnOpenContextMenu;
   end;
 
 var
@@ -763,6 +777,21 @@ begin
     Result := MUI_EventHandlerRC_Eat;
 end;
 
+function TMUIDrawPanel.DoContextMenuBuild(cl: PIClass; Obj: PObject_; Msg: PMUIP_ContextMenuBuild): PtrUInt;
+var
+  Allowed: Boolean;
+begin
+  Result := 0;
+  if Assigned(Self.ContextMenu) and Self.ContextMenu.HasObj then
+  begin
+    Allowed := True;
+    if Assigned(FOnOpenContextMenu) then
+      FOnOpenContextMenu(Self, Msg^.mx, Msg^.my, Allowed);
+    if Allowed then
+      Result := AsTag(ContextMenu.MUIObj);
+  end;
+end;
+
 
 function TMUIDrawPanel.MUIEvent(cl: PIClass; Obj: PObject_; Msg: intuition.PMsg): PtrUInt;
 begin
@@ -771,6 +800,8 @@ begin
     MUIM_Cleanup: Result := DoCleanup(cl, Obj, Pointer(Msg));
     //
     MUIM_AskMinMax: Result := DoAskMinMax(cl, Obj, Pointer(Msg));
+    //
+    MUIM_ContextMenuBuild: Result := DoContextMenuBuild(cl, Obj, Pointer(Msg));
     //
     MUIM_Draw: Result := DoDraw(cl, Obj, Pointer(Msg));
     MUIM_HANDLEEVENT: Result := DoHandleEvent(cl, Obj, Pointer(Msg));
@@ -791,6 +822,7 @@ begin
       MUIM_Cleanup,
       MUIM_AskMinMax,
       MUIM_Draw,
+      MUIM_ContextMenuBuild,
       MUIM_HANDLEEVENT:
       begin
         MUIPB := TMUIDrawPanel(INST_DATA(cl, Pointer(obj))^); // get class

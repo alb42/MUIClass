@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, mui, AGraphics, Utility, Intuition, Math,
-  MUIClass.Area,
+  MUIClass.Area, MUIClass.Menu,
   MUIClass.Base, MUIClass.Group, MUIClass.Gadget, MUIClass.DrawPanel;
 
 type
@@ -56,6 +56,7 @@ type
     FOnNodeClick: TNotifyEvent;
     FOnNodeDblClick: TNotifyEvent;
     FOnNodeRightClick: TNotifyEvent;
+    FOnOpenContextMenu: TMUIAllowedToOpenEvent;
     FOnSelectedNode: TNotifyEvent;
     FSelectedNode: TMUITreeNode;
     FTextHeight: Integer;
@@ -68,6 +69,7 @@ type
     FNodes: TMUITreeNodeList;
 
     procedure DrawMe(Sender: TObject; Rp: PRastPort; DrawRect: TRect);
+    procedure DrawOpenContextMenu(Sender: TObject; x, y: Integer; var AllowedToOpen: Boolean);
     procedure FirstChange(Sender: TObject);
     function GetAllNode(Idx: Integer): TMUITreeNode;
     function GetAllNodeCount: Integer;
@@ -79,12 +81,17 @@ type
     procedure SetSelectedNode(AValue: TMUITreeNode);
     procedure WheelEvent(Sender: TObject; ScrollUp: Boolean; var EatEvent: Boolean);
     procedure RemoveNode(ANode: TMUITreeNode);
+  protected
+    procedure BeforeCreateObject; override;
+    procedure AfterCreateObject; override;
   public
     constructor Create; override;
     destructor Destroy; override;
 
     function AddNode(ParentNode: TMUITreeNode; AName: string; Data: Pointer = nil): TMUITreeNode;
     function DeleteNode(ANode: TMUITreeNode): Boolean;
+
+    function GetNodeAtPosition(x, y: Integer): TMUITreeNode;
 
     procedure Redraw;
 
@@ -101,6 +108,8 @@ type
     property OnNodeClick: TNotifyEvent read FOnNodeClick write FOnNodeClick;
     property OnNodeRightClick: TNotifyEvent read FOnNodeRightClick write FOnNodeRightClick;
     property OnNodeDblClick: TNotifyEvent read FOnNodeDblClick write FOnNodeDblClick;
+
+    property OnOpenContextMenu: TMUIAllowedToOpenEvent read FOnOpenContextMenu write FOnOpenContextMenu;
   end;
 
 implementation
@@ -224,6 +233,12 @@ begin
   end;
 end;
 
+procedure TMUITreeView.DrawOpenContextMenu(Sender: TObject; x, y: Integer; var AllowedToOpen: Boolean);
+begin
+  if Assigned(FOnOpenContextMenu) then
+    FOnOpenContextMenu(Self, x - FDrawPanel.LeftEdge, y - FDrawPanel.TopEdge, AllowedToOpen);
+end;
+
 procedure TMUITreeView.FirstChange(Sender: TObject);
 begin
   Redraw;
@@ -324,6 +339,17 @@ begin
   FAllNodes.Remove(ANode);
   if FSelectedNode = ANode then
     SelectedNode := nil;
+end;
+
+procedure TMUITreeView.BeforeCreateObject;
+begin
+  inherited BeforeCreateObject;
+  Self.FDrawPanel.ContextMenu := ContextMenu;
+end;
+
+procedure TMUITreeView.AfterCreateObject;
+begin
+  inherited AfterCreateObject;
 end;
 
 procedure TMUITreeView.MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
@@ -433,6 +459,23 @@ begin
   Redraw;
 end;
 
+function TMUITreeView.GetNodeAtPosition(x, y: Integer): TMUITreeNode;
+var
+  i: Integer;
+  Node: TMUITreeNode;
+begin
+  Result := nil;
+  for i := 0 to FAllNodes.Count - 1 do
+  begin
+    Node := FAllNodes[i];
+    if Node.FTextRect.Contains(Point(x,y)) then
+    begin
+      Result := Node;
+      Exit;
+    end;
+  end;
+end;
+
 constructor TMUITreeView.Create;
 var
   Grp: TMUIGroup;
@@ -475,6 +518,7 @@ begin
     OnDblClick  := @MouseDblEvent;
     OnKeyDown  := @KeyDown;
     OnMouseWheel := @WheelEvent;
+    OnOpenContextMenu  := @DrawOpenContextMenu;
     Parent := Grp;
   end;
   FVScroller := TMUIScrollbar.Create;
@@ -498,6 +542,7 @@ end;
 
 destructor TMUITreeView.Destroy;
 begin
+  FDrawPanel.ContextMenu := nil;
   CloseMUIFont(FNormFont);
   FNodes.Clear;
   FNodes.Free;
