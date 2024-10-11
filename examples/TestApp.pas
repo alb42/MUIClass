@@ -11,7 +11,12 @@ uses
 
 
 type
+
+  { TMyWindow }
+
   TMyWindow = class(TMUIWindow)
+  private
+    procedure AppDropEvent(Sender: TObject; x, y: LongInt; Files: array of string);
   public
     Count: Integer;
     Txt: TMUIText;
@@ -89,12 +94,14 @@ begin
   OnShow := @ShowEvent;
   Bubble := nil;
   Count := 0;
+  AppWindow := True;
 
   //SizeGadget := False; // Disable SizeGadget
 
   Title := 'Main Window';
   ScreenTitle := 'My new supercool Window';
   OnActivate := @WinActive;
+  OnAppDrop  := @AppDropEvent;
 
 
   MUIApp.OnActivate := @AppActivate;
@@ -308,6 +315,7 @@ begin
   begin
     Entries := ['Some', 'Radio', 'Items', 'To', 'select'];
     Active := 2;
+    Spacing := 200;
     OnActiveChange := @RadioChange;
     Parent := Pages;
   end;
@@ -358,6 +366,15 @@ destructor TMyWindow.Destroy;
 begin
   DB.Free;
   inherited;
+end;
+
+procedure TMyWindow.AppDropEvent(Sender: TObject; x, y: LongInt; Files: array of string);
+var
+  Filename: string;
+begin
+  writeln('got ' + IntToStr(Length(Files)) + ' dropped at ' + IntToStr(x) + ' ' + IntToStr(y));
+  for Filename in Files do
+    writeln(Filename);
 end;
 
 procedure TMyWindow.ShowEvent(Sender: TObject);

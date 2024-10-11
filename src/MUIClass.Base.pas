@@ -531,7 +531,7 @@ begin
   Hook := HookList.GetNewHook;
 
   MH_SetHook(Hook^, HookFunc, Self);
-  DoMethod(AObj, [MUIM_Notify, MUIField, TriggerValue, AsTag(AObj), 2, MUIM_CallHook, AsTag(Hook)]);
+  DoMethod(AObj, [MUIM_Notify, MUIField, TriggerValue, AsTag(AObj), 3, MUIM_CallHook, AsTag(Hook), MUIV_TriggerValue]);
 end;
 
 

@@ -3,7 +3,7 @@ unit MUIClass.Window;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Exec,
+  Classes, SysUtils, fgl, Exec, workbench, amigados,
   Utility, Intuition, icon, mui, muihelper,
   MUIClass.Base;
 {$M+}
@@ -11,6 +11,8 @@ type
   TCloseAction = (caNone, caClose, caFree); // return values for OnCloseRequest, default is caClose
 
   TCloseReqEvent = procedure(Sender: TObject; var CloseAction: TCloseAction) of object;
+  TAppDropEvent = procedure(Sender: TObject; x,y: LongInt; Files: array of string) of object;
+
 
   TMUIWindow = class(TMUIWithParent)
   private
@@ -30,6 +32,7 @@ type
     FBorderless: Boolean;
     FCloseGadget: Boolean;
     FOnCloseRequest: TCloseReqEvent;
+    FOnAppDrop: TAppDropEvent;
     FDefaultObject: TMUINotify;
     FDepthGadget: Boolean;
     FDragBar: Boolean;
@@ -162,6 +165,7 @@ type
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;               // Event when the Window gets activated
     property OnDeactivate: TNotifyEvent read FOnDeactivate write FOnDeactivate;         // Event when the Window gets activated
     property OnCloseRequest: TCloseReqEvent read FOnCloseRequest write FOnCloseRequest; // Ask the user what to do on Close button click
+    property OnAppDrop: TAppDropEvent read FOnAppDrop write FOnAppDrop;                 // Fired if files are droppped onto the window, when AppWindow is True
   end;
 
   { TMUIAboutMUI }
@@ -397,6 +401,37 @@ begin
   end;
 end;
 
+function AppMessageFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
+var
+  PApp: pAppMessage;
+  ArgList: pWBArgList;
+  Buf: PChar;
+  i: Integer;
+  PasObj: TMUIWindow;
+  Files: array of string;
+begin
+  Result := 0;
+  PApp := PAppMessage(Msg^);
+  ArgList := PApp^.am_ArgList;
+  Buf := AllocMem(257);
+  SetLength(Files, Papp^.am_NumArgs);
+  for i := 1 to Papp^.am_NumArgs do
+  begin
+    NameFromLock(ArgList^[i].wa_Lock, Buf, 256);
+    Files[i - 1] := IncludeTrailingPathDelimiter(Buf) + ArgList^[i].wa_Name;
+  end;
+  FreeMem(Buf);
+  //
+  PasObj := TMUIWindow(Hook^.h_Data);
+  try
+    if Assigned(PasObj.FOnAppDrop) then
+      PasObj.FOnAppDrop(PasObj, Papp^.am_MouseX, PApp^.am_MouseY, Files);
+  except
+    on E: Exception do
+      MUIApp.DoException(E);
+  end;
+end;
+
 procedure TMUIWindow.AfterCreateObject;
 begin
   inherited;
@@ -404,6 +439,7 @@ begin
   ConnectHook(MUIA_Window_Activate, MUI_TRUE, @ActivateFunc);
   ConnectHook(MUIA_Window_Activate, MUI_FALSE, @DeactivateFunc);
   ConnectHook(MUIA_Window_CloseRequest, MUI_TRUE, @CloseReqFunc);
+  ConnectHook(MUIA_AppMessage, MUIV_EveryTime, @AppMessageFunc);
 end;
 
 procedure TMUIWindow.SetOpen(AOpen: Boolean);
