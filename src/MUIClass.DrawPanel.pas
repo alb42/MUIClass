@@ -394,7 +394,7 @@ begin
 
     BltBitMapRastPort(NewBitmap, 0, 0, DestRP, x, y, DestWidth, DestHeight, $00c0);
   finally
-    FreeBitMap(Bitmap);
+    FreeBitMap(NewBitmap);
   end;
 end;
 
