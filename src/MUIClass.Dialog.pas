@@ -17,6 +17,8 @@ type
     property TitleText: string read FTitleText write FTitleText;
   end;
 
+  { TFileDialog }
+
   TFileDialog = class(TBaseDialog)
   private
     FSaveMode: Boolean;
@@ -28,6 +30,7 @@ type
     FFilenames: TStringList;
   public
     constructor Create; virtual;
+    destructor Destroy; override;
     function Execute: Boolean; override;
     property SaveMode: Boolean read FSaveMode write FSaveMode;
     property MultiSelect: Boolean read FMultiSelect write FMultiSelect;
@@ -141,6 +144,12 @@ begin
   FMultiSelect := False;
   FDrawersOnly := False;
   FSaveMode := False;
+end;
+
+destructor TFileDialog.Destroy;
+begin
+  FileNames.Free;
+  inherited Destroy;
 end;
 
 function IntuiFunc(Hook: PHook; Obj: PObject_; Data: Pointer): PtrInt;
