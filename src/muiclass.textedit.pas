@@ -15,9 +15,12 @@ type
   TMUITextEdit = class(TMUIGroup)
   private
     FTabsToSpaces: Boolean;
+    FReadOnly: Boolean;
     FText: string;
+    function GetReadOnly: Boolean;
     function GetTabsToSpaces: Boolean;
     function GetText: string;
+    procedure SetReadOnly(AValue: Boolean);
     procedure SetTabsToSpaces(AValue: Boolean);
     procedure SetText(AValue: string);
   protected
@@ -28,11 +31,13 @@ type
 
   public
     constructor Create; override;
+    procedure AddText(s: string);
     procedure Clear;
     procedure Copy;
     procedure Cut;
     procedure Paste;
     property Text: string read GetText write SetText;
+    property ReadOnly: Boolean read GetReadOnly write SetReadOnly;
     property TabsToSpaces: Boolean read GetTabsToSpaces write SetTabsToSpaces;
   end;
 
@@ -167,12 +172,26 @@ begin
   Result := FText;
 end;
 
+procedure TMUITextEdit.SetReadOnly(AValue: Boolean);
+begin
+  FReadOnly := AValue;
+  if HasObj then
+    MH_Set(FTextObj, MUIA_TextEditor_ReadOnly, AsTag(AValue));
+end;
+
 function TMUITextEdit.GetTabsToSpaces: Boolean;
 begin
   if HasObj then
     FTabsToSpaces := Boolean(MH_Get(FTextObj, MUIA_TextEditor_ConvertTabs));
   Result := FTabsToSpaces;
 end;
+
+function TMUITextEdit.GetReadOnly: Boolean;
+begin
+  if HasObj then
+    FReadOnly := Boolean(MH_Get(FTextObj, MUIA_TextEditor_ReadOnly));
+  Result := FReadOnly;
+  end;
 
 procedure TMUITextEdit.SetTabsToSpaces(AValue: Boolean);
 begin
@@ -202,6 +221,7 @@ begin
   ATagList.AddTag(MUIA_Group_Spacing, 0);
   //
   Tags.AddTag(MUIA_TextEditor_ConvertTabs, AsTag(FTabsToSpaces));
+  Tags.AddTag(MUIA_TextEditor_ReadOnly, AsTag(FReadOnly));
   FTextObj := MUI_NewObjectA(MUIC_TextEdit, Tags.GetTagPointer);
   //
   Tags.Clear;
@@ -217,6 +237,14 @@ end;
 constructor TMUITextEdit.Create;
 begin
   inherited Create;
+  FReadOnly := False;
+  FTabsToSpaces := False;
+end;
+
+procedure TMUITextEdit.AddText(s: string);
+begin
+  if HasObj then
+    DoMethod(FTextObj, [NativeUInt(MUIM_TextEditor_InsertText), AsTag(PChar(s)), MUIV_TextEditor_InsertText_Bottom]);
 end;
 
 procedure TMUITextEdit.Clear;
