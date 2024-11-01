@@ -3,8 +3,11 @@ unit MUIClass.Gadget;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
+  Classes, SysUtils,
+  {$ifdef AmigaOS4}
+  Exec, AmigaDOS,
+  {$endif}
+  Utility, Intuition, icon, mui,
   MUIClass.Base, MUIClass.Area;
 {$M+}
 type
@@ -144,6 +147,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Gadget, TagList.GetTagPointer);
@@ -204,6 +208,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_String, TagList.GetTagPointer);
@@ -215,6 +220,8 @@ function AckFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIString;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIString(Hook^.h_Data);
@@ -230,6 +237,8 @@ function ContentsFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIString;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIString(Hook^.h_Data);
@@ -402,6 +411,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Prop, TagList.GetTagPointer);
@@ -413,6 +423,8 @@ function PropFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIProp;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIProp(Hook^.h_Data);
@@ -532,6 +544,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Scrollbar, TagList.GetTagPointer);

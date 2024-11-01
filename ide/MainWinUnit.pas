@@ -92,7 +92,7 @@ var
 implementation
 
 uses
-  StrArraySetUnit, math, prefsunit;
+  StrArraySetUnit, prefsunit;
 
 // Create Main Window
 constructor TMainWindow.Create;
@@ -131,6 +131,7 @@ begin
 
   // Choose Component
   //    Create the ComboBox Entries from the List
+  StrCycle := [];
   SetLength(StrCycle, MUIComps.Count);
   for i := 0 to MUIComps.Count - 1 do
     StrCycle[i] := '    ' + MUIComps[i].Name + '    ';
@@ -602,6 +603,8 @@ begin
               end;
             end;
           end;
+       else
+        ;
       end;
     end;
   end;
@@ -878,6 +881,7 @@ var
   Num: Integer;
 begin
   // Number of Params is easy, just take it ;)
+  Result := [];
   SetLength(Result, MT^.ParamCount);
   P := @(MT^.ParamList[0]);
   // Names and types of the Parameter you have to calculate yourself
@@ -1067,7 +1071,8 @@ begin
                 ItemProps.Add(ItemProp);
               end;
             end;
-          //else
+          else
+            ;
           //  writeln(name, 'Not handled Type: ', PropType^.Kind); // still unknown Types needs Handler
         end;
       end;
@@ -1076,6 +1081,7 @@ begin
   end;
   // Faster Setting to the List we form an Array with all the names
   // for ItemList
+  a := [];
   SetLength(A, ItemProps.Count + 1);
   for i := 0 to ItemProps.Count - 1 do
     A[i] := PChar(ItemProps[i].Name);
@@ -1083,6 +1089,7 @@ begin
   PropList.List.Insert(@a[0], ItemProps.Count, MUIV_List_Insert_Bottom);
   PropList.List.Quiet := False;
   // For EventList
+  B := [];
   SetLength(B, EventProps.Count + 1);
   for i := 0 to EventProps.Count - 1 do
     B[i] := PChar(EventProps[i].Name);

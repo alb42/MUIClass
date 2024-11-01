@@ -3,8 +3,9 @@ unit MUIClass.Menu;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
+  Classes, SysUtils,
+  {$ifdef AmigaOS4}Exec, AmigaDOS,{$endif}
+  Utility, Intuition, icon, mui,
   MUIClass.Base;
 {$M+}
 type
@@ -108,6 +109,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_MenuStrip, TagList.GetTagPointer);
@@ -149,6 +151,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Menu, TagList.GetTagPointer);
@@ -221,6 +224,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_MenuItem, TagList.GetTagPointer);
@@ -232,6 +236,8 @@ function TriggerFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIMenuItem;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIMenuItem(Hook^.h_Data);

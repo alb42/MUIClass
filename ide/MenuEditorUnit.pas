@@ -3,7 +3,7 @@ unit menueditorunit;
 interface
 uses
   SysUtils, Classes,
-  IDETypes, NodeTreeUnit,
+  NodeTreeUnit,
   MUI,
   MUIClass.Base, MUIClass.Area, MUIClass.Window,
   MUIClass.Group, MUIClass.Menu;

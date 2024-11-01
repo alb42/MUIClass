@@ -3,8 +3,11 @@ unit MUIClass.PopString;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
+  Classes, SysUtils,
+  {$ifdef AmigaOS4}
+  Exec, AmigaDOS,
+  {$endif}
+  Utility, Intuition, agraphics, icon, mui, muihelper,
   MUIClass.Base, MUIClass.Group, MUIClass.Area, MUIClass.Gadget;
 {$M+}
 type
@@ -172,6 +175,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_PopString, TagList.GetTagPointer);
@@ -270,6 +274,8 @@ function OpenFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopString;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := AsTag(False);
     PasObj := TMUIPopString(Hook^.h_Data);
@@ -307,6 +313,8 @@ var
   CMsg: ^TCloseMsg;
   PasObj: TMUIPopString;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIPopString(Hook^.h_Data);
@@ -366,6 +374,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Poplist, TagList.GetTagPointer);
@@ -432,6 +441,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_PopObject, TagList.GetTagPointer);
@@ -504,6 +514,8 @@ function StrObjFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopObject;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := AsTag(False);
     PasObj := TMUIPopObject(Hook^.h_Data);
@@ -519,6 +531,8 @@ function ObjStrFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPopObject;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIPopObject(Hook^.h_Data);
@@ -593,6 +607,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_PopASL, TagList.GetTagPointer);

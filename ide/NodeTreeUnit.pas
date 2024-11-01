@@ -452,6 +452,7 @@ var
           end;
           // ##################### DynArray (TStringArray)
           tkDynArray: begin
+            Sa := [];
             SetLength(Sa, Prop.ChildNodes.Count);
             for j := 0 to Prop.ChildNodes.Count - 1 do
             begin

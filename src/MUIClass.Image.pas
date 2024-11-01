@@ -3,8 +3,8 @@ unit MUIClass.Image;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
+  Classes, SysUtils,
+  {$ifdef AmigaOS4}Exec, AmigaDOS,{$endif} Utility, Intuition, agraphics, icon, mui,
   MUIClass.Base, MUIClass.Area;
 {$M+}
 type
@@ -138,6 +138,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Image, TagList.GetTagPointer);
@@ -264,6 +265,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Bitmap, TagList.GetTagPointer);

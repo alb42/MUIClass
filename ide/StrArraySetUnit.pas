@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Classes, MUI,
   MUIClass.Base, MUIClass.Area, MUIClass.Window, MUIClass.Group,
-  MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric,
+  MUIClass.Gadget, MUIClass.List,
   MainWinUnit,
   NodeTreeUnit, IDETypes;
 
@@ -133,7 +133,8 @@ function TStrArrayWin.GetStringArray: TStringArray;
 var
   i: Integer;
 begin
-  SetLength(Result , SL.Count);
+  Result := [];
+  SetLength(Result, SL.Count);
   for i := 0 to SL.Count - 1 do
     Result[i] := SL[i];
 end;

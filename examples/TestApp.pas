@@ -428,12 +428,14 @@ begin
   if FD.Execute then
     ShowMessage('File(s) Selected: '#10 + FD.Filenames.Text);
   FD.Free;
-  {FO := TFontDialog.Create;
+
+  FO := TFontDialog.Create;
   FO.Options := [foFrontPen, foBackPen, foStyle, foDrawMode, foFixedOnly];
   if FO.Execute then
     ShowMessage('Font Selected: '#10 + FO.Name + IntToStr(FO.Size));
-  FO.Free;}
-  //Writeln('Clicked: ', MessageBox('Test MessageBox', 'This is a Text MessageBox', ['Button 1', 'Button 2', 'Cancel']));
+  FO.Free;
+
+  Writeln('Clicked: ', MessageBox('Test MessageBox', 'This is a Text MessageBox', ['Button 1', 'Button 2', 'Cancel']));
 end;
 
 procedure TMyWindow.NewBtnClick(Sender: TObject);

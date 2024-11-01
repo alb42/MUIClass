@@ -4,8 +4,8 @@ unit MUIClass.Dialog;
 interface
 
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, asl, icon, mui, muihelper,
+  Classes, SysUtils,
+  Exec, Utility, {$ifdef AmigaOS4}AmigaDOS,{$endif} Intuition, asl, icon, mui, muihelper,
   MUIClass.Base, MUIClass.Window;
 {$M+}
 type
@@ -156,6 +156,8 @@ function IntuiFunc(Hook: PHook; Obj: PObject_; Data: Pointer): PtrInt;
 var
   IMsg: PIntuiMessage;
 begin
+  Unused(Hook);
+  Unused(Obj);
   try
     Result := 0;
     IMsg := Data;
@@ -168,7 +170,7 @@ begin
 end;
 
 type
-  PWBArg = ^TWBArg;
+  //PWBArg = ^TWBArg;
   TWBArg = record
     wa_Lock: BPTR;         { a lock descriptor }
     wa_Name: STRPTR;       { a string relative to that lock }
@@ -188,7 +190,7 @@ begin
   Result := False;
   FFileNames.Clear;
   //
-  MH_SetHook(IntuiHook, @IntuiFunc, Self);
+  MH_SetHook({%H-}IntuiHook, @IntuiFunc, Self);
   TagList.AddTags([
     ASLFR_Window,  AsTag(TMUIWindow(MUIApp.MainWindow).Window),
     ASLFR_UserData, AsTag(MUIApp.MUIObj),
@@ -261,7 +263,7 @@ var
 begin
   Result := False;
   //
-  MH_SetHook(IntuiHook, @IntuiFunc, Self);
+  MH_SetHook({%H-}IntuiHook, @IntuiFunc, Self);
   TagList.AddTags([
     ASLFO_Window,  AsTag(TMUIWindow(MUIApp.MainWindow).Window),
     ASLFO_UserData, AsTag(MUIApp.MUIObj),
@@ -343,7 +345,7 @@ var
 begin
   Result := False;
   //
-  MH_SetHook(IntuiHook, @IntuiFunc, Self);
+  MH_SetHook({%H-}IntuiHook, @IntuiFunc, Self);
   TagList.AddTags([
     ASLSM_Window,  AsTag(TMUIWindow(MUIApp.MainWindow).Window),
     ASLSM_UserData, AsTag(MUIApp.MUIObj),

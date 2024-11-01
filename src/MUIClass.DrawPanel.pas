@@ -490,6 +490,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMuiObj := NewObjectA(MUIPBType^.mcc_Class, nil, TagList.GetTagPointer);
@@ -519,13 +520,13 @@ begin
   {$ifdef AmigaOS4}
   EHNode.ehn_Events := EHNode.ehn_Events or IDCMP_EXTENDEDMOUSE;
   {$endif}
-  DoMethod(OBJ_win(obj), [MUIM_Window_AddEventHandler, PtrUInt(@EHNode)]);
+  DoMethod(OBJ_win(obj), [MUIM_Window_AddEventHandler, {%H-}PtrUInt(@EHNode)]);
 end;
 
 // OM_CLEANUP
 function TMUIDrawPanel.DoCleanup(cl: PIClass; Obj: PObject_; Msg: PMUIP_Cleanup): PtrUInt;
 begin
-  DoMethod(OBJ_win(obj), [MUIM_Window_RemEventHandler, PtrUInt(@EHNode)]);
+  DoMethod(OBJ_win(obj), [MUIM_Window_RemEventHandler, {%H-}PtrUInt(@EHNode)]);
   Result := DoSuperMethodA(cl,obj,msg);
 end;
 
@@ -781,6 +782,8 @@ function TMUIDrawPanel.DoContextMenuBuild(cl: PIClass; Obj: PObject_; Msg: PMUIP
 var
   Allowed: Boolean;
 begin
+  Unused(cl);
+  Unused(Obj);
   Result := 0;
   if Assigned(Self.ContextMenu) and Self.ContextMenu.HasObj then
   begin

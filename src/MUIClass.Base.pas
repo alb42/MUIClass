@@ -455,6 +455,7 @@ end;
 
 procedure TMUIRootClass.GetCreateTags(var ATagList: TATagList);
 begin
+  Unused(ATagList);
 end;
 
 function TMUIRootClass.GetHasObj: Boolean;
@@ -505,7 +506,7 @@ function TMUIRootClass.GetPointerValue(Tag: LongWord): Pointer;
 begin
   Result := nil;
   if Assigned(FMUIObj) then
-    Result := Pointer(MH_Get(FMUIObj, Tag));
+    Result := {%H-}Pointer(MH_Get(FMUIObj, Tag));
 end;
 
 function TMUIRootClass.GetStringValue(Tag: LongWord): string;
@@ -745,7 +746,7 @@ begin
     fkList: Typ := MUICFG_Font_List;
     fkTitle: Typ := MUICFG_Font_Title;
   end;
-  d := PChar(MUIApp.GetConfigData(Typ));
+  d := {%H-}PChar(MUIApp.GetConfigData(Typ));
   if Assigned(d) then
   begin
     s := string(d);
@@ -848,6 +849,7 @@ var
   PasObj: TMUIApplication;
   Txt: String;
 begin
+  Unused(Obj);
   try
     Result := 0;
     PasObj := TMUIApplication(Hook^.h_Data);
@@ -917,6 +919,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Application, TagList.GetTagPointer);
@@ -936,6 +939,8 @@ function ActivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIApplication(Hook^.h_Data);
@@ -951,6 +956,8 @@ function DeactivateFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIApplication(Hook^.h_Data);
@@ -966,6 +973,8 @@ function DoubleStartFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIApplication(Hook^.h_Data);
@@ -981,6 +990,8 @@ function IconifyFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIApplication(Hook^.h_Data);
@@ -996,6 +1007,8 @@ function RestoreFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIApplication;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIApplication(Hook^.h_Data);
@@ -1479,6 +1492,8 @@ begin
       DoMethod(FMUIObj, [MUIM_Application_Load, AsTag(MUIV_Application_Load_ENVARC)])
     else
       DoMethod(FMUIObj, [MUIM_Application_Load, AsTag(MUIV_Application_Load_ENV)])
+    {$else}
+    Unused(FromEnvarc);
     {$endif}
   end;
 end;
@@ -1498,6 +1513,8 @@ begin
       DoMethod(FMUIObj, [MUIM_Application_Save, AsTag(MUIV_Application_Load_ENVARC)])
     else
       DoMethod(FMUIObj, [MUIM_Application_Save, AsTag(MUIV_Application_Load_ENV)])
+    {$else}
+    Unused(ToEnvarc);
     {$endif}
   end;
 end;
@@ -1608,6 +1625,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Semaphore, TagList.GetTagPointer);
@@ -1617,12 +1635,14 @@ end;
 
 function TMUISemaphore.Attempt: Boolean;
 begin
+  Result := False;
   if HasObj then
     Result := Boolean(DoMethod(MUIObj, [MUIM_Semaphore_Attempt]));
 end;
 
 function TMUISemaphore.AtteptShared: Boolean;
 begin
+  Result := False;
   if HasObj then
     Result := Boolean(DoMethod(MUIObj, [MUIM_Semaphore_AttemptShared]));
 end;
@@ -1666,6 +1686,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Dataspace, TagList.GetTagPointer);
@@ -1701,7 +1722,7 @@ function TMUIDataspace.Find(Id: LongWord): Pointer;
 begin
   Result := nil;
   if HasObj then
-    Result := Pointer(DoMethod(MUIObj, [MUIM_Dataspace_Find, AsTag(Id)]));
+    Result := {%H-}Pointer(DoMethod(MUIObj, [MUIM_Dataspace_Find, AsTag(Id)]));
 end;
 
 function TMUIDataspace.Merge(DS: TMUIDataSpace): Integer;
@@ -1838,7 +1859,7 @@ begin
   for i := 0 to High(List) do
   begin
     //TagDbgOut('+ ' + IntToStr(i) + '. ' + HexStr(@List[i]));
-    TagDbgOut('  ' + IntToStr(i) + '. Tag: ' + HexStr(Pointer(List[i].ti_Tag)) + ' Data: ' + HexStr(Pointer(List[i].ti_Data)));
+    TagDbgOut('  ' + IntToStr(i) + '. Tag: ' + HexStr({%H-}Pointer(List[i].ti_Tag)) + ' Data: ' + HexStr({%H-}Pointer(List[i].ti_Data)));
     //TagDbgOut('- ' + IntToStr(i) + '. ' + HexStr(@List[i]));
   end;
   TagDbgOut('End Of List');

@@ -3,8 +3,9 @@ unit MUIClass.List;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
+  Classes, SysUtils,
+  {$ifdef AmigaOS4}Exec, AmigaDOS,{$endif}
+  Utility, Intuition, agraphics, icon, mui, muihelper,
   MUIClass.Base, MUIClass.Area, MUIClass.Image;
 {$M+}
 type
@@ -302,6 +303,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_List, TagList.GetTagPointer);
@@ -313,6 +315,8 @@ function DropFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIList;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIList(Hook^.h_Data);
@@ -328,6 +332,8 @@ function ActiveFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIList;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIList(Hook^.h_Data);
@@ -518,7 +524,7 @@ begin
     if not Bitmap.HasObj then
       Bitmap.CreateObject;
     if Bitmap.HasObj then
-      Result := PListImage(DoMethod(MUIObj, [MUIM_List_CreateImage, AsTag(Bitmap.MUIObj), AsTag(Flags)]));
+      Result := {%H-}PListImage(DoMethod(MUIObj, [MUIM_List_CreateImage, AsTag(Bitmap.MUIObj), AsTag(Flags)]));
   end;
 end;
 
@@ -734,6 +740,7 @@ function MultiTestFunc(Hook: PHook; Dummy: Pointer; Entry: PChar): PtrInt;
 var
   PasObj: TMUIList;
 begin
+  Unused(Dummy);
   try
     Result := MUI_TRUE;
     PasObj := TMUIList(Hook^.h_Data);
@@ -821,6 +828,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_FloatText, TagList.GetTagPointer);
@@ -876,6 +884,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_VolumeList, TagList.GetTagPointer);
@@ -928,6 +937,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_DirList, TagList.GetTagPointer);
@@ -939,6 +949,8 @@ function StatusValidFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIDirList;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIDirList(Hook^.h_Data);
@@ -954,6 +966,8 @@ function StatusInvalidFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIDirList;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIDirList(Hook^.h_Data);

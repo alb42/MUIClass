@@ -3,8 +3,9 @@ unit MUIClass.Numeric;
 {$mode objfpc}{$H+}
 interface
 uses
-  Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
+  Classes, SysUtils,
+  {$ifdef AmigaOS4}Exec, AmigaDOS,{$endif}
+  Utility, Intuition, agraphics, icon, mui,
   MUIClass.Base, MUIClass.Area;
 {$M+}
 type
@@ -140,6 +141,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Numeric, TagList.GetTagPointer);
@@ -151,6 +153,8 @@ function ValueFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUINumeric;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUINumeric(Hook^.h_Data);
@@ -300,7 +304,7 @@ begin
   Result := '';
   if HasObj then
   begin
-    PC := PChar(DoMethod(MUIObj, [MUIM_Numeric_Stringify, Value]));
+    PC := {%H-}PChar(DoMethod(MUIObj, [MUIM_Numeric_Stringify, Value]));
     if Assigned(PC) then
       Result := PC;
   end;
@@ -322,6 +326,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Knob, TagList.GetTagPointer);
@@ -350,6 +355,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Levelmeter, TagList.GetTagPointer);
@@ -375,6 +381,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Numericbutton, TagList.GetTagPointer);
@@ -403,6 +410,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Slider, TagList.GetTagPointer);

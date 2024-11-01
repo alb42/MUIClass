@@ -3,7 +3,7 @@ unit IDETypes;
 interface
 
 uses
-  fgl, NodeTreeUnit, typinfo;
+  fgl, typinfo;
 
 type
   TItemProp = class

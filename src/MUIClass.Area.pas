@@ -4,7 +4,10 @@ unit MUIClass.Area;
 interface
 uses
   Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, agraphics, icon, mui, muihelper,
+  {$ifdef AmigaOS4}
+  Exec, AmigaDOS,
+  {$endif}
+  Utility, Intuition, agraphics, icon, mui, muihelper,
   MUIClass.Base, MUIClass.Window, MUIClass.Menu;
 {$M+}
 type
@@ -546,6 +549,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Area, TagList.GetTagPointer);
@@ -557,6 +561,8 @@ function PressFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIArea;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIArea(Hook^.h_Data);
@@ -572,6 +578,8 @@ function SelectedFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIArea;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIArea(Hook^.h_Data);
@@ -1081,7 +1089,7 @@ begin
   Result := nil;
   if HasObj then
   begin
-    Result := PBubble(DoMethod(MUIObj, [MUIM_CreateBubble, x, y, AsTag(PChar(Txt)), Flags]));
+    Result := {%H-}PBubble(DoMethod(MUIObj, [MUIM_CreateBubble, x, y, AsTag(PChar(Txt)), Flags]));
     if Assigned(Result) then
       FBubbleList.Add(Result);
   end;
@@ -1135,6 +1143,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Rectangle, TagList.GetTagPointer);
@@ -1201,6 +1210,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Balance, TagList.GetTagPointer);
@@ -1256,6 +1266,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Gauge, TagList.GetTagPointer);
@@ -1335,6 +1346,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Scale, TagList.GetTagPointer);
@@ -1386,6 +1398,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Colorfield, TagList.GetTagPointer);
@@ -1510,6 +1523,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Text, TagList.GetTagPointer);
@@ -1602,6 +1616,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_PenDisplay, TagList.GetTagPointer);
@@ -1613,6 +1628,8 @@ function SpecFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIPenDisplay;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIPenDisplay(Hook^.h_Data);
@@ -1699,6 +1716,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_PopPen, TagList.GetTagPointer);
@@ -1841,42 +1859,42 @@ end;
 procedure TSpecDesc.SetRGB32(R,G,B: LongWord); overload;     //2: r,g,b
 begin
   FText := '2:' + IntToHex(R, 8) +', ' + IntToHex(G, 8) +', ' + IntToHex(B, 8);
-  FSpec := PtrInt(@FText[1]);
+  FSpec := {%H-}PtrInt(@FText[1]);
   FIsSet := True;
 end;
 
 procedure TSpecDesc.SetBoopsiName(AName: string);            //3:
 begin
   FText := '3:' + AName;
-  FSpec := PtrInt(@FText[1]);
+  FSpec := {%H-}PtrInt(@FText[1]);
   FIsSet := True;
 end;
 
 procedure TSpecDesc.SetMUIBrush(AName: string);              //4:
 begin
   FText := '4:' + AName;
-  FSpec := PtrInt(@FText[1]);
+  FSpec := {%H-}PtrInt(@FText[1]);
   FIsSet := True;
 end;
 
 procedure TSpecDesc.SetPicture(PicPath: string);             //5:
 begin
   FText := '5:' + PicPath;
-  FSpec := PtrInt(@FText[1]);
+  FSpec := {%H-}PtrInt(@FText[1]);
   FIsSet := True;
 end;
 
 procedure TSpecDesc.SetPreConf(ABack: Integer);          //6:
 begin
   FText := '6:' + IntToStr(ABack);
-  FSpec := PtrInt(@FText[1]);
+  FSpec := {%H-}PtrInt(@FText[1]);
   FIsSet := True;
 end;
 
 procedure TSpecDesc.SetString(AText: string);
 begin
   FText := AText;
-  FSpec := PtrInt(@FText[1]);
+  FSpec := {%H-}PtrInt(@FText[1]);
   FIsSet := True;
 end;
 

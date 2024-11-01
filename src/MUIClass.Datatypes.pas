@@ -5,7 +5,7 @@ unit MUIClass.Datatypes;
 interface
 
 uses
-  Classes, SysUtils, Datatypes, AGraphics, Utility, Intuition, AmigaDos, Exec, Math,
+  Classes, SysUtils, Datatypes, AGraphics, Utility, Intuition, AmigaDos, Exec,
   layers;
 
 type

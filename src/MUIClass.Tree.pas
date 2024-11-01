@@ -4,7 +4,7 @@ interface
 
 uses
   Classes, SysUtils, fgl, mui, AGraphics, Utility, Intuition, Math,
-  MUIClass.Area, MUIClass.Menu,
+  MUIClass.Area,
   MUIClass.Base, MUIClass.Group, MUIClass.Gadget, MUIClass.DrawPanel;
 
 type
@@ -272,6 +272,7 @@ procedure TMUITreeView.KeyDown(Sender: TObject; Shift: TMUIShiftState; Code: Wor
 var
   Idx: Integer;
 begin
+  Unused(Key);
   EatEvent := True;
   case code of
     76: begin // up
@@ -354,10 +355,14 @@ end;
 
 procedure TMUITreeView.MouseDblEvent(Sender: TObject; MouseBtn: TMUIMouseBtn; X, Y: Integer; var EatEvent: Boolean);
 begin
-  if Assigned(FSelectedNode) and Assigned(FOnNodeDblClick) then
+
+  if Assigned(FSelectedNode) and Assigned(FOnNodeDblClick) and (MouseBtn = mmbLeft) then
   begin
     if FSelectedNode.FTextRect.Contains(Point(x,y)) then
+    begin
       FOnNodeDblClick(Self);
+      EatEvent := True;
+    end;
   end;
 end;
 
@@ -406,6 +411,7 @@ var
 begin
   Found := False;
   CheckClick(FNodes);
+  EatEvent := True;
   Redraw;
 end;
 

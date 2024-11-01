@@ -1,9 +1,11 @@
 unit MUIClass.Window;
 
 {$mode objfpc}{$H+}
+{$NOTES OFF}
 interface
 uses
-  Classes, SysUtils, fgl, Exec, workbench, amigados,
+  Classes, SysUtils, fgl,
+  {$ifdef AmigaOS4}Exec,{$endif} workbench, amigados,
   Utility, Intuition, icon, mui, muihelper,
   MUIClass.Base;
 {$M+}
@@ -410,6 +412,8 @@ var
   PasObj: TMUIWindow;
   Files: array of string;
 begin
+  Unused(Obj);
+  Files := [];
   Result := 0;
   PApp := PAppMessage(Msg^);
   ArgList := PApp^.am_ArgList;

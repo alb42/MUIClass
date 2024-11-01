@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Fgl, TypInfo,
   MUIClass.Base, MUIClass.Area, MUIClass.Window, MUIClass.Group,
-  MUIClass.Gadget, MUIClass.Image, MUIClass.List, MUIClass.Numeric,
+  MUIClass.Gadget, MUIClass.Image, MUIClass.Numeric,
   MUIClass.Menu;
 
 type

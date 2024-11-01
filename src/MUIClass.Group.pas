@@ -3,7 +3,10 @@ unit MUIClass.Group;
 interface
 uses
   Classes, SysUtils, fgl, Math,
-  Exec, Utility, AmigaDOS, Intuition, icon, mui, muihelper,
+  {$ifdef AmigaOS4}
+  Exec, AmigaDOS,
+  {$endif}
+  Utility, Intuition, icon, mui, muihelper,
   MUIClass.Base, MUIClass.Area, MUIClass.List, MUIClass.Gadget;
 type
   {$M+}
@@ -344,6 +347,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Group, TagList.GetTagPointer);
@@ -355,6 +359,8 @@ function PageFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIGroup;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIGroup(Hook^.h_Data);
@@ -578,6 +584,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_ListView, TagList.GetTagPointer);
@@ -603,6 +610,8 @@ function ColumnClickFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIListView;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIListView(Hook^.h_Data);
@@ -618,6 +627,8 @@ function DoubleClickFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIListView;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIListView(Hook^.h_Data);
@@ -633,6 +644,8 @@ function SelectChangeFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIListView;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIListView(Hook^.h_Data);
@@ -768,6 +781,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Register, TagList.GetTagPointer);
@@ -815,6 +829,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_VirtGroup, TagList.GetTagPointer);
@@ -926,6 +941,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_ScrollGroup, TagList.GetTagPointer);
@@ -1026,6 +1042,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Radio, TagList.GetTagPointer);
@@ -1037,6 +1054,8 @@ function RadioFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIRadio;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIRadio(Hook^.h_Data);
@@ -1118,6 +1137,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Cycle, TagList.GetTagPointer);
@@ -1129,6 +1149,8 @@ function CycleFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUICycle;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUICycle(Hook^.h_Data);
@@ -1213,6 +1235,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_ColorAdjust, TagList.GetTagPointer);
@@ -1224,6 +1247,8 @@ function ColFunc(Hook: PHook; Obj: PObject_; Msg: Pointer): PtrInt;
 var
   PasObj: TMUIColorAdjust;
 begin
+  Unused(Obj);
+  Unused(Msg);
   try
     Result := 0;
     PasObj := TMUIColorAdjust(Hook^.h_Data);
@@ -1338,6 +1363,7 @@ var
 begin
   if not Assigned(FMUIObj) then
   begin
+    TagList.Clear;
     BeforeCreateObject;
     GetCreateTags(TagList);
     FMUIObj := MUI_NewObjectA(MUIC_Palette, TagList.GetTagPointer);
