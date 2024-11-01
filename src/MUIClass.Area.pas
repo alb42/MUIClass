@@ -1464,6 +1464,7 @@ end;
 constructor TMUIText.Create;
 begin
   inherited;
+  FFrame := MUIV_Frame_None;
   FContents := '';
   FHiChar := #0;
   FPreParse := '';
@@ -1476,13 +1477,13 @@ end;
 constructor TMUIText.Create(AContents: string);
 begin
   inherited Create;
+  FFrame := MUIV_Frame_None;
   FContents := AContents;
   FHiChar := #0;
   FPreParse := '';
   FSetMax := False;
   FSetMax := False;
   FSetVMax := True;
-  Frame := MUIV_Frame_Text;
 end;
 
 procedure TMUIText.GetCreateTags(var ATagList: TATagList);
