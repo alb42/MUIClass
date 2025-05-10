@@ -144,6 +144,7 @@ type
     procedure CreateObject; override;
 
     procedure RedrawObject;
+    procedure SetFixedSize(AWidth, AHeight: Integer); // Shortcut to set min, max and def width and height
   published
     property FillArea;
     property MinWidth: Integer read FMinWidth write FMinWidth;
@@ -505,6 +506,18 @@ begin
   if HasObj then
     MUI_Redraw(FMUIObj, MADF_DRAWOBJECT);
 end;
+
+procedure TMUIDrawPanel.SetFixedSize(AWidth, AHeight: Integer);
+begin
+  MinWidth := AWidth;
+  DefWidth := AWidth;
+  MaxWidth := AWidth;
+  //
+  MinHeight := AHeight;
+  DefHeight := AHeight;
+  MaxHeight := AHeight;
+end;
+
 const
   MUI_EHF_GUIMODE = 1 shl 1;
 
