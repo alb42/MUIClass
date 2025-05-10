@@ -54,6 +54,8 @@ type
     function LoadFile(AFilename: string): Boolean; override;
     function SaveFile(AFilename: string): Boolean; override;
 
+    function SetRGBAImage(AWidth, AHeight: Integer; AData: PLongWord): Boolean;
+
     function DrawToRastport(DestRP: PRastPort; x, y: LongInt; AWidth: LongInt = -1; AHeight: LongInt = -1): Boolean;
 
     property Filename: string read FFilename;
@@ -205,6 +207,98 @@ begin
   //
   DoDTMethodA(self.FDTObj, nil ,nil, @Msg);
   DOSClose(fh);
+  Result := True;
+end;
+type
+  TpdtBlitPixelArray = record
+	  MethodID: PtrUInt;
+	  pbpa_PixelData: APTR;		      //* The pixel data to transfer to/from */
+	  pbpa_PixelFormat: PtrUInt;	  //* Format of the pixel data (see "Pixel Formats" below) */
+	  pbpa_PixelArrayMod: PtrUInt;	//* Number of bytes per row */
+	  pbpa_Left: PtrUInt;		      //* Left edge of the rectangle to transfer pixels to/from */
+	  pbpa_Top: PtrUInt;		        //* Top edge of the rectangle to transfer pixels to/from */
+	  pbpa_Width: PtrUInt;		      //* Width of the rectangle to transfer pixels to/from */
+	  pbpa_Height: PtrUInt;		    //* Height of the rectangle to transfer pixels to/from */
+  end;
+const
+  //PBPAFMT_RGB	 =  0;	//* 3 bytes per pixel (red, green, blue) */
+  PBPAFMT_RGBA =	1;	//* 4 bytes per pixel (red, green, blue, alpha channel) */
+  //PBPAFMT_ARGB =	2;	//* 4 bytes per pixel (alpha channel, red, green, blue) */
+  //PBPAFMT_LUT8 =	3;	//* 1 byte per pixel (using a separate colour map) */
+  //PBPAFMT_GREY8 =	4;	//* 1 byte per pixel (0==black, 255==white) */
+
+function TPictureDataType.SetRGBAImage(AWidth, AHeight: Integer; AData: PLongWord): Boolean;
+var
+  bpa: TpdtBlitPixelArray;
+  FScr: pScreen;
+  Res: PtrUInt;
+begin
+  Result := False;
+  ClearDTObject;
+  //
+  if Assigned(FScreen) then
+    FScr := FScreen
+  else
+    FScr := IntuitionBase^.ActiveScreen;
+  FDTObj := NewDTObject(nil, [
+    DTA_GroupID, GID_PICTURE,
+    PDTA_Remap, AsTag(FRemap),
+    PDTA_DestMode, PMODE_V43,
+    PDTA_Screen, AsTag(FScr),
+    OBP_Precision, Precision_Image,
+    DTA_SourceType, DTST_RAM,
+    TAG_END, TAG_END]);
+  if not Assigned(FDTObj) then
+    Exit;
+
+
+  // bitmap header
+  GetDTAttrs(FDTObj, [PDTA_BitMapHeader, AsTag(@FBitmapHeader), Tag_DONE]);
+  if not Assigned(FBitmapHeader) then
+    Exit;
+  FBitmapHeader^.bmh_Left := 0;
+  FBitmapHeader^.bmh_Top := 0;
+  FBitmapHeader^.bmh_Width := AWidth;
+  FBitmapHeader^.bmh_Height := AHeight;
+  FBitmapHeader^.bmh_PageWidth := AWidth;
+  FBitmapHeader^.bmh_PageHeight := AHeight;
+  FBitmapHeader^.bmh_Depth := 32;
+  FBitmapHeader^.bmh_Masking := mskHasAlpha;
+
+  SetDTAttrs(FDTObj, nil, nil, [
+     DTA_NominalHoriz, AWidth,
+     DTA_NominalVert,  AHeight,
+     PDTA_SourceMode,  PMODE_V43
+    ]);
+  //
+  bpa.MethodID := PDTM_WRITEPIXELARRAY;
+
+  bpa.pbpa_PixelData := AData;
+  bpa.pbpa_PixelFormat := PBPAFMT_RGBA;
+  bpa.pbpa_PixelArrayMod := AWidth * SizeOf(LongWord);
+  bpa.pbpa_Left := 0;
+  bpa.pbpa_Top := 0;
+  bpa.pbpa_Height := AHeight;
+  bpa.pbpa_Width := AWidth;
+
+  Res := DoMethodA(FDTObj, @bpa);
+  if Res = 0 then
+    Exit;
+
+  DoDTMethod(FDTObj, nil, nil, [DTM_CLEARSELECTED, 0]);
+
+  DoMethod(FDTObj, [DTM_PROCLAYOUT, 0 , 1]);
+
+  GetDTAttrs(FDTObj, [
+    PDTA_DestBitMap, AsTag(@FBitmap),
+    PDTA_BitMapHeader,AsTag(@FBitmapHeader),
+    TAG_END]);
+  if not Assigned(FBitmap) and not Assigned(FBitmapHeader) then
+    Exit;
+
+  FDrawHandle := ObtainDTDrawInfoA(FDTObj, nil);
+  if not Assigned(DrawHandle) then
+    Exit;
   Result := True;
 end;
 
