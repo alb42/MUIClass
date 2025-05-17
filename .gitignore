@@ -100,3 +100,5 @@ examples/ModalWindow
 examples/TreeViewTest
 
 examples/ExampleSpinEdit
+
+*.zip

@@ -227,6 +227,16 @@ const
   //PBPAFMT_LUT8 =	3;	//* 1 byte per pixel (using a separate colour map) */
   //PBPAFMT_GREY8 =	4;	//* 1 byte per pixel (0==black, 255==white) */
 
+{$ifdef AROS}
+const
+  // V43 extensions (methods)
+  PDTM_Dummy = DTM_Dummy + $60;
+
+  PDTM_WRITEPIXELARRAY = PDTM_Dummy + 0; // Transfer pixel data to the picture object in the specified format
+  PDTM_READPIXELARRAY  = PDTM_Dummy + 1; // Transfer pixel data from the picture object in the specified format
+{$endif}
+
+
 function TPictureDataType.SetRGBAImage(AWidth, AHeight: Integer; AData: PLongWord): Boolean;
 var
   bpa: TpdtBlitPixelArray;
